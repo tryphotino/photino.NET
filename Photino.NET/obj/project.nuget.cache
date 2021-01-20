@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "nDxFXtG0rasOgpomBZY7quRXc4CsWbfuOlJ+XWEioOAtKWOQ0oikDHxk1XOpW+/Rqj6jMNflpNJErGm8lyT4oQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ottod\\Source\\Repos\\Photino.NET\\Photino.NET\\WebWindow.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ottod\\.nuget\\packages\\west.native\\0.1.0-20210102.4\\west.native.0.1.0-20210102.4.nupkg.sha512"
+  ],
+  "logs": []
+}

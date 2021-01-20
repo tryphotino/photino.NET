@@ -1,0 +1,35 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "WebWindow/0.1.2-dev": {
+        "dependencies": {
+          "WEST.Native": "0.1.0-20210102.4"
+        },
+        "runtime": {
+          "WebWindow.dll": {}
+        }
+      },
+      "WEST.Native/0.1.0-20210102.4": {}
+    }
+  },
+  "libraries": {
+    "WebWindow/0.1.2-dev": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WEST.Native/0.1.0-20210102.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JJkuZpAZYymcNwKa34yGitC5Gjfy8al4hrKVaYBKPzEf0Jsx/Nqxbq4ZzX7w4zrN2lLGm74fNqNFwRk21v5jHA==",
+      "path": "west.native/0.1.0-20210102.4",
+      "hashPath": "west.native.0.1.0-20210102.4.nupkg.sha512"
+    }
+  }
+}

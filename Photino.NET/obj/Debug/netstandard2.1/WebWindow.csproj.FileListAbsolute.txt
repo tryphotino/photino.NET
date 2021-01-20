@@ -1,0 +1,9 @@
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\bin\Debug\netstandard2.1\WebWindow.deps.json
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\bin\Debug\netstandard2.1\WebWindow.dll
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\bin\Debug\netstandard2.1\WebWindow.pdb
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.csprojAssemblyReference.cache
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.AssemblyInfoInputs.cache
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.AssemblyInfo.cs
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.csproj.CoreCompileInputs.cache
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.dll
+C:\Users\ottod\Source\Repos\Photino.NET\Photino.NET\obj\Debug\netstandard2.1\WebWindow.pdb
