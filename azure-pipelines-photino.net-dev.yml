@@ -46,7 +46,6 @@ jobs:
     - task: CmdLine@2
       displayName: 'Create NuGet package'
       inputs:
-        workingDirectory: '$(Pipeline.Workspace)'
         script: 'nuget.exe pack Photino.NET/Photino.NET.nuspec -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
 
     #Publish NuGet package to Artifacts
