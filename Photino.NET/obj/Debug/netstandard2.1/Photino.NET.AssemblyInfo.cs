@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(".NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux" +
     " (without Blazor support)")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.2-dev")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.3.4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Photino.NET")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Photino.NET")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.2.0")]

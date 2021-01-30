@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "Photino.NET/0.1.2-dev": {
+      "Photino.NET/1.2.3.4": {
         "dependencies": {
           "Photino.Native": "0.1.0-20210129.2"
         },
@@ -19,7 +19,7 @@
     }
   },
   "libraries": {
-    "Photino.NET/0.1.2-dev": {
+    "Photino.NET/1.2.3.4": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
