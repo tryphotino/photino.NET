@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace WebWindows
+namespace PhotinoNET
 {
     [StructLayout(LayoutKind.Sequential)]
     struct NativeRect
@@ -41,7 +41,7 @@ namespace WebWindows
         { }
     }
 
-    public class WebWindow
+    public class PhotinoNET
     {
         // Here we use auto charset instead of forcing UTF-8.
         // Thus the native code for Windows will be much more simple.
@@ -56,63 +56,63 @@ namespace WebWindows
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void ResizedCallback(int width, int height);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void MovedCallback(int x, int y);
 
-        const string DllName = "WEST.Native";
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr WebWindow_register_win32(IntPtr hInstance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr WebWindow_register_mac();
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr WebWindow_ctor(string title, IntPtr parentWebWindow, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_dtor(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr WebWindow_getHwnd_win32(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_SetTitle(IntPtr instance, string title);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_Show(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_WaitForExit(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_Invoke(IntPtr instance, InvokeCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_NavigateToString(IntPtr instance, string content);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_NavigateToUrl(IntPtr instance, string url);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_ShowMessage(IntPtr instance, string title, string body, uint type);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_SendMessage(IntPtr instance, string message);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_AddCustomScheme(IntPtr instance, string scheme, OnWebResourceRequestedCallback requestHandler);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetResizable(IntPtr instance, int resizable);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_GetSize(IntPtr instance, out int width, out int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetSize(IntPtr instance, int width, int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetResizedCallback(IntPtr instance, ResizedCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_GetAllMonitors(IntPtr instance, GetAllMonitorsCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern uint WebWindow_GetScreenDpi(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_GetPosition(IntPtr instance, out int x, out int y);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetPosition(IntPtr instance, int x, int y);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetMovedCallback(IntPtr instance, MovedCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void WebWindow_SetTopmost(IntPtr instance, int topmost);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void WebWindow_SetIconFile(IntPtr instance, string filename);
+        const string DllName = "Photino.Native";
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_register_win32(IntPtr hInstance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_register_mac();
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr PhotinoNET_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_dtor(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_getHwnd_win32(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SetTitle(IntPtr instance, string title);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_WaitForExit(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_Invoke(IntPtr instance, InvokeCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_NavigateToString(IntPtr instance, string content);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_NavigateToUrl(IntPtr instance, string url);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_ShowMessage(IntPtr instance, string title, string body, uint type);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SendMessage(IntPtr instance, string message);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_AddCustomScheme(IntPtr instance, string scheme, OnWebResourceRequestedCallback requestHandler);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetResizable(IntPtr instance, int resizable);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetSize(IntPtr instance, out int width, out int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetSize(IntPtr instance, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetResizedCallback(IntPtr instance, ResizedCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetAllMonitors(IntPtr instance, GetAllMonitorsCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern uint PhotinoNET_GetScreenDpi(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetPosition(IntPtr instance, out int x, out int y);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetPosition(IntPtr instance, int x, int y);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetMovedCallback(IntPtr instance, MovedCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetTopmost(IntPtr instance, int topmost);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SetIconFile(IntPtr instance, string filename);
 
         private readonly List<GCHandle> _gcHandlesToFree = new List<GCHandle>();
         private readonly List<IntPtr> _hGlobalToFree = new List<IntPtr>();
-        private readonly IntPtr _nativeWebWindow;
+        private readonly IntPtr _nativePhotinoNET;
         private readonly int _ownerThreadId;
         private string _title;
 
-        static WebWindow()
+        static PhotinoNET()
         {
             // Workaround for a crashing issue on Linux. Without this, applications
             // are crashing when running in Debug mode (but not Release) if the very
-            // first line of code in Program::Main references the WebWindow type.
+            // first line of code in Program::Main references the PhotinoNET type.
             // It's unclear why.
             Thread.Sleep(1);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var hInstance = Marshal.GetHINSTANCE(typeof(WebWindow).Module);
-                WebWindow_register_win32(hInstance);
+                var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoNET).Module);
+                PhotinoNET_register_win32(hInstance);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                WebWindow_register_mac();
+                PhotinoNET_register_mac();
             }
         }
 
-        public WebWindow(string title) : this(title, _ => { })
+        public PhotinoNET(string title) : this(title, _ => { })
         {
         }
 
-        public WebWindow(string title, Action<WebWindowOptions> configure, bool fullscreen = false, int x = 0, int y = 0, int width = 800, int height = 600)
+        public PhotinoNET(string title, Action<PhotinoNETOptions> configure, bool fullscreen = false, int x = 0, int y = 0, int width = 800, int height = 600)
         {
             _ownerThreadId = Thread.CurrentThread.ManagedThreadId;
 
@@ -121,7 +121,7 @@ namespace WebWindows
                 throw new ArgumentNullException(nameof(configure));
             }
 
-            var options = new WebWindowOptions();
+            var options = new PhotinoNETOptions();
             configure.Invoke(options);
 
             WriteTitleField(title);
@@ -129,8 +129,8 @@ namespace WebWindows
             var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)ReceiveWebMessage;
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
-            var parentPtr = options.Parent?._nativeWebWindow ?? default;
-            _nativeWebWindow = WebWindow_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
+            var parentPtr = options.Parent?._nativePhotinoNET ?? default;
+            _nativePhotinoNET = PhotinoNET_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
 
             foreach (var (schemeName, handler) in options.SchemeHandlers)
             {
@@ -139,22 +139,22 @@ namespace WebWindows
 
             var onResizedDelegate = (ResizedCallback)OnResized;
             _gcHandlesToFree.Add(GCHandle.Alloc(onResizedDelegate));
-            WebWindow_SetResizedCallback(_nativeWebWindow, onResizedDelegate);
+            PhotinoNET_SetResizedCallback(_nativePhotinoNET, onResizedDelegate);
 
             var onMovedDelegate = (MovedCallback)OnMoved;
             _gcHandlesToFree.Add(GCHandle.Alloc(onMovedDelegate));
-            WebWindow_SetMovedCallback(_nativeWebWindow, onMovedDelegate);
+            PhotinoNET_SetMovedCallback(_nativePhotinoNET, onMovedDelegate);
 
             // Auto-show to simplify the API, but more importantly because you can't
             // do things like navigate until it has been shown
             Show();
         }
 
-        ~WebWindow()
+        ~PhotinoNET()
         {
             // TODO: IDisposable
-            WebWindow_SetResizedCallback(_nativeWebWindow, null);
-            WebWindow_SetMovedCallback(_nativeWebWindow, null);
+            PhotinoNET_SetResizedCallback(_nativePhotinoNET, null);
+            PhotinoNET_SetMovedCallback(_nativePhotinoNET, null);
             foreach (var gcHandle in _gcHandlesToFree)
             {
                 gcHandle.Free();
@@ -165,11 +165,11 @@ namespace WebWindows
                 Marshal.FreeHGlobal(handle);
             }
             _hGlobalToFree.Clear();
-            WebWindow_dtor(_nativeWebWindow);
+            PhotinoNET_dtor(_nativePhotinoNET);
         }
 
-        public void Show() => WebWindow_Show(_nativeWebWindow);
-        public void WaitForExit() => WebWindow_WaitForExit(_nativeWebWindow);
+        public void Show() => PhotinoNET_Show(_nativePhotinoNET);
+        public void WaitForExit() => PhotinoNET_WaitForExit(_nativePhotinoNET);
 
         public string Title
         {
@@ -177,13 +177,13 @@ namespace WebWindows
             set
             {
                 WriteTitleField(value);
-                WebWindow_SetTitle(_nativeWebWindow, _title);
+                PhotinoNET_SetTitle(_nativePhotinoNET, _title);
             }
         }
 
         public void ShowMessage(string title, string body)
         {
-            WebWindow_ShowMessage(_nativeWebWindow, title, body, /* MB_OK */ 0);
+            PhotinoNET_ShowMessage(_nativePhotinoNET, title, body, /* MB_OK */ 0);
         }
 
         public void Invoke(Action workItem)
@@ -195,7 +195,7 @@ namespace WebWindows
             }
             else
             {
-                WebWindow_Invoke(_nativeWebWindow, workItem.Invoke);
+                PhotinoNET_Invoke(_nativePhotinoNET, workItem.Invoke);
             }
         }
 
@@ -205,7 +205,7 @@ namespace WebWindows
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    return WebWindow_getHwnd_win32(_nativeWebWindow);
+                    return PhotinoNET_getHwnd_win32(_nativePhotinoNET);
                 }
                 else
                 {
@@ -216,12 +216,12 @@ namespace WebWindows
 
         public void NavigateToString(string content)
         {
-            WebWindow_NavigateToString(_nativeWebWindow, content);
+            PhotinoNET_NavigateToString(_nativePhotinoNET, content);
         }
 
         public void NavigateToUrl(string url)
         {
-            WebWindow_NavigateToUrl(_nativeWebWindow, url);
+            PhotinoNET_NavigateToUrl(_nativePhotinoNET, url);
         }
 
         public void NavigateToLocalFile(string path)
@@ -233,7 +233,7 @@ namespace WebWindows
 
         public void SendMessage(string message)
         {
-            WebWindow_SendMessage(_nativeWebWindow, message);
+            PhotinoNET_SendMessage(_nativePhotinoNET, message);
         }
 
         public event EventHandler<string> OnWebMessageReceived;
@@ -291,7 +291,7 @@ namespace WebWindows
             };
 
             _gcHandlesToFree.Add(GCHandle.Alloc(callback));
-            WebWindow_AddCustomScheme(_nativeWebWindow, scheme, callback);
+            PhotinoNET_AddCustomScheme(_nativePhotinoNET, scheme, callback);
         }
 
         private bool _resizable = true;
@@ -303,7 +303,7 @@ namespace WebWindows
                 if (_resizable != value)
                 {
                     _resizable = value;
-                    Invoke(() => WebWindow_SetResizable(_nativeWebWindow, _resizable ? 1 : 0));
+                    Invoke(() => PhotinoNET_SetResizable(_nativePhotinoNET, _resizable ? 1 : 0));
                 }
             }
         }
@@ -311,9 +311,9 @@ namespace WebWindows
         private int _width;
         private int _height;
 
-        private void GetSize() => WebWindow_GetSize(_nativeWebWindow, out _width, out _height);
+        private void GetSize() => PhotinoNET_GetSize(_nativePhotinoNET, out _width, out _height);
 
-        private void SetSize() => Invoke(() => WebWindow_SetSize(_nativeWebWindow, _width, _height));
+        private void SetSize() => Invoke(() => PhotinoNET_SetSize(_nativePhotinoNET, _width, _height));
 
         public int Width
         {
@@ -376,9 +376,9 @@ namespace WebWindows
         private int _x;
         private int _y;
 
-        private void GetPosition() => WebWindow_GetPosition(_nativeWebWindow, out _x, out _y);
+        private void GetPosition() => PhotinoNET_GetPosition(_nativePhotinoNET, out _x, out _y);
 
-        private void SetPosition() => Invoke(() => WebWindow_SetPosition(_nativeWebWindow, _x, _y));
+        private void SetPosition() => Invoke(() => PhotinoNET_SetPosition(_nativePhotinoNET, _x, _y));
 
         public int Left
         {
@@ -448,12 +448,12 @@ namespace WebWindows
                     monitors.Add(new Monitor(monitor));
                     return 1;
                 }
-                WebWindow_GetAllMonitors(_nativeWebWindow, callback);
+                PhotinoNET_GetAllMonitors(_nativePhotinoNET, callback);
                 return monitors;
             }
         }
 
-        public uint ScreenDpi => WebWindow_GetScreenDpi(_nativeWebWindow);
+        public uint ScreenDpi => PhotinoNET_GetScreenDpi(_nativePhotinoNET);
 
         private bool _topmost = false;
         public bool Topmost
@@ -464,11 +464,11 @@ namespace WebWindows
                 if (_topmost != value)
                 {
                     _topmost = value;
-                    Invoke(() => WebWindow_SetTopmost(_nativeWebWindow, _topmost ? 1 : 0));
+                    Invoke(() => PhotinoNET_SetTopmost(_nativePhotinoNET, _topmost ? 1 : 0));
                 }
             }
         }
 
-        public void SetIconFile(string filename) => WebWindow_SetIconFile(_nativeWebWindow, Path.GetFullPath(filename));
+        public void SetIconFile(string filename) => PhotinoNET_SetIconFile(_nativePhotinoNET, Path.GetFullPath(filename));
     }
 }

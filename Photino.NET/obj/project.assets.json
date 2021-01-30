@@ -2,18 +2,18 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.1": {
-      "WEST.Native/0.1.0-20210102.4": {
+      "Photino.Native/0.1.0-20210129.2": {
         "type": "package",
         "runtimeTargets": {
-          "runtimes/linux-x64/native/WEST.Native.so": {
+          "runtimes/linux-x64/native/Photino.Native.so": {
             "assetType": "native",
             "rid": "linux-x64"
           },
-          "runtimes/osx-x64/native/WEST.Native.dylib": {
+          "runtimes/osx-x64/native/Photino.Native.dylib": {
             "assetType": "native",
             "rid": "osx-x64"
           },
-          "runtimes/win-x64/native/WEST.Native.dll": {
+          "runtimes/win-x64/native/Photino.Native.dll": {
             "assetType": "native",
             "rid": "win-x64"
           },
@@ -26,44 +26,44 @@
     }
   },
   "libraries": {
-    "WEST.Native/0.1.0-20210102.4": {
-      "sha512": "JJkuZpAZYymcNwKa34yGitC5Gjfy8al4hrKVaYBKPzEf0Jsx/Nqxbq4ZzX7w4zrN2lLGm74fNqNFwRk21v5jHA==",
+    "Photino.Native/0.1.0-20210129.2": {
+      "sha512": "R7JzwAlCoV7+6FDGHMuzuTZUhcFv0cvztEacGS8wMUVAkn4ehD/bwh4PANto708sAIrTUXyqCtDV+Gl4ClZaqg==",
       "type": "package",
-      "path": "west.native/0.1.0-20210102.4",
+      "path": "photino.native/0.1.0-20210129.2",
       "files": [
         ".nupkg.metadata",
-        "runtimes/linux-x64/native/WEST.Native.so",
-        "runtimes/osx-x64/native/WEST.Native.dylib",
-        "runtimes/win-x64/native/WEST.Native.dll",
-        "runtimes/win-x64/native/WebView2Loader.dll",
-        "west.native.0.1.0-20210102.4.nupkg.sha512",
-        "west.native.nuspec"
+        "photino.native.0.1.0-20210129.2.nupkg.sha512",
+        "photino.native.nuspec",
+        "runtimes/linux-x64/native/Photino.Native.so",
+        "runtimes/osx-x64/native/Photino.Native.dylib",
+        "runtimes/win-x64/native/Photino.Native.dll",
+        "runtimes/win-x64/native/WebView2Loader.dll"
       ]
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.1": [
-      "WEST.Native >= 0.1.0-20210102.4"
+      "Photino.Native >= 0.1.0-20210129.2"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ottod\\.nuget\\packages\\": {},
+    "C:\\Users\\myeag\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "0.1.2-dev",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ottod\\Source\\Repos\\Photino.NET\\Photino.NET\\WebWindow.csproj",
-      "projectName": "WEST.NET",
-      "projectPath": "C:\\Users\\ottod\\Source\\Repos\\Photino.NET\\Photino.NET\\WebWindow.csproj",
-      "packagesPath": "C:\\Users\\ottod\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ottod\\Source\\Repos\\Photino.NET\\Photino.NET\\obj\\",
+      "projectUniqueName": "C:\\TFS\\Repos\\Photino\\photino.NET\\Photino.NET\\Photino.NET.csproj",
+      "projectName": "Photino.NET",
+      "projectPath": "C:\\TFS\\Repos\\Photino\\photino.NET\\Photino.NET\\Photino.NET.csproj",
+      "packagesPath": "C:\\Users\\myeag\\.nuget\\packages\\",
+      "outputPath": "C:\\TFS\\Repos\\Photino\\photino.NET\\Photino.NET\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\ottod\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\myeag\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -71,10 +71,9 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\ottod\\Desktop": {},
-        "C:\\Users\\ottod\\Desktop\\NUGETS": {},
         "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/eps-software/25138a24-91f3-4071-b9bd-4d7763ecb75f/_packaging/WESTPackages/nuget/v3/index.json": {}
+        "https://pkgs.dev.azure.com/eps-software/_packaging/EPSPackages/nuget/v3/index.json": {},
+        "https://pkgs.dev.azure.com/tryphotino/Photino.Native/_packaging/PhotinoPackages/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.1": {
@@ -92,9 +91,9 @@
       "netstandard2.1": {
         "targetAlias": "netstandard2.1",
         "dependencies": {
-          "WEST.Native": {
+          "Photino.Native": {
             "target": "Package",
-            "version": "[0.1.0-20210102.4, )"
+            "version": "[0.1.0-20210129.2, )"
           }
         },
         "imports": [
@@ -112,7 +111,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

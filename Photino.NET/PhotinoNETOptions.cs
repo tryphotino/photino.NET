@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace WebWindows
+namespace PhotinoNET
 {
-    public class WebWindowOptions
+    public class PhotinoNETOptions
     {
-        public WebWindow Parent { get; set; }
+        public PhotinoNET Parent { get; set; }
 
         public IDictionary<string, ResolveWebResourceDelegate> SchemeHandlers { get; }
             = new Dictionary<string, ResolveWebResourceDelegate>();
