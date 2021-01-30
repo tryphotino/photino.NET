@@ -38,14 +38,9 @@ jobs:
     #    script: 'dotnet nuget list source'
 
     - task: CmdLine@2
-      displayName: 'Directory Listing'
-      inputs:
-        script: 'dir'
-
-    - task: CmdLine@2
       displayName: 'Build Photino.NET'
       inputs:
-        script: 'dotnet build Photino.NET/Photino.csproj -c $(buildConfiguration)'
+        script: 'dotnet build Photino.NET/Photino.NET.csproj -c $(buildConfiguration)'
 
     - task: CmdLine@2
       displayName: 'Rename package'
