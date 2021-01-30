@@ -11,7 +11,7 @@
     <description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</description>
     <dependencies>
       <group targetFramework=".NETStandard2.1">
-        <dependency id="Photino.Native" version="0.1.0-20210129.2" exclude="Build,Analyzers" />
+        <dependency id="Photino.Native" version="0.1.0-20210130.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
