@@ -1,0 +1,81 @@
+# Build Photino.NET project from dev branch in GitHub
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- dev
+
+variables:
+  versionprefix: 0.1.0
+
+jobs:
+  - job: 'BuildPackageAndPublish'
+
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      buildConfiguration: 'Release'
+
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk'
+      inputs:
+        packageType: sdk
+        version: 5.0.100
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - task: CmdLine@2
+      displayName: 'Add NuGet source'
+      inputs:
+        script: 'dotnet nuget add source https://pkgs.dev.azure.com/tryphotino/Photino.Native/_packaging/PhotinoPackages/nuget/v3/index.json -n DevOpsArtifacts'
+
+    - task: NuGetAuthenticate@0
+      displayName: 'NuGet Authenticate'
+      
+    #- task: CmdLine@2
+    #  displayName: 'List NuGet sources'
+    #  inputs:
+    #    script: 'dotnet nuget list source'
+
+    - task: CmdLine@2
+      displayName: 'Build Photino.NET'
+      inputs:
+        script: 'dotnet build Photino.NET/Photino.csproj -c $(buildConfiguration)'
+
+    - task: CmdLine@2
+      displayName: 'Rename package'
+      inputs:
+        script: 'cd artifacts & rename Photino.NET.0.1.2-dev.nupkg Photino.NET.$(versionprefix)-$(Build.BuildNumber).nupkg'
+
+    #Publish NuGet package to Artifacts
+    - task: NuGetCommand@2
+      displayName: 'NuGet push'
+      inputs:
+        command: push
+        feedsToUse: 'select'
+        publishVstsFeed: 'Photino.Native/PhotinoPackages'
+        packagesToPush: 'artifacts/**/*.nupkg'
+        allowPackageConflicts: true
+
+  # Uploads the NuGet package file to nuget.org
+  # Important notes:
+  # 1. For this to work, you need to create a 'service connection' with the same name
+  #    as the 'publishFeedCredentials' value.
+  # 2. For security, you *must* ensure that 'Make secrets available to builds of forks'
+  #    is disabled in your PR validation settings (inside build -> Edit -> Triggers).
+  #    Otherwise, PRs would be able to push new packages even without being merged.
+  #- job: 'PublishToNuGet'
+  #  dependsOn: 'CombinePackages'
+  #  steps:
+  #  - task: DownloadBuildArtifacts@0
+  #    inputs:
+  #      downloadPath: 'artifacts'
+  #      artifactName: 'artifacts-combined'
+  #  - task: NuGetCommand@2
+  #    displayName: 'Publish to nuget.org'
+  #    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #    inputs:
+  #      command: push
+  #      packagesToPush: 'artifacts/artifacts-combined/*.nupkg'
+  #      nuGetFeedType: external
+  #      publishFeedCredentials: 'WebWindowNuGet'

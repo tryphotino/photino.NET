@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Photino.NET", "Photino.NET\Photino.NET.csproj", "{BB5C5BF0-D891-4005-BEC2-A654FCF02D5B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ADCF985E-349D-455E-A4DF-1748B27BA637}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines-photino.net-dev.yml = azure-pipelines-photino.net-dev.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
