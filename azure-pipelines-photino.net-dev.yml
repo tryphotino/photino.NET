@@ -55,7 +55,7 @@ jobs:
         command: push
         feedsToUse: 'select'
         publishVstsFeed: 'Photino.Native/PhotinoPackages'
-        packagesToPush: 'artifacts/**/*.nupkg'
+        packagesToPush: '*.nupkg'
         allowPackageConflicts: true
 
   # Uploads the NuGet package file to nuget.org

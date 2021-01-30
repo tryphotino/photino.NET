@@ -15,4 +15,7 @@
       </group>
     </dependencies>
   </metadata>
+  <files>
+    <file src="Photino.NET.dll" target="lib/netstandard2.1" />
+  </files>
 </package>
