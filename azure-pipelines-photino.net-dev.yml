@@ -5,7 +5,7 @@ trigger:
 - dev
 
 variables:
-  versionprefix: 0.1.0
+  versionprefix: 0.9.0
 
 jobs:
   - job: 'BuildPackageAndPublish'
@@ -57,7 +57,7 @@ jobs:
         command: push
         feedsToUse: 'select'
         publishVstsFeed: 'Photino.Native/PhotinoPackages'
-        packagesToPush: '*.nupkg'
+        packagesToPush: 'Photino.NET/bin/$(buildConfiguration)/*.nupkg'
         allowPackageConflicts: true
 
   # Uploads the NuGet package file to nuget.org
