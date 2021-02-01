@@ -57,31 +57,31 @@ namespace PhotinoNET
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void MovedCallback(int x, int y);
 
         const string DllName = "Photino.Native";
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_register_win32(IntPtr hInstance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_register_mac();
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr PhotinoNET_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_dtor(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr PhotinoNET_getHwnd_win32(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_win32(IntPtr hInstance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_mac();
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SetTitle(IntPtr instance, string title);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_Show(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_WaitForExit(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_Invoke(IntPtr instance, InvokeCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_NavigateToString(IntPtr instance, string content);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_NavigateToUrl(IntPtr instance, string url);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_ShowMessage(IntPtr instance, string title, string body, uint type);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SendMessage(IntPtr instance, string message);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_AddCustomScheme(IntPtr instance, string scheme, OnWebResourceRequestedCallback requestHandler);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetResizable(IntPtr instance, int resizable);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetSize(IntPtr instance, out int width, out int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetSize(IntPtr instance, int width, int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetResizedCallback(IntPtr instance, ResizedCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetAllMonitors(IntPtr instance, GetAllMonitorsCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern uint PhotinoNET_GetScreenDpi(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_GetPosition(IntPtr instance, out int x, out int y);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetPosition(IntPtr instance, int x, int y);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetMovedCallback(IntPtr instance, MovedCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_SetTopmost(IntPtr instance, int topmost);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SetIconFile(IntPtr instance, string filename);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Invoke(IntPtr instance, InvokeCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToString(IntPtr instance, string content);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToUrl(IntPtr instance, string url);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SendMessage(IntPtr instance, string message);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_AddCustomScheme(IntPtr instance, string scheme, OnWebResourceRequestedCallback requestHandler);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetResizable(IntPtr instance, int resizable);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetSize(IntPtr instance, out int width, out int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetSize(IntPtr instance, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetResizedCallback(IntPtr instance, ResizedCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetAllMonitors(IntPtr instance, GetAllMonitorsCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern uint Photino_GetScreenDpi(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetPosition(IntPtr instance, out int x, out int y);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetPosition(IntPtr instance, int x, int y);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetMovedCallback(IntPtr instance, MovedCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetTopmost(IntPtr instance, int topmost);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetIconFile(IntPtr instance, string filename);
 
         private readonly List<GCHandle> _gcHandlesToFree = new List<GCHandle>();
         private readonly List<IntPtr> _hGlobalToFree = new List<IntPtr>();
@@ -100,11 +100,11 @@ namespace PhotinoNET
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoNET).Module);
-                PhotinoNET_register_win32(hInstance);
+                Photino_register_win32(hInstance);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                PhotinoNET_register_mac();
+                Photino_register_mac();
             }
         }
 
@@ -130,7 +130,7 @@ namespace PhotinoNET
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
             var parentPtr = options.Parent?._nativePhotinoNET ?? default;
-            _nativePhotinoNET = PhotinoNET_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
+            _nativePhotinoNET = Photino_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
 
             foreach (var (schemeName, handler) in options.SchemeHandlers)
             {
@@ -139,11 +139,11 @@ namespace PhotinoNET
 
             var onResizedDelegate = (ResizedCallback)OnResized;
             _gcHandlesToFree.Add(GCHandle.Alloc(onResizedDelegate));
-            PhotinoNET_SetResizedCallback(_nativePhotinoNET, onResizedDelegate);
+            Photino_SetResizedCallback(_nativePhotinoNET, onResizedDelegate);
 
             var onMovedDelegate = (MovedCallback)OnMoved;
             _gcHandlesToFree.Add(GCHandle.Alloc(onMovedDelegate));
-            PhotinoNET_SetMovedCallback(_nativePhotinoNET, onMovedDelegate);
+            Photino_SetMovedCallback(_nativePhotinoNET, onMovedDelegate);
 
             // Auto-show to simplify the API, but more importantly because you can't
             // do things like navigate until it has been shown
@@ -153,8 +153,8 @@ namespace PhotinoNET
         ~PhotinoNET()
         {
             // TODO: IDisposable
-            PhotinoNET_SetResizedCallback(_nativePhotinoNET, null);
-            PhotinoNET_SetMovedCallback(_nativePhotinoNET, null);
+            Photino_SetResizedCallback(_nativePhotinoNET, null);
+            Photino_SetMovedCallback(_nativePhotinoNET, null);
             foreach (var gcHandle in _gcHandlesToFree)
             {
                 gcHandle.Free();
@@ -165,11 +165,11 @@ namespace PhotinoNET
                 Marshal.FreeHGlobal(handle);
             }
             _hGlobalToFree.Clear();
-            PhotinoNET_dtor(_nativePhotinoNET);
+            Photino_dtor(_nativePhotinoNET);
         }
 
         public void Show() => PhotinoNET_Show(_nativePhotinoNET);
-        public void WaitForExit() => PhotinoNET_WaitForExit(_nativePhotinoNET);
+        public void WaitForExit() => Photino_WaitForExit(_nativePhotinoNET);
 
         public string Title
         {
@@ -183,7 +183,7 @@ namespace PhotinoNET
 
         public void ShowMessage(string title, string body)
         {
-            PhotinoNET_ShowMessage(_nativePhotinoNET, title, body, /* MB_OK */ 0);
+            Photino_ShowMessage(_nativePhotinoNET, title, body, /* MB_OK */ 0);
         }
 
         public void Invoke(Action workItem)
@@ -195,7 +195,7 @@ namespace PhotinoNET
             }
             else
             {
-                PhotinoNET_Invoke(_nativePhotinoNET, workItem.Invoke);
+                Photino_Invoke(_nativePhotinoNET, workItem.Invoke);
             }
         }
 
@@ -205,7 +205,7 @@ namespace PhotinoNET
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    return PhotinoNET_getHwnd_win32(_nativePhotinoNET);
+                    return Photino_getHwnd_win32(_nativePhotinoNET);
                 }
                 else
                 {
@@ -216,12 +216,12 @@ namespace PhotinoNET
 
         public void NavigateToString(string content)
         {
-            PhotinoNET_NavigateToString(_nativePhotinoNET, content);
+            Photino_NavigateToString(_nativePhotinoNET, content);
         }
 
         public void NavigateToUrl(string url)
         {
-            PhotinoNET_NavigateToUrl(_nativePhotinoNET, url);
+            Photino_NavigateToUrl(_nativePhotinoNET, url);
         }
 
         public void NavigateToLocalFile(string path)
@@ -233,7 +233,7 @@ namespace PhotinoNET
 
         public void SendMessage(string message)
         {
-            PhotinoNET_SendMessage(_nativePhotinoNET, message);
+            Photino_SendMessage(_nativePhotinoNET, message);
         }
 
         public event EventHandler<string> OnWebMessageReceived;
@@ -291,7 +291,7 @@ namespace PhotinoNET
             };
 
             _gcHandlesToFree.Add(GCHandle.Alloc(callback));
-            PhotinoNET_AddCustomScheme(_nativePhotinoNET, scheme, callback);
+            Photino_AddCustomScheme(_nativePhotinoNET, scheme, callback);
         }
 
         private bool _resizable = true;
@@ -303,7 +303,7 @@ namespace PhotinoNET
                 if (_resizable != value)
                 {
                     _resizable = value;
-                    Invoke(() => PhotinoNET_SetResizable(_nativePhotinoNET, _resizable ? 1 : 0));
+                    Invoke(() => Photino_SetResizable(_nativePhotinoNET, _resizable ? 1 : 0));
                 }
             }
         }
@@ -311,9 +311,9 @@ namespace PhotinoNET
         private int _width;
         private int _height;
 
-        private void GetSize() => PhotinoNET_GetSize(_nativePhotinoNET, out _width, out _height);
+        private void GetSize() => Photino_GetSize(_nativePhotinoNET, out _width, out _height);
 
-        private void SetSize() => Invoke(() => PhotinoNET_SetSize(_nativePhotinoNET, _width, _height));
+        private void SetSize() => Invoke(() => Photino_SetSize(_nativePhotinoNET, _width, _height));
 
         public int Width
         {
@@ -376,9 +376,9 @@ namespace PhotinoNET
         private int _x;
         private int _y;
 
-        private void GetPosition() => PhotinoNET_GetPosition(_nativePhotinoNET, out _x, out _y);
+        private void GetPosition() => Photino_GetPosition(_nativePhotinoNET, out _x, out _y);
 
-        private void SetPosition() => Invoke(() => PhotinoNET_SetPosition(_nativePhotinoNET, _x, _y));
+        private void SetPosition() => Invoke(() => Photino_SetPosition(_nativePhotinoNET, _x, _y));
 
         public int Left
         {
@@ -448,12 +448,12 @@ namespace PhotinoNET
                     monitors.Add(new Monitor(monitor));
                     return 1;
                 }
-                PhotinoNET_GetAllMonitors(_nativePhotinoNET, callback);
+                Photino_GetAllMonitors(_nativePhotinoNET, callback);
                 return monitors;
             }
         }
 
-        public uint ScreenDpi => PhotinoNET_GetScreenDpi(_nativePhotinoNET);
+        public uint ScreenDpi => Photino_GetScreenDpi(_nativePhotinoNET);
 
         private bool _topmost = false;
         public bool Topmost
@@ -464,11 +464,11 @@ namespace PhotinoNET
                 if (_topmost != value)
                 {
                     _topmost = value;
-                    Invoke(() => PhotinoNET_SetTopmost(_nativePhotinoNET, _topmost ? 1 : 0));
+                    Invoke(() => Photino_SetTopmost(_nativePhotinoNET, _topmost ? 1 : 0));
                 }
             }
         }
 
-        public void SetIconFile(string filename) => PhotinoNET_SetIconFile(_nativePhotinoNET, Path.GetFullPath(filename));
+        public void SetIconFile(string filename) => Photino_SetIconFile(_nativePhotinoNET, Path.GetFullPath(filename));
     }
 }

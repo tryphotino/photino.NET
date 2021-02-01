@@ -6,3 +6,4 @@ C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NE
 C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.csproj.CoreCompileInputs.cache
 C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.dll
 C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.pdb
+C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.csprojAssemblyReference.cache
