@@ -14,7 +14,7 @@ jobs:
       vmImage: windows-latest
 
     variables:
-      buildConfiguration: 'Release'
+      buildConfiguration: 'Debug'
 
     steps:
     - task: UseDotNet@2
@@ -32,21 +32,17 @@ jobs:
     - task: NuGetAuthenticate@0
       displayName: 'NuGet Authenticate'
       
+
     #- task: CmdLine@2
-    #  displayName: 'List NuGet sources'
+    #  displayName: 'Build Photino.NET'
     #  inputs:
-    #    script: 'dotnet nuget list source'
+    #    script: 'dotnet build Photino.NET/Photino.NET.csproj -c $(buildConfiguration)'
 
+    #Build and Create NuGet package
     - task: CmdLine@2
-      displayName: 'Build Photino.NET'
+      displayName: 'Build and Create NuGet package'
       inputs:
-        script: 'dotnet build Photino.NET/Photino.NET.csproj -c $(buildConfiguration)'
-
-    #Create NuGet package
-    - task: CmdLine@2
-      displayName: 'Create NuGet package'
-      inputs:
-        script: 'dotnet pack Photino.NET/Photino.NET.csproj -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
+        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) --include-symbols -Version $(versionprefix)-$(Build.BuildNumber)'
 
     #Create NuGet package
     #- task: CmdLine@2
