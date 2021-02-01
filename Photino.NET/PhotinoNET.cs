@@ -62,8 +62,8 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void PhotinoNET_SetTitle(IntPtr instance, string title);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void PhotinoNET_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Show(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Invoke(IntPtr instance, InvokeCallback callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToString(IntPtr instance, string content);
@@ -168,7 +168,7 @@ namespace PhotinoNET
             Photino_dtor(_nativePhotinoNET);
         }
 
-        public void Show() => PhotinoNET_Show(_nativePhotinoNET);
+        public void Show() => Photino_Show(_nativePhotinoNET);
         public void WaitForExit() => Photino_WaitForExit(_nativePhotinoNET);
 
         public string Title
@@ -177,7 +177,7 @@ namespace PhotinoNET
             set
             {
                 WriteTitleField(value);
-                PhotinoNET_SetTitle(_nativePhotinoNET, _title);
+                Photino_SetTitle(_nativePhotinoNET, _title);
             }
         }
 
