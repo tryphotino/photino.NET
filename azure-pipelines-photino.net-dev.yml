@@ -46,7 +46,13 @@ jobs:
     - task: CmdLine@2
       displayName: 'Create NuGet package'
       inputs:
-        script: 'nuget.exe pack Photino.NET/Photino.NET.nuspec -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
+        script: 'dotnet pack Photino.NET/Photino.NET.csproj -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
+
+    #Create NuGet package
+    #- task: CmdLine@2
+    #  displayName: 'Create NuGet package'
+    #  inputs:
+    #    script: 'nuget.exe pack Photino.NET/Photino.NET.nuspec -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
 
     #Publish NuGet package to Artifacts
     - task: NuGetCommand@2
