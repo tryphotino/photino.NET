@@ -1,9 +1,0 @@
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\bin\Debug\netstandard2.1\Photino.NET.deps.json
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\bin\Debug\netstandard2.1\Photino.NET.dll
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\bin\Debug\netstandard2.1\Photino.NET.pdb
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.AssemblyInfoInputs.cache
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.AssemblyInfo.cs
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.csproj.CoreCompileInputs.cache
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.dll
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.pdb
-C:\TFS\Repos\Photino\photino.NET\Photino.NET\obj\Debug\netstandard2.1\Photino.NET.csprojAssemblyReference.cache
