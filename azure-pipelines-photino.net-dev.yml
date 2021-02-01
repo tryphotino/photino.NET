@@ -42,7 +42,7 @@ jobs:
     - task: CmdLine@2
       displayName: 'Build and Create NuGet package'
       inputs:
-        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) --include-symbols -Version $(versionprefix)-$(Build.BuildNumber)'
+        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) --include-symbols /p:Version=$(versionprefix)-dev-$(Build.BuildNumber) /p:PackageVersion=$(versionprefix)-dev-$(Build.BuildNumber)'
 
     #Create NuGet package
     #- task: CmdLine@2

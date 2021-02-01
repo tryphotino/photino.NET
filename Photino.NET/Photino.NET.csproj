@@ -7,7 +7,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <Version>1.2.3.4</Version>
     <PackageId>Photino.NET</PackageId>
     <Authors>Photino.NET</Authors>
     <Company>TryPhotino</Company>
@@ -15,13 +14,11 @@
     <PackageProjectUrl>https://github.com/tryphotino/photino.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
     <Description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
-    <AssemblyVersion>0.1.2.0</AssemblyVersion>
-    <FileVersion>0.1.2.0</FileVersion>
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
     <PropertyGroup>
-      <PackageVersion>0.1.0-$([System.DateTime]::Now.ToString("yyyyMMdd"))</PackageVersion>
+      <PackageVersion>$(Version)-$([System.DateTime]::Now.ToString("yyyyMMdd"))</PackageVersion>
     </PropertyGroup>
   </Target>
   
