@@ -11,6 +11,6 @@
     <description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</description>
   </metadata>
   <files>
-    <file src="bin/$configuration$/netstandard2.1/Photino.NET.dll" target="lib/netstandard2.1" />
+    <file src="bin/Release/netstandard2.1/Photino.NET.dll" target="lib/netstandard2.1" />
   </files>
 </package>
