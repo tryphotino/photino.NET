@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Title>PhotinoNET</Title>
-    <PackageDescription>Open native OS windows hosting web UI on Windows, Mac, and Linux</PackageDescription>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <PackageId>Photino.NET</PackageId>
-    <Authors>Photino.NET</Authors>
+    <Authors>TryPhotino</Authors>
     <Company>TryPhotino</Company>
+    <Description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
+    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageDescription>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
+    <PackageId>Photino.NET</PackageId>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Product>Photino.NET</Product>
     <PackageProjectUrl>https://github.com/tryphotino/photino.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
-    <Description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Title>PhotinoNET</Title>
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
