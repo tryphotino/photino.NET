@@ -24,8 +24,6 @@ jobs:
         version: 5.0.100
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
-    #Get latest NuGet of Photino.Native - it's specified in the .csprojfile!'
-
     #Build and Create NuGet package
     - task: CmdLine@2
       displayName: 'Build and Create NuGet package'
