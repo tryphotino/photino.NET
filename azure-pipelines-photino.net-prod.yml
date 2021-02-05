@@ -2,7 +2,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+- manual
 
 variables:
     major: 1
@@ -28,7 +28,7 @@ jobs:
     - task: CmdLine@2
       displayName: 'Build and Create NuGet package'
       inputs:
-        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) --include-symbols /p:Version=$(major).$(minor).$(patch) /p:PackageVersion=$(major).$(minor).$(patch)'
+        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) /p:Version=$(major).$(minor).$(patch) /p:PackageVersion=$(major).$(minor).$(patch)'
 
   # Uploads the NuGet package file to nuget.org
   # Important notes:
