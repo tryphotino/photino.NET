@@ -39,8 +39,8 @@ namespace PhotinoNET
         PhotinoWindow Fullscreen();
         PhotinoWindow Restore();
 
-        PhotinoWindow Move(Point location);
-        PhotinoWindow Move(int left, int top);
+        PhotinoWindow MoveTo(Point location);
+        PhotinoWindow MoveTo(int left, int top);
         PhotinoWindow Offset(Point offset);
         PhotinoWindow Offset(int left, int top);
 
@@ -50,7 +50,7 @@ namespace PhotinoNET
 
         PhotinoWindow ShowMessage(string title, string message);
         PhotinoWindow SendMessage(string message);
-        
+
         PhotinoWindow RegisterWebMessageHandler(EventHandler<string> handler);
         PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler);
     }

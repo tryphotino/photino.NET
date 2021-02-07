@@ -438,7 +438,7 @@ namespace PhotinoNET
             Size workArea = this.MainMonitor.WorkArea.Size;
 
             return this
-                .Move(0, 0)
+                .MoveTo(0, 0)
                 .Resize(workArea.Width, workArea.Height);
         }
 
@@ -464,11 +464,11 @@ namespace PhotinoNET
             }
 
             return this
-                .Move(_lastLocation)
+                .MoveTo(_lastLocation)
                 .Resize(_lastSize);
         }
 
-        public PhotinoWindow Move(Point location)
+        public PhotinoWindow MoveTo(Point location)
         {
             Console.WriteLine("Executing: Photino.Move(Point location)");
             Console.WriteLine($"Current location: {this.Location}");
@@ -494,11 +494,11 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow Move(int left, int top)
+        public PhotinoWindow MoveTo(int left, int top)
         {
             Console.WriteLine("Executing: Photino.Move(int left, int top)");
             
-            return this.Move(new Point(left, top));
+            return this.MoveTo(new Point(left, top));
         }
 
         public PhotinoWindow Offset(Point offset)
@@ -510,7 +510,7 @@ namespace PhotinoNET
             int left = location.X + offset.X;
             int top = location.Y + offset.Y;
 
-            return this.Move(left, top);
+            return this.MoveTo(left, top);
         }
 
         public PhotinoWindow Offset(int left, int top)
