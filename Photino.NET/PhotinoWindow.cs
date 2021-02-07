@@ -254,7 +254,7 @@ namespace PhotinoNET
         }
 
         // EventHandlers
-        public event EventHandler<string> MessageReceived;
+        public event EventHandler<string> WebMessageReceived;
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
 
@@ -581,7 +581,7 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: Photino.RegisterWebMessageHandler(EventHandler<string> handler)");
             
-            this.MessageReceived += handler;
+            this.WebMessageReceived += handler;
 
             return this;
         }
@@ -627,7 +627,7 @@ namespace PhotinoNET
         private void OnWebMessageReceived(string message)
         {
             Console.WriteLine("Executing: Photino.OnMWebessageReceived(string message)");
-            this.MessageReceived?.Invoke(this, message);
+            this.WebMessageReceived?.Invoke(this, message);
         }
 
         private void OnSizeChanged(int width, int height)
