@@ -20,11 +20,10 @@ namespace PhotinoNET
         uint ScreenDpi { get; }
         bool IsOnTop { get; set; }
 
-        event EventHandler<PhotinoWindow> WindowOpening;
-        event EventHandler<PhotinoWindow> WindowOpened;
+        event EventHandler<PhotinoWindow> WindowCreating;
+        event EventHandler<PhotinoWindow> WindowCreated;
         
         event EventHandler<PhotinoWindow> WindowClosing;
-        event EventHandler<PhotinoWindow> WindowClosed;
 
         event EventHandler<Size> SizeChanged;
         event EventHandler<Point> LocationChanged;
@@ -36,7 +35,7 @@ namespace PhotinoNET
 
         PhotinoWindow Show();
         PhotinoWindow Hide();
-        PhotinoWindow Close();
+        void Close();
         void WaitforClose();
 
         PhotinoWindow Resize(Size size);

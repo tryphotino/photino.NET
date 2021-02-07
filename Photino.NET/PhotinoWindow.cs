@@ -254,15 +254,14 @@ namespace PhotinoNET
         }
 
         // EventHandlers
-        public event EventHandler<PhotinoWindow> WindowOpening;
-        public event EventHandler<PhotinoWindow> WindowOpened;
+        public event EventHandler<PhotinoWindow> WindowCreating;
+        public event EventHandler<PhotinoWindow> WindowCreated;
         
         public event EventHandler<PhotinoWindow> WindowClosing;
-        public event EventHandler<PhotinoWindow> WindowClosed;
 
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
-        
+
         public event EventHandler<string> WebMessageReceived;
 
         public PhotinoWindow(
@@ -396,11 +395,11 @@ namespace PhotinoNET
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
         }
 
-        public PhotinoWindow Close()
+        public void Close()
         {
             Console.WriteLine("Executing: Photino.Close()");
-            
-            throw new NotImplementedException("Close is not yet implemented in PhotinoNET.");
+
+            this.Dispose();
         }
 
         public void WaitforClose()
