@@ -9,7 +9,7 @@ using PhotinoNET.Structs;
 
 namespace PhotinoNET
 {
-    public class PhotinoFluid : IPhotinoFluid, IDisposable
+    public class PhotinoWindow : IPhotinoWindow, IDisposable
     {
         // Here we use auto charset instead of forcing UTF-8.
         // Thus the native code for Windows will be much more simple.
@@ -258,9 +258,9 @@ namespace PhotinoNET
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
 
-        public PhotinoFluid(
+        public PhotinoWindow(
             string title,
-            Action<PhotinoFluidOptions> configure,
+            Action<PhotinoWindowOptions> configure,
             int width = 800,
             int height = 600,
             int left = 20,
@@ -280,7 +280,7 @@ namespace PhotinoNET
             
             this.Title = title;
 
-            var options = new PhotinoFluidOptions();
+            var options = new PhotinoWindowOptions();
             configure.Invoke(options);
 
             var parentPtr = options.Parent?._nativeContext ?? default;
@@ -302,21 +302,21 @@ namespace PhotinoNET
             this.Show();
         }
 
-        public PhotinoFluid(string title)
+        public PhotinoWindow(string title)
             : this(title, _ => { })
         { }
 
-        static PhotinoFluid()
+        static PhotinoWindow()
         {
             // Workaround for a crashing issue on Linux. Without this, applications
             // are crashing when running in Debug mode (but not Release) if the very
-            // first line of code in Program::Main references the PhotinoFluid type.
+            // first line of code in Program::Main references the PhotinoWindow type.
             // It's unclear why.
             Thread.Sleep(1);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoFluid).Module);
+                var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
                 Photino_register_win32(hInstance);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -325,7 +325,7 @@ namespace PhotinoNET
             }
         }
 
-        ~PhotinoFluid()
+        ~PhotinoWindow()
         {
             this.Dispose();
         }
@@ -363,7 +363,7 @@ namespace PhotinoNET
             }
         }
 
-        public PhotinoFluid SetIconFile(string path)
+        public PhotinoWindow SetIconFile(string path)
         {
             Console.WriteLine("Executing: Photino.SetIconFile(string path)");
 
@@ -372,7 +372,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid Show()
+        public PhotinoWindow Show()
         {
             Console.WriteLine("Executing: Photino.Show()");
             
@@ -381,14 +381,14 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid Hide()
+        public PhotinoWindow Hide()
         {
             Console.WriteLine("Executing: Photino.Hide()");
             
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
         }
 
-        public PhotinoFluid Close()
+        public PhotinoWindow Close()
         {
             Console.WriteLine("Executing: Photino.Close()");
             
@@ -402,7 +402,7 @@ namespace PhotinoNET
             Photino_WaitForExit(_nativeContext);
         }
 
-        public PhotinoFluid Resize(Size size)
+        public PhotinoWindow Resize(Size size)
         {
             Console.WriteLine("Executing: Photino.Resize(Size size)");
             Console.WriteLine($"Current size: {this.Size}");
@@ -416,21 +416,21 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid Resize(int width, int height)
+        public PhotinoWindow Resize(int width, int height)
         {
             Console.WriteLine("Executing: Photino.Resize(int width, int height)");
             
             return this.Resize(new Size(width, height));
         }
 
-        public PhotinoFluid Minimize()
+        public PhotinoWindow Minimize()
         {
             Console.WriteLine("Executing: Photino.Minimize()");
             
             throw new NotImplementedException("Minimize is not yet implemented in PhotinoNET.");
         }
 
-        public PhotinoFluid Maximize()
+        public PhotinoWindow Maximize()
         {
             Console.WriteLine("Executing: Photino.Maximize()");
 
@@ -441,14 +441,14 @@ namespace PhotinoNET
                 .Resize(workArea.Width, workArea.Height);
         }
 
-        public PhotinoFluid Fullscreen()
+        public PhotinoWindow Fullscreen()
         {
             Console.WriteLine("Executing: Photino.Fullscreen()");
             
             throw new NotImplementedException("Fullscreen is not yet implemented in PhotinoNET.");
         }
 
-        public PhotinoFluid Restore()
+        public PhotinoWindow Restore()
         {
             Console.WriteLine("Executing: Photino.Restore()");
             Console.WriteLine($"Last location: {_lastLocation}");
@@ -467,7 +467,7 @@ namespace PhotinoNET
                 .Resize(_lastSize);
         }
 
-        public PhotinoFluid Move(Point location)
+        public PhotinoWindow Move(Point location)
         {
             Console.WriteLine("Executing: Photino.Move(Point location)");
             Console.WriteLine($"Current location: {this.Location}");
@@ -493,14 +493,14 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid Move(int left, int top)
+        public PhotinoWindow Move(int left, int top)
         {
             Console.WriteLine("Executing: Photino.Move(int left, int top)");
             
             return this.Move(new Point(left, top));
         }
 
-        public PhotinoFluid Offset(Point offset)
+        public PhotinoWindow Offset(Point offset)
         {
             Console.WriteLine("Executing: Photino.Offset(Point offset)");
             
@@ -512,14 +512,14 @@ namespace PhotinoNET
             return this.Move(left, top);
         }
 
-        public PhotinoFluid Offset(int left, int top)
+        public PhotinoWindow Offset(int left, int top)
         {
             Console.WriteLine("Executing: Photino.Offset(int left, int top)");
             
             return this.Offset(new Point(left, top));
         }
 
-        public PhotinoFluid NavigateTo(Uri uri)
+        public PhotinoWindow NavigateTo(Uri uri)
         {
             Console.WriteLine("Executing: Photino.NavigateTo(Uri uri)");
             
@@ -532,7 +532,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid NavigateTo(string path)
+        public PhotinoWindow NavigateTo(string path)
         {
             Console.WriteLine("Executing: Photino.NavigateTo(string path)");
             
@@ -546,7 +546,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid LoadRawString(string content)
+        public PhotinoWindow LoadRawString(string content)
         {
             Console.WriteLine("Executing: Photino.LoadRawString(string content)");
 
@@ -555,7 +555,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid ShowMessage(string title, string message)
+        public PhotinoWindow ShowMessage(string title, string message)
         {
             Console.WriteLine("Executing: Photino.ShowMessage(string title, string message)");
             
@@ -567,7 +567,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid SendMessage(string message)
+        public PhotinoWindow SendMessage(string message)
         {
             Console.WriteLine("Executing: Photino.SendMessage(string message)");
             
@@ -576,7 +576,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid RegisterWebMessageHandler(EventHandler<string> handler)
+        public PhotinoWindow RegisterWebMessageHandler(EventHandler<string> handler)
         {
             Console.WriteLine("Executing: Photino.RegisterWebMessageHandler(EventHandler<string> handler)");
             
@@ -585,7 +585,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoFluid RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler)
+        public PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler)
         {
             // Because of WKWebView limitations, this can only be called during the constructor
             // before the first call to Show. To enforce this, it's private and is only called

@@ -3,10 +3,9 @@ using System.IO;
 
 namespace PhotinoNET
 {
-    public class PhotinoNETOptions
+    public class PhotinoWindowOptions
     {
         public PhotinoWindow Parent { get; set; }
-
         public IDictionary<string, ResolveWebResourceDelegate> SchemeHandlers { get; }
             = new Dictionary<string, ResolveWebResourceDelegate>();
     }
