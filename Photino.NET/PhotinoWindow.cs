@@ -277,7 +277,7 @@ namespace PhotinoNET
             var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
             var onSizedChangedDelegate = (ResizedCallback)OnSizeChanged;
             var onLocationChangedDelegate = (MovedCallback)OnLocationChanged;
-            
+
             this.Title = title;
 
             var options = new PhotinoWindowOptions();
@@ -285,6 +285,7 @@ namespace PhotinoNET
 
             var parentPtr = options.Parent?._nativeContext ?? default;
             _nativeContext = Photino_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
+
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
             _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
             _gcHandlesToFree.Add(GCHandle.Alloc(onLocationChangedDelegate));
