@@ -520,9 +520,9 @@ namespace PhotinoNET
             return this.Offset(new Point(left, top));
         }
 
-        public PhotinoWindow NavigateTo(Uri uri)
+        public PhotinoWindow Load(Uri uri)
         {
-            Console.WriteLine("Executing: Photino.NavigateTo(Uri uri)");
+            Console.WriteLine("Executing: Photino.Load(Uri uri)");
             
             // ––––––––––––––––––––––
             // SECURITY RISK!
@@ -533,16 +533,16 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow NavigateTo(string path)
+        public PhotinoWindow Load(string path)
         {
-            Console.WriteLine("Executing: Photino.NavigateTo(string path)");
+            Console.WriteLine("Executing: Photino.Load(string path)");
             
             // ––––––––––––––––––––––
             // SECURITY RISK!
             // This needs validation!
             // ––––––––––––––––––––––
             string absolutePath = Path.GetFullPath(path);
-            NavigateTo(new Uri(absolutePath, UriKind.Absolute));
+            Load(new Uri(absolutePath, UriKind.Absolute));
 
             return this;
         }

@@ -44,8 +44,8 @@ namespace PhotinoNET
         PhotinoWindow Offset(Point offset);
         PhotinoWindow Offset(int left, int top);
 
-        PhotinoWindow NavigateTo(Uri uri);
-        PhotinoWindow NavigateTo(string path);
+        PhotinoWindow Load(Uri uri);
+        PhotinoWindow Load(string path);
         PhotinoWindow LoadRawString(string content);
 
         PhotinoWindow ShowMessage(string title, string message);
