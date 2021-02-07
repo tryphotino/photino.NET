@@ -20,9 +20,16 @@ namespace PhotinoNET
         uint ScreenDpi { get; }
         bool IsOnTop { get; set; }
 
-        event EventHandler<string> MessageReceived;
+        event EventHandler<PhotinoWindow> WindowOpening;
+        event EventHandler<PhotinoWindow> WindowOpened;
+        
+        event EventHandler<PhotinoWindow> WindowClosing;
+        event EventHandler<PhotinoWindow> WindowClosed;
+
         event EventHandler<Size> SizeChanged;
         event EventHandler<Point> LocationChanged;
+        
+        event EventHandler<string> WebMessageReceived;
 
         void Invoke(Action workItem);
         PhotinoWindow SetIconFile(string path);

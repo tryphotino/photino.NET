@@ -254,8 +254,15 @@ namespace PhotinoNET
         }
 
         // EventHandlers
+        public event EventHandler<PhotinoWindow> WindowOpening;
+        public event EventHandler<PhotinoWindow> WindowOpened;
+        
+        public event EventHandler<PhotinoWindow> WindowClosing;
+        public event EventHandler<PhotinoWindow> WindowClosed;
+
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
+        
         public event EventHandler<string> WebMessageReceived;
 
         public PhotinoWindow(
@@ -635,7 +642,7 @@ namespace PhotinoNET
             Console.WriteLine("Executing: Photino.OnLocationChanged(int left, int top)");
             this.LocationChanged?.Invoke(this, new Point(left, top));
         }
-        
+
         private void OnWebMessageReceived(string message)
         {
             Console.WriteLine("Executing: Photino.OnMWebessageReceived(string message)");
