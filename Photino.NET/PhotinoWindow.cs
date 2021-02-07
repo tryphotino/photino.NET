@@ -254,9 +254,9 @@ namespace PhotinoNET
         }
 
         // EventHandlers
-        public event EventHandler<string> WebMessageReceived;
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
+        public event EventHandler<string> WebMessageReceived;
 
         public PhotinoWindow(
             string title,
@@ -274,9 +274,9 @@ namespace PhotinoNET
 
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
-            var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
             var onSizedChangedDelegate = (ResizedCallback)OnSizeChanged;
             var onLocationChangedDelegate = (MovedCallback)OnLocationChanged;
+            var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
 
             this.Title = title;
 
@@ -624,12 +624,6 @@ namespace PhotinoNET
         }
 
         // Internal Event Handlers
-        private void OnWebMessageReceived(string message)
-        {
-            Console.WriteLine("Executing: Photino.OnMWebessageReceived(string message)");
-            this.WebMessageReceived?.Invoke(this, message);
-        }
-
         private void OnSizeChanged(int width, int height)
         {
             Console.WriteLine("Executing: Photino.OnSizeChanged(int width, int height)");
@@ -640,6 +634,12 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: Photino.OnLocationChanged(int left, int top)");
             this.LocationChanged?.Invoke(this, new Point(left, top));
+        }
+        
+        private void OnWebMessageReceived(string message)
+        {
+            Console.WriteLine("Executing: Photino.OnMWebessageReceived(string message)");
+            this.WebMessageReceived?.Invoke(this, message);
         }
     }
 }
