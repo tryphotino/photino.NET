@@ -94,6 +94,9 @@ namespace PhotinoNET
             }
         }
 
+        private Guid _id;
+        public Guid Id => _id;
+
         private string _title;
         public string Title
         {
@@ -316,12 +319,13 @@ namespace PhotinoNET
 
             this.RegisterEventHandlerOptions(options);
 
-            this.Title = title;
-
             // Fire pre-create event handlers
             this.OnWindowCreating();
 
             // Create window
+            this.Title = title;
+
+            _id = Guid.NewGuid();
             _parent = options.Parent;
             _nativeInstance = Photino_ctor(_title, _parent?._nativeInstance ?? default, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
 
