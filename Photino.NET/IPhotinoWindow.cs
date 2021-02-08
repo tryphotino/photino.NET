@@ -58,8 +58,9 @@ namespace PhotinoNET
         PhotinoWindow Load(string path);
         PhotinoWindow LoadRawString(string content);
 
-        PhotinoWindow ShowMessage(string title, string message);
-        PhotinoWindow SendMessage(string message);
+        PhotinoWindow OpenAlertWindow(string title, string message);
+
+        PhotinoWindow SendWebMessage(string message);
 
         PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler);
 

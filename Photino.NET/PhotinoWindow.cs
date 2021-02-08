@@ -629,21 +629,21 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow ShowMessage(string title, string message)
+        public PhotinoWindow OpenAlertWindow(string title, string message)
         {
-            Console.WriteLine("Executing: PhotinoWindow.ShowMessage(string title, string message)");
+            Console.WriteLine("Executing: PhotinoWindow.OpenAlertWindow(string title, string message)");
             
             // Bug:
-            // Closing the message shown with the ShowMessage
+            // Closing the message shown with the OpenAlertWindow
             // method closes the sender window as well.
             Photino_ShowMessage(_nativeInstance, title, message, /* MB_OK */ 0);
 
             return this;
         }
 
-        public PhotinoWindow SendMessage(string message)
+        public PhotinoWindow SendWebMessage(string message)
         {
-            Console.WriteLine("Executing: PhotinoWindow.SendMessage(string message)");
+            Console.WriteLine("Executing: PhotinoWindow.SendWebMessage(string message)");
             
             Photino_SendMessage(_nativeInstance, message);
 
