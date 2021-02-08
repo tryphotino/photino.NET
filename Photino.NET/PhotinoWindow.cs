@@ -266,6 +266,11 @@ namespace PhotinoNET
             }
         }
 
+        // Static API Members
+        public static bool IsWindowsPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static bool IsMacOsPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        public static bool IsLinuxPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
         // EventHandlers
         public event EventHandler WindowCreating;
         public event EventHandler WindowCreated;
@@ -303,6 +308,7 @@ namespace PhotinoNET
             var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
+            // Configure Photino instance
             var options = new PhotinoWindowOptions();
             configure.Invoke(options);
 
@@ -310,11 +316,15 @@ namespace PhotinoNET
 
             this.Title = title;
 
+            // Fire pre-create event handlers
             this.OnWindowCreating();
 
+            // Create window
             _parent = options.Parent;
             _nativeContext = Photino_ctor(_title, _parent?._nativeContext ?? default, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
 
+            // Register handlers that depend on an existing
+            // Photino.Native instance.
             foreach (var (scheme, handler) in options.CustomSchemeHandlers)
             {
                 this.RegisterCustomSchemeHandler(scheme, handler);
@@ -323,6 +333,7 @@ namespace PhotinoNET
             Photino_SetResizedCallback(_nativeContext, onSizedChangedDelegate);
             Photino_SetMovedCallback(_nativeContext, onLocationChangedDelegate);
 
+            // Fire post-create event handlers
             this.OnWindowCreated();
 
             // Manage parent / child relationship
@@ -348,15 +359,20 @@ namespace PhotinoNET
             // It's unclear why.
             Thread.Sleep(1);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (PhotinoWindow.IsWindowsPlatform)
             {
                 var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
                 Photino_register_win32(hInstance);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            else if (PhotinoWindow.IsMacOsPlatform)
             {
                 Photino_register_mac();
             }
+        }
+
+        ~PhotinoWindow()
+        {
+            this.Dispose();
         }
 
         // Does not get called when window is closed using
@@ -365,11 +381,6 @@ namespace PhotinoNET
         // well not be the right way to do it. An interop
         // method is most likely needed to handle closing
         // and associated events.
-        ~PhotinoWindow()
-        {
-            this.Dispose();
-        }
-
         public void Dispose()
         {
             this.OnWindowClosing();
@@ -533,11 +544,17 @@ namespace PhotinoNET
             // very bottom of the screen and the only visible thing is the
             // application window title bar. As a workaround we make a 
             // negative value out of the vertical position to "pull" the window up.
-            Size workArea = this.MainMonitor.WorkArea.Size;
-
-            location.Y = location.Y >= 0
-                ? location.Y - workArea.Height
-                : location.Y;
+            // Note: 
+            // This behavior seems to be a macOS thing. In the Photino.Native
+            // project files it is commented to be expected behavior for macOS.
+            // There is some code trying to mitigate this problem but it might
+            // not work as expected. Further investigation is necessary.
+            if (PhotinoWindow.IsMacOsPlatform) {
+                Size workArea = this.MainMonitor.WorkArea.Size;
+                location.Y = location.Y >= 0
+                    ? location.Y - workArea.Height
+                    : location.Y;
+            }
 
             this.Location = location;
 
