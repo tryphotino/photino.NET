@@ -81,6 +81,19 @@ namespace PhotinoNET
         private Point _lastLocation;
 
         // API Members
+        private PhotinoWindow _parent;
+        public PhotinoWindow Parent => _parent;
+
+        private List<PhotinoWindow> _children = new List<PhotinoWindow>();
+        public List<PhotinoWindow> Children
+        {
+            get => _children;
+            set
+            {
+                _children = value;
+            }
+        }
+
         private string _title;
         public string Title
         {
@@ -254,10 +267,10 @@ namespace PhotinoNET
         }
 
         // EventHandlers
-        public event EventHandler<PhotinoWindow> WindowCreating;
-        public event EventHandler<PhotinoWindow> WindowCreated;
+        public event EventHandler WindowCreating;
+        public event EventHandler WindowCreated;
         
-        public event EventHandler<PhotinoWindow> WindowClosing;
+        public event EventHandler WindowClosing;
 
         public event EventHandler<Size> SizeChanged;
         public event EventHandler<Point> LocationChanged;
@@ -280,29 +293,43 @@ namespace PhotinoNET
 
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
+            // Native Interop Events
             var onSizedChangedDelegate = (ResizedCallback)OnSizeChanged;
-            var onLocationChangedDelegate = (MovedCallback)OnLocationChanged;
-            var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
+            _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
 
-            this.Title = title;
+            var onLocationChangedDelegate = (MovedCallback)OnLocationChanged;
+            _gcHandlesToFree.Add(GCHandle.Alloc(onLocationChangedDelegate));
+
+            var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
+            _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
             var options = new PhotinoWindowOptions();
             configure.Invoke(options);
 
-            var parentPtr = options.Parent?._nativeContext ?? default;
-            _nativeContext = Photino_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
+            this.RegisterEventHandlerOptions(options);
 
-            _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
-            _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
-            _gcHandlesToFree.Add(GCHandle.Alloc(onLocationChangedDelegate));
+            this.Title = title;
 
-            foreach (var (scheme, handler) in options.SchemeHandlers)
+            this.OnWindowCreating();
+
+            _parent = options.Parent;
+            _nativeContext = Photino_ctor(_title, _parent?._nativeContext ?? default, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
+
+            foreach (var (scheme, handler) in options.CustomSchemeHandlers)
             {
                 this.RegisterCustomSchemeHandler(scheme, handler);
             }
 
             Photino_SetResizedCallback(_nativeContext, onSizedChangedDelegate);
             Photino_SetMovedCallback(_nativeContext, onLocationChangedDelegate);
+
+            this.OnWindowCreated();
+
+            // Manage parent / child relationship
+            if (_parent != null)
+            {
+                this.Parent.AddChild(this);
+            }
 
             // Auto-show to simplify the API, but more importantly because 
             // you can't do things like navigate until it has been shown
@@ -332,6 +359,12 @@ namespace PhotinoNET
             }
         }
 
+        // Does not get called when window is closed using
+        // the UI close button of the window chrome.
+        // Works when calling this.Close(). This might very
+        // well not be the right way to do it. An interop
+        // method is most likely needed to handle closing
+        // and associated events.
         ~PhotinoWindow()
         {
             this.Dispose();
@@ -339,6 +372,11 @@ namespace PhotinoNET
 
         public void Dispose()
         {
+            this.OnWindowClosing();
+
+            // Make sure all children of a window get closed.
+            this.Children.ForEach(child => { child.Close(); });
+
             Photino_SetResizedCallback(_nativeContext, null);
             Photino_SetMovedCallback(_nativeContext, null);
 
@@ -368,6 +406,12 @@ namespace PhotinoNET
             {
                 Photino_Invoke(_nativeContext, workItem.Invoke);
             }
+        }
+
+        public PhotinoWindow AddChild(PhotinoWindow child)
+        {
+            this.Children.Add(child);
+            return this;
         }
 
         public PhotinoWindow SetIconFile(string path)
@@ -583,15 +627,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow RegisterWebMessageHandler(EventHandler<string> handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageHandler(EventHandler<string> handler)");
-            
-            this.WebMessageReceived += handler;
-
-            return this;
-        }
-
+        // Register handlers
         public PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler)
         {
             // Because of WKWebView limitations, this can only be called during the constructor
@@ -629,7 +665,112 @@ namespace PhotinoNET
             return this;
         }
 
+        public PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatingHandler(EventHandler handler)");
+            
+            this.WindowCreating += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatedHandler(EventHandler handler)");
+            
+            this.WindowCreated += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterWindowClosingHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowClosingHandler(EventHandler handler)");
+            
+            this.WindowClosing += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterSizeChangedHandler(EventHandler<Size> handler)");
+            
+            this.SizeChanged += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterLocationChangedHandler(EventHandler<Point> handler)");
+            
+            this.LocationChanged += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
+            
+            this.WebMessageReceived += handler;
+
+            return this;
+        }
+
         // Internal Event Handlers
+        private void RegisterEventHandlerOptions(PhotinoWindowOptions options)
+        {
+            if (options.WindowCreatingHandler != null)
+            {
+                this.RegisterWindowCreatingHandler(options.WindowCreatingHandler);
+            }
+
+            if (options.WindowCreatedHandler != null)
+            {
+                this.RegisterWindowCreatedHandler(options.WindowCreatedHandler);
+            }
+            
+            if (options.WindowClosingHandler != null)
+            {
+                this.RegisterWindowClosingHandler(options.WindowClosingHandler);
+            }
+
+            if (options.SizeChangedHandler != null)
+            {
+                this.RegisterSizeChangedHandler(options.SizeChangedHandler);
+            }
+
+            if (options.LocationChangedHandler != null)
+            {
+                this.RegisterLocationChangedHandler(options.LocationChangedHandler);
+            }
+            
+            if (options.WebMessageReceivedHandler != null)
+            {
+                this.RegisterWebMessageReceivedHandler(options.WebMessageReceivedHandler);
+            }
+        }
+
+        private void OnWindowCreating()
+        {
+            Console.WriteLine("Executing: PhotinoWindow.OnWindowCreating()");
+            this.WindowCreating?.Invoke(this, null);
+        }
+        
+        private void OnWindowCreated()
+        {
+            Console.WriteLine("Executing: PhotinoWindow.OnWindowCreated()");
+            this.WindowCreated?.Invoke(this, null);
+        }
+
+        private void OnWindowClosing()
+        {
+            Console.WriteLine("Executing: PhotinoWindow.OnWindowClosing()");
+            this.WindowClosing?.Invoke(this, null);
+        }
+
         private void OnSizeChanged(int width, int height)
         {
             Console.WriteLine("Executing: PhotinoWindow.OnSizeChanged(int width, int height)");

@@ -7,6 +7,10 @@ namespace PhotinoNET
     public interface IPhotinoWindow
     {
         IntPtr WindowHandle { get; }
+
+        PhotinoWindow Parent { get; }
+        List<PhotinoWindow> Children { get; }
+
         string Title { get; set; }
         bool Resizable { get; set; }
         Size Size { get; set; }
@@ -20,10 +24,10 @@ namespace PhotinoNET
         uint ScreenDpi { get; }
         bool IsOnTop { get; set; }
 
-        event EventHandler<PhotinoWindow> WindowCreating;
-        event EventHandler<PhotinoWindow> WindowCreated;
+        event EventHandler WindowCreating;
+        event EventHandler WindowCreated;
         
-        event EventHandler<PhotinoWindow> WindowClosing;
+        event EventHandler WindowClosing;
 
         event EventHandler<Size> SizeChanged;
         event EventHandler<Point> LocationChanged;
@@ -57,7 +61,16 @@ namespace PhotinoNET
         PhotinoWindow ShowMessage(string title, string message);
         PhotinoWindow SendMessage(string message);
 
-        PhotinoWindow RegisterWebMessageHandler(EventHandler<string> handler);
         PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler);
+
+        PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler);
+        
+        PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler);
+        PhotinoWindow RegisterWindowClosingHandler(EventHandler handler);
+        
+        PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler);
+        PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler);
+
+        PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler);
     }
 }
