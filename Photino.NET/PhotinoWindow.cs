@@ -383,8 +383,32 @@ namespace PhotinoNET
 
         public PhotinoWindow AddChild(PhotinoWindow child)
         {
+            Console.WriteLine("Executing: PhotinoWindow.AddChild(PhotinoWindow child)");
+
             this.Children.Add(child);
+
             return this;
+        }
+
+        public PhotinoWindow RemoveChild(PhotinoWindow child)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RemoveChild(PhotinoWindow child)");
+
+            child.Dispose();
+
+            this.Children.Remove(child);
+
+            return this;
+        }
+
+        public PhotinoWindow RemoveChild(Guid id)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RemoveChild(Guid id)");
+
+            PhotinoWindow child = this.Children
+                .FirstOrDefault(c => c.Id = id);
+
+            return this.RemoveChild(child);
         }
 
         public PhotinoWindow SetIconFile(string path)
