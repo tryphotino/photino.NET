@@ -62,8 +62,6 @@ namespace PhotinoNET
 
         PhotinoWindow SendWebMessage(string message);
 
-        PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler);
-
         PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler);
         
         PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler);

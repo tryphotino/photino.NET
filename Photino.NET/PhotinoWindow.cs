@@ -32,7 +32,8 @@ namespace PhotinoNET
             }
         }
 
-        // Last State
+        // Internal State
+        private bool _windowWasShown = false;
         private Size _lastSize;
         private Point _lastLocation;
 
@@ -260,20 +261,20 @@ namespace PhotinoNET
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
             // Native Interop Events
-            var onSizedChangedDelegate = (ResizedCallback)OnSizeChanged;
+            var onSizedChangedDelegate = (SizeChangedDelegate)this.OnSizeChanged;
             _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
 
-            var onLocationChangedDelegate = (MovedCallback)OnLocationChanged;
+            var onLocationChangedDelegate = (LocationChangedDelegate)this.OnLocationChanged;
             _gcHandlesToFree.Add(GCHandle.Alloc(onLocationChangedDelegate));
 
-            var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)OnWebMessageReceived;
+            var onWebMessageReceivedDelegate = (WebMessageReceivedDelegate)this.OnWebMessageReceived;
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
             // Configure Photino instance
             var options = new PhotinoWindowOptions();
             configure.Invoke(options);
 
-            this.RegisterEventHandlerOptions(options);
+            this.RegisterEventHandlerFromOptions(options);
 
             // Fire pre-create event handlers
             this.OnWindowCreating();
@@ -423,8 +424,16 @@ namespace PhotinoNET
         public PhotinoWindow Show()
         {
             Console.WriteLine("Executing: PhotinoWindow.Show()");
-            
+
             Photino_Show(_nativeInstance);
+
+            // Is used to indicate that the window was
+            // shown to the user at least once. Some
+            // functionality like registering custom
+            // scheme handlers can only be executed on
+            // the native window before it was shown the
+            // first time.
+            _windowWasShown = true;
 
             return this;
         }
@@ -630,44 +639,7 @@ namespace PhotinoNET
             return this;
         }
 
-        // Register handlers
-        public PhotinoWindow RegisterCustomSchemeHandler(string scheme, ResolveWebResourceDelegate handler)
-        {
-            // Because of WKWebView limitations, this can only be called during the constructor
-            // before the first call to Show. To enforce this, it's private and is only called
-            // in response to the constructor options.
-            OnWebResourceRequestedCallback callback = (string url, out int numBytes, out string contentType) =>
-            {
-                var responseStream = handler(url, out contentType);
-                if (responseStream == null)
-                {
-                    // Webview should pass through request to normal handlers (e.g., network)
-                    // or handle as 404 otherwise
-                    numBytes = 0;
-                    return default;
-                }
-
-                // Read the stream into memory and serve the bytes
-                // In the future, it would be possible to pass the stream through into C++
-                using (responseStream)
-                using (var ms = new MemoryStream())
-                {
-                    responseStream.CopyTo(ms);
-
-                    numBytes = (int)ms.Position;
-                    var buffer = Marshal.AllocHGlobal(numBytes);
-                    Marshal.Copy(ms.GetBuffer(), 0, buffer, numBytes);
-                    _hGlobalToFree.Add(buffer);
-                    return buffer;
-                }
-            };
-
-            _gcHandlesToFree.Add(GCHandle.Alloc(callback));
-            Photino_AddCustomScheme(_nativeInstance, scheme, callback);
-
-            return this;
-        }
-
+        // Register public event handlers
         public PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
         {
             Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatingHandler(EventHandler handler)");
@@ -695,35 +667,7 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterSizeChangedHandler(EventHandler<Size> handler)");
-            
-            this.SizeChanged += handler;
-
-            return this;
-        }
-
-        public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterLocationChangedHandler(EventHandler<Point> handler)");
-            
-            this.LocationChanged += handler;
-
-            return this;
-        }
-
-        public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
-            
-            this.WebMessageReceived += handler;
-
-            return this;
-        }
-
-        // Internal Event Handlers
-        private void RegisterEventHandlerOptions(PhotinoWindowOptions options)
+        private void RegisterEventHandlersFromOptions(PhotinoWindowOptions options)
         {
             if (options.WindowCreatingHandler != null)
             {
@@ -756,6 +700,77 @@ namespace PhotinoNET
             }
         }
 
+        // Register native event handlers
+        private PhotinoWindow RegisterCustomSchemeHandler(string scheme, CustomSchemeDelegate handler)
+        {
+            // Because of WKWebView limitations, this can only be called during the constructor
+            // before the first call to Show. To enforce this, it's private and is only called
+            // in response to the constructor options.
+            if (_windowWasShown == true)
+            {
+                throw new InvalidOperationException("Can only register custom scheme handlers from within the PhotinoWindowOptions context.");
+            }
+
+            WebResourceRequestDelegate callback = (string url, out int numBytes, out string contentType) =>
+            {
+                var responseStream = handler(url, out contentType);
+                if (responseStream == null)
+                {
+                    // Webview should pass through request to normal handlers (e.g., network)
+                    // or handle as 404 otherwise
+                    numBytes = 0;
+                    return default;
+                }
+
+                // Read the stream into memory and serve the bytes
+                // In the future, it would be possible to pass the stream through into C++
+                using (responseStream)
+                using (var ms = new MemoryStream())
+                {
+                    responseStream.CopyTo(ms);
+
+                    numBytes = (int)ms.Position;
+                    var buffer = Marshal.AllocHGlobal(numBytes);
+                    Marshal.Copy(ms.GetBuffer(), 0, buffer, numBytes);
+                    _hGlobalToFree.Add(buffer);
+                    return buffer;
+                }
+            };
+
+            _gcHandlesToFree.Add(GCHandle.Alloc(callback));
+            Photino_AddCustomScheme(_nativeInstance, scheme, callback);
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterSizeChangedHandler(EventHandler<Size> handler)");
+            
+            this.SizeChanged += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterLocationChangedHandler(EventHandler<Point> handler)");
+            
+            this.LocationChanged += handler;
+
+            return this;
+        }
+
+        public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
+            
+            this.WebMessageReceived += handler;
+
+            return this;
+        }
+
+        // Invoke public event handlers
         private void OnWindowCreating()
         {
             Console.WriteLine("Executing: PhotinoWindow.OnWindowCreating()");
@@ -774,6 +789,11 @@ namespace PhotinoNET
             this.WindowClosing?.Invoke(this, null);
         }
 
+        // Invoke native event handlers
+        // These event handlers are called from inside
+        // the native window context and are not handled.
+        // Don't forget to add new handlers to the
+        // garbage collector along with existing ones.
         private void OnSizeChanged(int width, int height)
         {
             Console.WriteLine("Executing: PhotinoWindow.OnSizeChanged(int width, int height)");
@@ -797,21 +817,20 @@ namespace PhotinoNET
         // Auto charset is UTF-16 on Windows and UTF-8 on Unix(.NET Core 3.0 and later and Mono).
         // As we target .NET Standard 2.1, we assume it runs on .NET Core 3.0 and later.
         // We should specify using auto charset because the default value is ANSI.
-        
         #region UnmanagedFunctionPointers
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate void OnWebMessageReceivedCallback(string message);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate IntPtr OnWebResourceRequestedCallback(string url, out int numBytes, out string contentType);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void InvokeCallback();
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate int GetAllMonitorsCallback(in NativeMonitor monitor);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void ResizedCallback(int width, int height);
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void MovedCallback(int x, int y);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate int MonitorsRequestDelegate(in NativeMonitor monitor);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate void WebMessageReceivedDelegate(string message);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate IntPtr WebResourceRequestDelegate(string url, out int numBytes, out string contentType);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void SizeChangedDelegate(int width, int height);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void LocationChangedDelegate(int x, int y);
         #endregion
 
         #region DllImports
         const string DllName = "Photino.Native";
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_win32(IntPtr hInstance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_mac();
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, WebMessageReceivedDelegate webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
@@ -822,16 +841,16 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToUrl(IntPtr instance, string url);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SendMessage(IntPtr instance, string message);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_AddCustomScheme(IntPtr instance, string scheme, OnWebResourceRequestedCallback requestHandler);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_AddCustomScheme(IntPtr instance, string scheme, WebResourceRequestDelegate requestHandler);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetResizable(IntPtr instance, int resizable);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetSize(IntPtr instance, out int width, out int height);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetSize(IntPtr instance, int width, int height);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetResizedCallback(IntPtr instance, ResizedCallback callback);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetAllMonitors(IntPtr instance, GetAllMonitorsCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetResizedCallback(IntPtr instance, SizeChangedDelegate callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetAllMonitors(IntPtr instance, MonitorsRequestDelegate callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern uint Photino_GetScreenDpi(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetPosition(IntPtr instance, out int x, out int y);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetPosition(IntPtr instance, int x, int y);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetMovedCallback(IntPtr instance, MovedCallback callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetMovedCallback(IntPtr instance, LocationChangedDelegate callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetTopmost(IntPtr instance, int topmost);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetIconFile(IntPtr instance, string filename);
         #endregion
