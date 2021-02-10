@@ -49,8 +49,8 @@ namespace PhotinoNET
         PhotinoWindow Fullscreen();
         PhotinoWindow Restore();
 
-        PhotinoWindow MoveTo(Point location);
-        PhotinoWindow MoveTo(int left, int top);
+        PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea);
+        PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea);
         PhotinoWindow Offset(Point offset);
         PhotinoWindow Offset(int left, int top);
 
