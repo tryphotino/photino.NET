@@ -269,7 +269,7 @@ namespace PhotinoNET
             var options = new PhotinoWindowOptions();
             configure?.Invoke(options);
 
-            this.RegisterEventHandlerFromOptions(options);
+            this.RegisterEventHandlersFromOptions(options);
 
             // Fire pre-create event handlers
             this.OnWindowCreating();
@@ -304,10 +304,6 @@ namespace PhotinoNET
             // you can't do things like navigate until it has been shown
             this.Show();
         }
-
-        public PhotinoWindow(string title)
-            : this(title)
-        { }
 
         static PhotinoWindow()
         {
@@ -402,7 +398,7 @@ namespace PhotinoNET
             Console.WriteLine("Executing: PhotinoWindow.RemoveChild(Guid id)");
 
             PhotinoWindow child = this.Children
-                .FirstOrDefault(c => c.Id = id);
+                .FirstOrDefault(c => c.Id == id);
 
             return this.RemoveChild(child);
         }
@@ -464,7 +460,7 @@ namespace PhotinoNET
             _lastSize = this.Size;
 
             // Check window dimensions against work area dimensions
-            Size workArea = this.MainMonitor.Size;
+            Size workArea = this.MainMonitor.WorkArea.Size;
             size = new Size(
                 size.Width <= workArea.Width ? size.Width :  workArea.Width,
                 size.Height <= workArea.Height ? size.Height : workArea.Height
