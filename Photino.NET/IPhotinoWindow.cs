@@ -62,9 +62,6 @@ namespace PhotinoNET
 
         PhotinoWindow SendWebMessage(string message);
 
-        PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler);
-        
-        PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler);
         PhotinoWindow RegisterWindowClosingHandler(EventHandler handler);
         
         PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler);
