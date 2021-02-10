@@ -246,18 +246,13 @@ namespace PhotinoNET
 
         public PhotinoWindow(
             string title,
-            Action<PhotinoWindowOptions> configure,
+            Action<PhotinoWindowOptions> configure = null,
             int width = 800,
             int height = 600,
             int left = 20,
             int top = 20,
             bool fullscreen = false)
         {
-            if (configure is null)
-            {
-                throw new ArgumentNullException(nameof(configure));
-            }
-
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
             // Native Interop Events
@@ -272,7 +267,7 @@ namespace PhotinoNET
 
             // Configure Photino instance
             var options = new PhotinoWindowOptions();
-            configure.Invoke(options);
+            configure?.Invoke(options);
 
             this.RegisterEventHandlerFromOptions(options);
 
@@ -311,7 +306,7 @@ namespace PhotinoNET
         }
 
         public PhotinoWindow(string title)
-            : this(title, _ => { })
+            : this(title)
         { }
 
         static PhotinoWindow()
@@ -647,6 +642,12 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Opens a native alert window with a title and message.
+        /// </summary>
+        /// <param name="title">The window title.</param>
+        /// <param name="message">The window message body.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow OpenAlertWindow(string title, string message)
         {
             Console.WriteLine("Executing: PhotinoWindow.OpenAlertWindow(string title, string message)");
@@ -659,6 +660,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Send a message to the window's JavaScript context.
+        /// </summary>
+        /// <param name="message">The message to send.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow SendWebMessage(string message)
         {
             Console.WriteLine("Executing: PhotinoWindow.SendWebMessage(string message)");
@@ -668,34 +674,11 @@ namespace PhotinoNET
             return this;
         }
 
-        // Register public event handlers
-        public PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatingHandler(EventHandler handler)");
-            
-            this.WindowCreating += handler;
-
-            return this;
-        }
-
-        public PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatedHandler(EventHandler handler)");
-            
-            this.WindowCreated += handler;
-
-            return this;
-        }
-
-        public PhotinoWindow RegisterWindowClosingHandler(EventHandler handler)
-        {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowClosingHandler(EventHandler handler)");
-            
-            this.WindowClosing += handler;
-
-            return this;
-        }
-
+        /// <summary>
+        /// Register event handlers from options on window init,
+        /// both publicly accessible and private handlers can be registered.
+        /// </summary>
+        /// <param name="options"></param>
         private void RegisterEventHandlersFromOptions(PhotinoWindowOptions options)
         {
             if (options.WindowCreatingHandler != null)
@@ -729,7 +712,68 @@ namespace PhotinoNET
             }
         }
 
+        // Register public event handlers
+
+        /// <summary>
+        /// Register a handler that is fired on a window closing event.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
+        public PhotinoWindow RegisterWindowClosingHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowClosingHandler(EventHandler handler)");
+            
+            this.WindowClosing += handler;
+
+            return this;
+        }
+
+        // Register private event handlers
+
+        /// <summary>
+        /// Register a handler that is fired on a window creating event.
+        /// Can only be registered in PhotinoWindowOptions.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
+        private PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatingHandler(EventHandler handler)");
+            
+            this.WindowCreating += handler;
+
+            return this;
+        }
+        
+        /// <summary>
+        /// Register a handler that is fired on a window created event.
+        /// Can only be registered in PhotinoWindowOptions.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
+        private PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler)
+        {
+            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatedHandler(EventHandler handler)");
+            
+            this.WindowCreated += handler;
+
+            return this;
+        }
+
         // Register native event handlers
+
+        /// <summary>
+        /// Register a custom request path scheme that matches a url
+        /// scheme like "app", "api" or "assets".  Some schemes can't 
+        /// be used because they're already in use like "http" or "file".
+        /// A url path like "api://some-resource" can be caught with a 
+        /// scheme handler like this and dynamically processed on the backend.
+        /// 
+        /// Can only be registered in PhotinoWindowOptions.
+        /// </summary>
+        /// <param name="scheme">Name of the scheme, like "app".</param>
+        /// <param name="handler">Handler that processes a request path.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         private PhotinoWindow RegisterCustomSchemeHandler(string scheme, CustomSchemeDelegate handler)
         {
             // Because of WKWebView limitations, this can only be called during the constructor
@@ -772,6 +816,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Register a handler that is fired on a size changed event.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow and Size argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
         {
             Console.WriteLine("Executing: PhotinoWindow.RegisterSizeChangedHandler(EventHandler<Size> handler)");
@@ -781,6 +830,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Register a handler that is fired on a location changed event.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow and Point argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
         {
             Console.WriteLine("Executing: PhotinoWindow.RegisterLocationChangedHandler(EventHandler<Point> handler)");
@@ -790,6 +844,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Register a handler that is fired on a web message received event.
+        /// </summary>
+        /// <param name="handler">A handler that accepts a PhotinoWindow argument.</param>
+        /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
         {
             Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
