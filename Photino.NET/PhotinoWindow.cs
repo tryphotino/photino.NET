@@ -468,6 +468,13 @@ namespace PhotinoNET
             // Save last size
             _lastSize = this.Size;
 
+            // Check window dimensions against work area dimensions
+            Size workArea = this.MainMonitor.Size;
+            size = new Size(
+                size.Width <= workArea.Width ? size.Width :  workArea.Width,
+                size.Height <= workArea.Height ? size.Height : workArea.Height
+            );
+
             this.Size = size;
 
             return this;
@@ -524,7 +531,7 @@ namespace PhotinoNET
                 .Resize(_lastSize);
         }
 
-        public PhotinoWindow MoveTo(Point location)
+        public PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea = false)
         {
             Console.WriteLine("Executing: PhotinoWindow.Move(Point location)");
             Console.WriteLine($"Current location: {this.Location}");
@@ -532,6 +539,28 @@ namespace PhotinoNET
             
             // Save last location
             _lastLocation = this.Location;
+
+            // Check if the window is within the work area.
+            // If the window is outside of the work area,
+            // recalculate the position and continue.
+            if (allowOutsideWorkArea == false)
+            {
+                int horizontalWindowEdge = location.X + this.Width; // x position + window width
+                int verticalWindowEdge = location.Y + this.Height; // y position + window height
+
+                int horizontalWorkAreaEdge = this.MainMonitor.WorkArea.Width; // like 1920 (px)
+                int verticalWorkAreaEdge = this.MainMonitor.WorkArea.Height; // like 1080 (px)
+
+                bool isOutsideHorizontalWorkArea = horizontalWindowEdge > horizontalWorkAreaEdge;
+                bool isOutsideVerticalWorkArea = verticalWindowEdge > verticalWorkAreaEdge;
+
+                Point locationInsideWorkArea = new Point(
+                    isOutsideHorizontalWorkArea ? horizontalWorkAreaEdge - this.Width : location.X,
+                    isOutsideVerticalWorkArea ? verticalWorkAreaEdge - this.Height : location.Y
+                );
+
+                location = locationInsideWorkArea;
+            }
 
             // Bug:
             // For some reason the vertical position is not handled correctly.
@@ -556,11 +585,11 @@ namespace PhotinoNET
             return this;
         }
 
-        public PhotinoWindow MoveTo(int left, int top)
+        public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
         {
             Console.WriteLine("Executing: PhotinoWindow.Move(int left, int top)");
             
-            return this.MoveTo(new Point(left, top));
+            return this.MoveTo(new Point(left, top), allowOutsideWorkArea);
         }
 
         public PhotinoWindow Offset(Point offset)
