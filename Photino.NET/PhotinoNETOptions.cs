@@ -5,7 +5,7 @@ namespace PhotinoNET
 {
     public class PhotinoNETOptions
     {
-        public PhotinoNET Parent { get; set; }
+        public PhotinoWindow Parent { get; set; }
 
         public IDictionary<string, ResolveWebResourceDelegate> SchemeHandlers { get; }
             = new Dictionary<string, ResolveWebResourceDelegate>();

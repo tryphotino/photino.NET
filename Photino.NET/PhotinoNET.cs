@@ -41,7 +41,7 @@ namespace PhotinoNET
         { }
     }
 
-    public class PhotinoNET
+    public class PhotinoWindow
     {
         // Here we use auto charset instead of forcing UTF-8.
         // Thus the native code for Windows will be much more simple.
@@ -59,7 +59,7 @@ namespace PhotinoNET
         const string DllName = "Photino.Native";
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_win32(IntPtr hInstance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_mac();
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoWindow, OnWebMessageReceivedCallback webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
@@ -85,21 +85,21 @@ namespace PhotinoNET
 
         private readonly List<GCHandle> _gcHandlesToFree = new List<GCHandle>();
         private readonly List<IntPtr> _hGlobalToFree = new List<IntPtr>();
-        private readonly IntPtr _nativePhotinoNET;
+        private readonly IntPtr _nativePhotinoWindow;
         private readonly int _ownerThreadId;
         private string _title;
 
-        static PhotinoNET()
+        static PhotinoWindow()
         {
             // Workaround for a crashing issue on Linux. Without this, applications
             // are crashing when running in Debug mode (but not Release) if the very
-            // first line of code in Program::Main references the PhotinoNET type.
+            // first line of code in Program::Main references the PhotinoWindow type.
             // It's unclear why.
             Thread.Sleep(1);
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoNET).Module);
+                var hInstance = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
                 Photino_register_win32(hInstance);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -108,11 +108,10 @@ namespace PhotinoNET
             }
         }
 
-        public PhotinoNET(string title) : this(title, _ => { })
-        {
-        }
+        public PhotinoWindow(string title) : this(title, _ => { })
+        { }
 
-        public PhotinoNET(string title, Action<PhotinoNETOptions> configure, bool fullscreen = false, int x = 0, int y = 0, int width = 800, int height = 600)
+        public PhotinoWindow(string title, Action<PhotinoNETOptions> configure, bool fullscreen = false, int x = 0, int y = 0, int width = 800, int height = 600)
         {
             _ownerThreadId = Thread.CurrentThread.ManagedThreadId;
 
@@ -129,8 +128,8 @@ namespace PhotinoNET
             var onWebMessageReceivedDelegate = (OnWebMessageReceivedCallback)ReceiveWebMessage;
             _gcHandlesToFree.Add(GCHandle.Alloc(onWebMessageReceivedDelegate));
 
-            var parentPtr = options.Parent?._nativePhotinoNET ?? default;
-            _nativePhotinoNET = Photino_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
+            var parentPtr = options.Parent?._nativePhotinoWindow ?? default;
+            _nativePhotinoWindow = Photino_ctor(_title, parentPtr, onWebMessageReceivedDelegate, fullscreen, x, y, width, height);
 
             foreach (var (schemeName, handler) in options.SchemeHandlers)
             {
@@ -139,22 +138,22 @@ namespace PhotinoNET
 
             var onResizedDelegate = (ResizedCallback)OnResized;
             _gcHandlesToFree.Add(GCHandle.Alloc(onResizedDelegate));
-            Photino_SetResizedCallback(_nativePhotinoNET, onResizedDelegate);
+            Photino_SetResizedCallback(_nativePhotinoWindow, onResizedDelegate);
 
             var onMovedDelegate = (MovedCallback)OnMoved;
             _gcHandlesToFree.Add(GCHandle.Alloc(onMovedDelegate));
-            Photino_SetMovedCallback(_nativePhotinoNET, onMovedDelegate);
+            Photino_SetMovedCallback(_nativePhotinoWindow, onMovedDelegate);
 
             // Auto-show to simplify the API, but more importantly because you can't
             // do things like navigate until it has been shown
             Show();
         }
 
-        ~PhotinoNET()
+        ~PhotinoWindow()
         {
             // TODO: IDisposable
-            Photino_SetResizedCallback(_nativePhotinoNET, null);
-            Photino_SetMovedCallback(_nativePhotinoNET, null);
+            Photino_SetResizedCallback(_nativePhotinoWindow, null);
+            Photino_SetMovedCallback(_nativePhotinoWindow, null);
             foreach (var gcHandle in _gcHandlesToFree)
             {
                 gcHandle.Free();
@@ -165,11 +164,12 @@ namespace PhotinoNET
                 Marshal.FreeHGlobal(handle);
             }
             _hGlobalToFree.Clear();
-            Photino_dtor(_nativePhotinoNET);
+            Photino_dtor(_nativePhotinoWindow);
         }
 
-        public void Show() => Photino_Show(_nativePhotinoNET);
-        public void WaitForExit() => Photino_WaitForExit(_nativePhotinoNET);
+        public void Show() => Photino_Show(_nativePhotinoWindow);
+
+        public void WaitForExit() => Photino_WaitForExit(_nativePhotinoWindow);
 
         public string Title
         {
@@ -177,13 +177,13 @@ namespace PhotinoNET
             set
             {
                 WriteTitleField(value);
-                Photino_SetTitle(_nativePhotinoNET, _title);
+                Photino_SetTitle(_nativePhotinoWindow, _title);
             }
         }
 
         public void ShowMessage(string title, string body)
         {
-            Photino_ShowMessage(_nativePhotinoNET, title, body, /* MB_OK */ 0);
+            Photino_ShowMessage(_nativePhotinoWindow, title, body, /* MB_OK */ 0);
         }
 
         public void Invoke(Action workItem)
@@ -195,7 +195,7 @@ namespace PhotinoNET
             }
             else
             {
-                Photino_Invoke(_nativePhotinoNET, workItem.Invoke);
+                Photino_Invoke(_nativePhotinoWindow, workItem.Invoke);
             }
         }
 
@@ -205,7 +205,7 @@ namespace PhotinoNET
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    return Photino_getHwnd_win32(_nativePhotinoNET);
+                    return Photino_getHwnd_win32(_nativePhotinoWindow);
                 }
                 else
                 {
@@ -216,12 +216,12 @@ namespace PhotinoNET
 
         public void NavigateToString(string content)
         {
-            Photino_NavigateToString(_nativePhotinoNET, content);
+            Photino_NavigateToString(_nativePhotinoWindow, content);
         }
 
         public void NavigateToUrl(string url)
         {
-            Photino_NavigateToUrl(_nativePhotinoNET, url);
+            Photino_NavigateToUrl(_nativePhotinoWindow, url);
         }
 
         public void NavigateToLocalFile(string path)
@@ -233,7 +233,7 @@ namespace PhotinoNET
 
         public void SendMessage(string message)
         {
-            Photino_SendMessage(_nativePhotinoNET, message);
+            Photino_SendMessage(_nativePhotinoWindow, message);
         }
 
         public event EventHandler<string> OnWebMessageReceived;
@@ -291,7 +291,7 @@ namespace PhotinoNET
             };
 
             _gcHandlesToFree.Add(GCHandle.Alloc(callback));
-            Photino_AddCustomScheme(_nativePhotinoNET, scheme, callback);
+            Photino_AddCustomScheme(_nativePhotinoWindow, scheme, callback);
         }
 
         private bool _resizable = true;
@@ -303,7 +303,7 @@ namespace PhotinoNET
                 if (_resizable != value)
                 {
                     _resizable = value;
-                    Invoke(() => Photino_SetResizable(_nativePhotinoNET, _resizable ? 1 : 0));
+                    Invoke(() => Photino_SetResizable(_nativePhotinoWindow, _resizable ? 1 : 0));
                 }
             }
         }
@@ -311,9 +311,9 @@ namespace PhotinoNET
         private int _width;
         private int _height;
 
-        private void GetSize() => Photino_GetSize(_nativePhotinoNET, out _width, out _height);
+        private void GetSize() => Photino_GetSize(_nativePhotinoWindow, out _width, out _height);
 
-        private void SetSize() => Invoke(() => Photino_SetSize(_nativePhotinoNET, _width, _height));
+        private void SetSize() => Invoke(() => Photino_SetSize(_nativePhotinoWindow, _width, _height));
 
         public int Width
         {
@@ -376,9 +376,9 @@ namespace PhotinoNET
         private int _x;
         private int _y;
 
-        private void GetPosition() => Photino_GetPosition(_nativePhotinoNET, out _x, out _y);
+        private void GetPosition() => Photino_GetPosition(_nativePhotinoWindow, out _x, out _y);
 
-        private void SetPosition() => Invoke(() => Photino_SetPosition(_nativePhotinoNET, _x, _y));
+        private void SetPosition() => Invoke(() => Photino_SetPosition(_nativePhotinoWindow, _x, _y));
 
         public int Left
         {
@@ -448,12 +448,12 @@ namespace PhotinoNET
                     monitors.Add(new Monitor(monitor));
                     return 1;
                 }
-                Photino_GetAllMonitors(_nativePhotinoNET, callback);
+                Photino_GetAllMonitors(_nativePhotinoWindow, callback);
                 return monitors;
             }
         }
 
-        public uint ScreenDpi => Photino_GetScreenDpi(_nativePhotinoNET);
+        public uint ScreenDpi => Photino_GetScreenDpi(_nativePhotinoWindow);
 
         private bool _topmost = false;
         public bool Topmost
@@ -464,11 +464,11 @@ namespace PhotinoNET
                 if (_topmost != value)
                 {
                     _topmost = value;
-                    Invoke(() => Photino_SetTopmost(_nativePhotinoNET, _topmost ? 1 : 0));
+                    Invoke(() => Photino_SetTopmost(_nativePhotinoWindow, _topmost ? 1 : 0));
                 }
             }
         }
 
-        public void SetIconFile(string filename) => Photino_SetIconFile(_nativePhotinoNET, Path.GetFullPath(filename));
+        public void SetIconFile(string filename) => Photino_SetIconFile(_nativePhotinoWindow, Path.GetFullPath(filename));
     }
 }
