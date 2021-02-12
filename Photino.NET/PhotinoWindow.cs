@@ -450,6 +450,13 @@ namespace PhotinoNET
             Photino_WaitForExit(_nativeInstance);
         }
 
+        public PhotinoWindow IsResizable(bool isResizable = true)
+        {
+            this.Resizable = isResizable;
+
+            return this;
+        }
+
         public PhotinoWindow Resize(Size size)
         {
             Console.WriteLine("Executing: PhotinoWindow.Resize(Size size)");

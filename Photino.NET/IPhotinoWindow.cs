@@ -46,6 +46,7 @@ namespace PhotinoNET
         void Close();
         void WaitforClose();
 
+        PhotinoWindow IsResizable(bool isResizable);
         PhotinoWindow Resize(Size size);
         PhotinoWindow Resize(int width, int height);
         PhotinoWindow Minimize();
