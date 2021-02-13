@@ -66,7 +66,7 @@ namespace PhotinoNET
                 }
 
                 // Due to Linux/Gtk platform limitations, the window title has to be no more than 31 chars
-                if (value.Length > 31 && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (value.Length > 31 && IsLinuxPlatform)
                 {
                     value = value.Substring(0, 31);
                 }
