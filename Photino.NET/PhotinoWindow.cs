@@ -341,6 +341,9 @@ namespace PhotinoNET
             }
         }
 
+        /// <summary>
+        /// PhotinoWindow Destructor
+        /// </summary>
         ~PhotinoWindow()
         {
             this.Dispose();
@@ -394,6 +397,11 @@ namespace PhotinoNET
             Photino_dtor(_nativeInstance);
         }
 
+        /// <summary>
+        /// Adds a child PhotinoWindow instance to the current instance.
+        /// </summary>
+        /// <param name="child">The PhotinoWindow child instance to be added</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow AddChild(PhotinoWindow child)
         {
             Console.WriteLine("Executing: PhotinoWindow.AddChild(PhotinoWindow child)");
@@ -403,6 +411,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Removes a child PhotinoWindow instance from the current instance.
+        /// </summary>
+        /// <param name="child">The PhotinoWindow child instance to be removed</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow RemoveChild(PhotinoWindow child)
         {
             Console.WriteLine("Executing: PhotinoWindow.RemoveChild(PhotinoWindow child)");
@@ -414,6 +427,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Removes a child PhotinoWindow instance identified by its Id from the current instance.
+        /// </summary>
+        /// <param name="id">The Id of the PhotinoWindow child instance to be removed</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow RemoveChild(Guid id)
         {
             Console.WriteLine("Executing: PhotinoWindow.RemoveChild(Guid id)");
@@ -424,6 +442,11 @@ namespace PhotinoNET
             return this.RemoveChild(child);
         }
 
+        /// <summary>
+        /// Set the window icon file
+        /// </summary>
+        /// <param name="path">The path to the icon file</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow SetIconFile(string path)
         {
             Console.WriteLine("Executing: PhotinoWindow.SetIconFile(string path)");
@@ -437,6 +460,10 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Shows the current PhotinoWindow instance window.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Show()
         {
             Console.WriteLine("Executing: PhotinoWindow.Show()");
@@ -454,6 +481,10 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Hides the current PhotinoWindow instance window.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Hide()
         {
             Console.WriteLine("Executing: PhotinoWindow.Hide()");
@@ -461,6 +492,10 @@ namespace PhotinoNET
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
         }
 
+        /// <summary>
+        /// Closes the current PhotinoWindow instance. Also closes
+        /// all children of the current PhotinoWindow instance.
+        /// </summary>
         public void Close()
         {
             Console.WriteLine("Executing: PhotinoWindow.Close()");
@@ -468,6 +503,10 @@ namespace PhotinoNET
             this.Dispose();
         }
 
+        /// <summary>
+        /// Wait for the current window to close and send exit
+        /// signal to the native WebView instance.
+        /// </summary>
         public void WaitForClose()
         {
             Console.WriteLine("Executing: PhotinoWindow.WaitForClose()");
@@ -475,13 +514,23 @@ namespace PhotinoNET
             Invoke(() => Photino_WaitForExit(_nativeInstance));
         }
 
+        /// <summary>
+        /// Sets whether the current window is resizable or not.
+        /// </summary>
+        /// <param name="isResizable"></param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow IsResizable(bool isResizable = true)
         {
             this.Resizable = isResizable;
 
             return this;
         }
-
+        
+        /// <summary>
+        /// Resizes the current window instance using a Size struct.
+        /// </summary>
+        /// <param name="size">The Size struct for the window containing width and height</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Resize(Size size)
         {
             Console.WriteLine("Executing: PhotinoWindow.Resize(Size size)");
@@ -509,6 +558,12 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Resizes the current window instance using width and height.
+        /// </summary>
+        /// <param name="width">The width for the window</param>
+        /// <param name="height">The height for the window</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Resize(int width, int height)
         {
             Console.WriteLine("Executing: PhotinoWindow.Resize(int width, int height)");
@@ -516,6 +571,10 @@ namespace PhotinoNET
             return this.Resize(new Size(width, height));
         }
 
+        /// <summary>
+        /// Minimizes the window into the system tray.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Minimize()
         {
             Console.WriteLine("Executing: PhotinoWindow.Minimize()");
@@ -523,6 +582,10 @@ namespace PhotinoNET
             throw new NotImplementedException("Minimize is not yet implemented in PhotinoNET.");
         }
 
+        /// <summary>
+        /// Maximizes the window to fill the work area.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Maximize()
         {
             Console.WriteLine("Executing: PhotinoWindow.Maximize()");
@@ -534,6 +597,12 @@ namespace PhotinoNET
                 .Resize(workArea.Width, workArea.Height);
         }
 
+
+        /// <summary>
+        /// Makes the window fill the whole screen area 
+        /// without borders or OS interface.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Fullscreen()
         {
             Console.WriteLine("Executing: PhotinoWindow.Fullscreen()");
@@ -541,6 +610,10 @@ namespace PhotinoNET
             throw new NotImplementedException("Fullscreen is not yet implemented in PhotinoNET.");
         }
 
+        /// <summary>
+        /// Restores the previous window size and position.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Restore()
         {
             Console.WriteLine("Executing: PhotinoWindow.Restore()");
@@ -560,6 +633,13 @@ namespace PhotinoNET
                 .Resize(_lastSize);
         }
 
+        /// <summary>
+        /// Moves the window to the specified location 
+        /// on the screen using a Point struct.
+        /// </summary>
+        /// <param name="location">The Point struct defining the window location</param>
+        /// <param name="allowOutsideWorkArea">Allow the window to move outside the work area of the monitor</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea = false)
         {
             Console.WriteLine("Executing: PhotinoWindow.Move(Point location)");
@@ -614,6 +694,14 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Moves the window to the specified location
+        /// on the screen using left and right position.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="allowOutsideWorkArea"></param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
         {
             Console.WriteLine("Executing: PhotinoWindow.Move(int left, int top)");
@@ -621,6 +709,12 @@ namespace PhotinoNET
             return this.MoveTo(new Point(left, top), allowOutsideWorkArea);
         }
 
+        /// <summary>
+        /// Moves the window relative to its current location
+        /// on the screen using a Point struct.
+        /// </summary>
+        /// <param name="offset">The Point struct defining the location offset</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(Point offset)
         {
             Console.WriteLine("Executing: PhotinoWindow.Offset(Point offset)");
@@ -633,6 +727,13 @@ namespace PhotinoNET
             return this.MoveTo(left, top);
         }
 
+        /// <summary>
+        /// Moves the window relative to its current location
+        /// on the screen using left and top coordinates.
+        /// </summary>
+        /// <param name="left">The location offset from the left</param>
+        /// <param name="top">The location offset from the top</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(int left, int top)
         {
             Console.WriteLine("Executing: PhotinoWindow.Offset(int left, int top)");
@@ -640,6 +741,11 @@ namespace PhotinoNET
             return this.Offset(new Point(left, top));
         }
 
+        /// <summary>
+        /// Loads a URI resource into the window view.
+        /// </summary>
+        /// <param name="uri">The URI to the resource</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(Uri uri)
         {
             Console.WriteLine("Executing: PhotinoWindow.Load(Uri uri)");
@@ -653,6 +759,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Loads a path resource into the window view.
+        /// </summary>
+        /// <param name="path">The path to the resource</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(string path)
         {
             Console.WriteLine("Executing: PhotinoWindow.Load(string path)");
@@ -667,6 +778,11 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary>
+        /// Loads a raw string into the window view, like HTML.
+        /// </summary>
+        /// <param name="content">The raw string resource</param>
+        /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow LoadRawString(string content)
         {
             Console.WriteLine("Executing: PhotinoWindow.LoadRawString(string content)");
