@@ -468,7 +468,7 @@ namespace PhotinoNET
             this.Dispose();
         }
 
-        public void WaitforClose()
+        public void WaitForClose()
         {
             Console.WriteLine("Executing: PhotinoWindow.WaitForClose()");
 
