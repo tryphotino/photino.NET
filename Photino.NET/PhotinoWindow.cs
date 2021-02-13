@@ -346,6 +346,23 @@ namespace PhotinoNET
             this.Dispose();
         }
 
+        /// <summary>
+        /// Dispatches an Action to the UI thread.
+        /// </summary>
+        /// <param name="workItem"></param>
+        private void Invoke(Action workItem)
+        {
+            // If we're already on the UI thread, no need to dispatch
+            if (Thread.CurrentThread.ManagedThreadId == _managedThreadId)
+            {
+                workItem();
+            }
+            else
+            {
+                Photino_Invoke(_nativeInstance, workItem.Invoke);
+            }
+        }
+
         // Does not get called when window is closed using
         // the UI close button of the window chrome.
         // Works when calling this.Close(). This might very
@@ -375,19 +392,6 @@ namespace PhotinoNET
             _hGlobalToFree.Clear();
 
             Photino_dtor(_nativeInstance);
-        }
-
-        public void Invoke(Action workItem)
-        {
-            // If we're already on the UI thread, no need to dispatch
-            if (Thread.CurrentThread.ManagedThreadId == _managedThreadId)
-            {
-                workItem();
-            }
-            else
-            {
-                Photino_Invoke(_nativeInstance, workItem.Invoke);
-            }
         }
 
         public PhotinoWindow AddChild(PhotinoWindow child)

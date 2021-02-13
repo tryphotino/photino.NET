@@ -34,7 +34,6 @@ namespace PhotinoNET
         
         event EventHandler<string> WebMessageReceived;
 
-        void Invoke(Action workItem);
         PhotinoWindow AddChild(PhotinoWindow child);
         PhotinoWindow RemoveChild(PhotinoWindow child);
         PhotinoWindow RemoveChild(Guid id);
