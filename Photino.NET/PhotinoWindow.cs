@@ -403,9 +403,9 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.RemoveChild(PhotinoWindow child)");
 
-            child.Dispose();
-
             this.Children.Remove(child);
+
+            child.Dispose();
 
             return this;
         }
