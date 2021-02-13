@@ -213,7 +213,7 @@ namespace PhotinoNET
         public Structs.Monitor MainMonitor => this.Monitors.First();
 
         // Bug:
-        // ScreenDpi is static in Photino.Native, at 72 dpi.
+        // ScreenDpi is static in macOS's Photino.Native, at 72 dpi.
         public uint ScreenDpi => Photino_GetScreenDpi(_nativeInstance);
 
         private bool _onTop = false;
