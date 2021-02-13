@@ -305,8 +305,8 @@ namespace PhotinoNET
                 this.RegisterCustomSchemeHandler(scheme, handler);
             }
 
-            Photino_SetResizedCallback(_nativeInstance, onSizedChangedDelegate);
-            Photino_SetMovedCallback(_nativeInstance, onLocationChangedDelegate);
+            Invoke(() => Photino_SetResizedCallback(_nativeInstance, onSizedChangedDelegate));
+            Invoke(() => Photino_SetMovedCallback(_nativeInstance, onLocationChangedDelegate));
 
             // Fire post-create event handlers
             this.OnWindowCreated();
@@ -376,8 +376,8 @@ namespace PhotinoNET
             // Make sure all children of a window get closed.
             this.Children.ForEach(child => { child.Close(); });
 
-            Photino_SetResizedCallback(_nativeInstance, null);
-            Photino_SetMovedCallback(_nativeInstance, null);
+            Invoke(() => Photino_SetResizedCallback(_nativeInstance, null));
+            Invoke(() => Photino_SetMovedCallback(_nativeInstance, null));
 
             foreach (var gcHandle in _gcHandlesToFree)
             {
@@ -432,7 +432,7 @@ namespace PhotinoNET
             // Determine if Path.GetFullPath is always safe to use.
             // Perhaps it needs to be constrained to the application
             // root folder?
-            Photino_SetIconFile(_nativeInstance, Path.GetFullPath(path));
+            Invoke(() => Photino_SetIconFile(_nativeInstance, Path.GetFullPath(path)));
 
             return this;
         }
@@ -441,7 +441,7 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.Show()");
 
-            Photino_Show(_nativeInstance);
+            Invoke(() => Photino_Show(_nativeInstance));
 
             // Is used to indicate that the window was
             // shown to the user at least once. Some
@@ -472,7 +472,7 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.WaitForClose()");
 
-            Photino_WaitForExit(_nativeInstance);
+            Invoke(() => Photino_WaitForExit(_nativeInstance));
         }
 
         public PhotinoWindow IsResizable(bool isResizable = true)
@@ -689,7 +689,7 @@ namespace PhotinoNET
             // Bug:
             // Closing the message shown with the OpenAlertWindow
             // method closes the sender window as well.
-            Photino_ShowMessage(_nativeInstance, title, message, /* MB_OK */ 0);
+            Invoke(() => Photino_ShowMessage(_nativeInstance, title, message, /* MB_OK */ 0));
 
             return this;
         }
@@ -703,7 +703,7 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.SendWebMessage(string message)");
             
-            Photino_SendMessage(_nativeInstance, message);
+            Invoke(() => Photino_SendMessage(_nativeInstance, message));
 
             return this;
         }
@@ -845,7 +845,7 @@ namespace PhotinoNET
             };
 
             _gcHandlesToFree.Add(GCHandle.Alloc(callback));
-            Photino_AddCustomScheme(_nativeInstance, scheme, callback);
+            Invoke(() => Photino_AddCustomScheme(_nativeInstance, scheme, callback));
 
             return this;
         }
