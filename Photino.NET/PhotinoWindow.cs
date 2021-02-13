@@ -246,6 +246,21 @@ namespace PhotinoNET
 
         public event EventHandler<string> WebMessageReceived;
 
+        /// <summary>
+        /// Creates a new PhotinoWindow instance with
+        /// the supplied arguments. Register WindowCreating and
+        /// WindowCreated handlers in the configure action, they
+        /// are triggered in the constructor, whereas handlers
+        /// that are registered otherwise will be triggered
+        /// after the native PhotinoWindow instance was created.
+        /// </summary>
+        /// <param name="title">The window title</param>
+        /// <param name="configure">PhotinoWindow options configuration</param>
+        /// <param name="width">The window width</param>
+        /// <param name="height">The window height</param>
+        /// <param name="left">The position from the left side of the screen</param>
+        /// <param name="top">The position from the top side of the screen</param>
+        /// <param name="fullscreen">Open window in fullscreen mode</param>
         public PhotinoWindow(
             string title,
             Action<PhotinoWindowOptions> configure = null,
