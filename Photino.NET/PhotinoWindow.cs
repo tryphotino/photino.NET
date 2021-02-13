@@ -698,9 +698,9 @@ namespace PhotinoNET
         /// Moves the window to the specified location
         /// on the screen using left and right position.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="allowOutsideWorkArea"></param>
+        /// <param name="left">The location from the left of the screen</param>
+        /// <param name="top">The location from the top of the screen</param>
+        /// <param name="allowOutsideWorkArea">Allow the window to move outside the work area of the monitor</param>
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
         {
