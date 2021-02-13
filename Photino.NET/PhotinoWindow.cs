@@ -487,7 +487,13 @@ namespace PhotinoNET
             // Save last size
             _lastSize = this.Size;
 
-            // Check window dimensions against work area dimensions
+            // Don't allow window size values smaller than 0px
+            if (size.Width < 0 || size.Height < 0)
+            {
+                throw new ArgumentOutOfRangeException($"Window width and height must be greater than 0. (Invalid Size: {size}.)");
+            }
+
+            // Don't allow window to be bigger than work area
             Size workArea = this.MainMonitor.WorkArea.Size;
             size = new Size(
                 size.Width <= workArea.Width ? size.Width :  workArea.Width,
