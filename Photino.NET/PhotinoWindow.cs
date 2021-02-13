@@ -629,8 +629,8 @@ namespace PhotinoNET
             }
 
             return this
-                .MoveTo(_lastLocation)
-                .Resize(_lastSize);
+                .Resize(_lastSize)
+                .MoveTo(_lastLocation, true); // allow moving to outside work area in case the previous window Rect was outside.
         }
 
         /// <summary>
