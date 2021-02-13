@@ -98,6 +98,8 @@ namespace PhotinoNET
             }
             set
             {
+                // ToDo:
+                // Should this be locked if _isResizable == false?
                 if (_width != value.Width || _height != value.Height)
                 {
                     _width = value.Width;
