@@ -424,6 +424,10 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.SetIconFile(string path)");
 
+            // ToDo:
+            // Determine if Path.GetFullPath is always safe to use.
+            // Perhaps it needs to be constrained to the application
+            // root folder?
             Photino_SetIconFile(_nativeInstance, Path.GetFullPath(path));
 
             return this;
