@@ -515,11 +515,11 @@ namespace PhotinoNET
         }
 
         /// <summary>
-        /// Sets whether the current window is resizable or not.
+        /// Sets whether the user can resize the current window or not.
         /// </summary>
         /// <param name="isResizable"></param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow IsResizable(bool isResizable = true)
+        public PhotinoWindow UserCanResize(bool isResizable = true)
         {
             this.Resizable = isResizable;
 
