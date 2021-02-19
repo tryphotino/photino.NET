@@ -796,7 +796,7 @@ namespace PhotinoNET
         public PhotinoWindow Load(Uri uri)
         {
             Console.WriteLine("Executing: PhotinoWindow.Load(Uri uri)");
-            
+
             // Navigation only works after the window was shown once.
             if (_windowWasShown == false)
             {
@@ -825,10 +825,15 @@ namespace PhotinoNET
             // SECURITY RISK!
             // This needs validation!
             // ––––––––––––––––––––––
-            string absolutePath = Path.GetFullPath(path);
-            Load(new Uri(absolutePath, UriKind.Absolute));
+            // Open a web URL string path
+            if (path.Contains("http://") || path.Contains("https://"))
+            {
+                return this.Load(new Uri(path));
+            }
 
-            return this;
+            // Open a file resource string path
+            string absolutePath = Path.GetFullPath(path);
+            return this.Load(new Uri(absolutePath, UriKind.Absolute));
         }
 
         /// <summary>
