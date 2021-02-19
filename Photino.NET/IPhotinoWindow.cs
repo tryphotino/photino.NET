@@ -57,6 +57,7 @@ namespace PhotinoNET
         PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea);
         PhotinoWindow Offset(Point offset);
         PhotinoWindow Offset(int left, int top);
+        PhotinoWindow Center();
 
         PhotinoWindow Load(Uri uri);
         PhotinoWindow Load(string path);
