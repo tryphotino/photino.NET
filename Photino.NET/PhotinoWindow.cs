@@ -316,10 +316,6 @@ namespace PhotinoNET
             {
                 this.Parent.AddChild(this);
             }
-
-            // Auto-show to simplify the API, but more importantly because 
-            // you can't do things like navigate until it has been shown
-            this.Show();
         }
 
         static PhotinoWindow()
@@ -800,6 +796,12 @@ namespace PhotinoNET
         public PhotinoWindow Load(Uri uri)
         {
             Console.WriteLine("Executing: PhotinoWindow.Load(Uri uri)");
+
+            // Navigation only works after the window was shown once.
+            if (_windowWasShown == false)
+            {
+                this.Show();
+            }
             
             // ––––––––––––––––––––––
             // SECURITY RISK!
@@ -823,10 +825,15 @@ namespace PhotinoNET
             // SECURITY RISK!
             // This needs validation!
             // ––––––––––––––––––––––
-            string absolutePath = Path.GetFullPath(path);
-            Load(new Uri(absolutePath, UriKind.Absolute));
+            // Open a web URL string path
+            if (path.Contains("http://") || path.Contains("https://"))
+            {
+                return this.Load(new Uri(path));
+            }
 
-            return this;
+            // Open a file resource string path
+            string absolutePath = Path.GetFullPath(path);
+            return this.Load(new Uri(absolutePath, UriKind.Absolute));
         }
 
         /// <summary>
@@ -837,6 +844,12 @@ namespace PhotinoNET
         public PhotinoWindow LoadRawString(string content)
         {
             Console.WriteLine("Executing: PhotinoWindow.LoadRawString(string content)");
+
+            // Navigation only works after the window was shown once.
+            if (_windowWasShown == false)
+            {
+                this.Show();
+            }
 
             Photino_NavigateToString(_nativeInstance, content);
 
