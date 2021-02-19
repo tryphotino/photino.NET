@@ -742,6 +742,24 @@ namespace PhotinoNET
         }
 
         /// <summary>
+        /// Centers the window on the main monitor work area.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
+        public PhotinoWindow Center()
+        {
+            Console.WriteLine("Executing: PhotinoWindow.Center()");
+
+            Size workAreaSize = this.MainMonitor.WorkArea.Size;
+
+            Point centeredPosition = new Point(
+                ((workAreaSize.Width / 2) - (this.Width / 2)),
+                ((workAreaSize.Height / 2) - (this.Height / 2))
+            );
+
+            return this.MoveTo(centeredPosition);
+        }
+
+        /// <summary>
         /// Loads a URI resource into the window view.
         /// </summary>
         /// <param name="uri">The URI to the resource</param>
