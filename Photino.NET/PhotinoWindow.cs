@@ -515,11 +515,11 @@ namespace PhotinoNET
         }
 
         /// <summary>
-        /// Sets whether the current window is resizable or not.
+        /// Sets whether the user can resize the current window or not.
         /// </summary>
-        /// <param name="isResizable"></param>
+        /// <param name="isResizable">Let user resize window</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow IsResizable(bool isResizable = true)
+        public PhotinoWindow UserCanResize(bool isResizable = true)
         {
             this.Resizable = isResizable;
 
@@ -563,12 +563,34 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="width">The width for the window</param>
         /// <param name="height">The height for the window</param>
+        /// <param name="isPercentage">Width and Height values are percentages of work area</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow Resize(int width, int height)
+        public PhotinoWindow Resize(int width, int height, bool isPercentage = false)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Resize(int width, int height)");
+            Console.WriteLine("Executing: PhotinoWindow.Resize(int width, int height, bool isPercentage)");
+
+            var size = new Size(width, height);
+
+            // Calculate width and height based on percentage of work area
+            if (isPercentage)
+            {
+                // Check if the given values are in range. Prevents divide by zero.
+                if (width > 0 && width <= 100)
+                {
+                    throw new ArgumentOutOfRangeException("Window width percentage can't be less than 1 or greater than 100.");
+                }
+                
+                if (height > 0 && height <= 100)
+                {
+                    throw new ArgumentOutOfRangeException("Window height percentage can't be less than 1 or greater than 100.");
+                }
+
+                // Calculate window size based on main monitor work area
+                size.Width = (int)Math.Round((decimal)(this.MainMonitor.WorkArea.Width / 100 * width), 0);
+                size.Height = (int)Math.Round((decimal)(this.MainMonitor.WorkArea.Height / 100 * height), 0);
+            }
             
-            return this.Resize(new Size(width, height));
+            return this.Resize(size);
         }
 
         /// <summary>
