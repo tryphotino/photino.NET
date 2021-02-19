@@ -47,7 +47,7 @@ namespace PhotinoNET
 
         PhotinoWindow UserCanResize(bool isResizable);
         PhotinoWindow Resize(Size size);
-        PhotinoWindow Resize(int width, int height);
+        PhotinoWindow Resize(int width, int height, bool isPercentage);
         PhotinoWindow Minimize();
         PhotinoWindow Maximize();
         PhotinoWindow Fullscreen();
