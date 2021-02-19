@@ -541,7 +541,7 @@ namespace PhotinoNET
             _lastSize = this.Size;
 
             // Don't allow window size values smaller than 0px
-            if (size.Width < 0 || size.Height < 0)
+            if (size.Width <= 0 || size.Height <= 0)
             {
                 throw new ArgumentOutOfRangeException($"Window width and height must be greater than 0. (Invalid Size: {size}.)");
             }
