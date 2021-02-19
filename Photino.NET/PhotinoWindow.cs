@@ -316,10 +316,6 @@ namespace PhotinoNET
             {
                 this.Parent.AddChild(this);
             }
-
-            // Auto-show to simplify the API, but more importantly because 
-            // you can't do things like navigate until it has been shown
-            this.Show();
         }
 
         static PhotinoWindow()
@@ -801,6 +797,12 @@ namespace PhotinoNET
         {
             Console.WriteLine("Executing: PhotinoWindow.Load(Uri uri)");
             
+            // Navigation only works after the window was shown once.
+            if (_windowWasShown == false)
+            {
+                this.Show();
+            }
+            
             // ––––––––––––––––––––––
             // SECURITY RISK!
             // This needs validation!
@@ -837,6 +839,12 @@ namespace PhotinoNET
         public PhotinoWindow LoadRawString(string content)
         {
             Console.WriteLine("Executing: PhotinoWindow.LoadRawString(string content)");
+
+            // Navigation only works after the window was shown once.
+            if (_windowWasShown == false)
+            {
+                this.Show();
+            }
 
             Photino_NavigateToString(_nativeInstance, content);
 
