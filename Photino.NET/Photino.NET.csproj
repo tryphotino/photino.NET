@@ -23,7 +23,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="1.0.4" />
+    <PackageReference Include="Photino.Native" Version="0.9.0-20210218.1" />
   </ItemGroup>
   
 </Project>
