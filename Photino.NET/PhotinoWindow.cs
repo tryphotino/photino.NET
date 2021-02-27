@@ -38,7 +38,13 @@ namespace PhotinoNET
 
         // API Members
         private PhotinoWindow _parent;
-        public PhotinoWindow Parent => _parent;
+        public PhotinoWindow Parent {
+            get => _parent;
+            private set
+            {
+                _parent = value;
+            }
+        }
 
         private List<PhotinoWindow> _children = new List<PhotinoWindow>();
         public List<PhotinoWindow> Children
@@ -310,14 +316,15 @@ namespace PhotinoNET
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, onSizedChangedDelegate));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, onLocationChangedDelegate));
 
-            // Fire post-create event handlers
-            this.OnWindowCreated();
-
             // Manage parent / child relationship
             if (_parent != null)
             {
+                this.Parent = _parent;
                 this.Parent.AddChild(this);
             }
+
+            // Fire post-create event handlers
+            this.OnWindowCreated();
         }
 
         static PhotinoWindow()
@@ -372,7 +379,9 @@ namespace PhotinoNET
         // and associated events.
         public void Dispose()
         {
-            this.OnWindowClosing();
+            // Remove the window from a parent window.
+            // Don't dispose of child in RemoveChild method (or it'll be recursive).
+            this.Parent?.RemoveChild(this, true);
 
             // Make sure all children of a window get closed.
             this.Children.ForEach(child => { child.Close(); });
@@ -393,6 +402,8 @@ namespace PhotinoNET
             _hGlobalToFree.Clear();
 
             Photino_dtor(_nativeInstance);
+
+            this.OnWindowClosing();
         }
 
         /// <summary>
@@ -414,13 +425,19 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="child">The PhotinoWindow child instance to be removed</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow RemoveChild(PhotinoWindow child)
+        public PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing = false)
         {
             Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(PhotinoWindow child)");
 
             this.Children.Remove(child);
-
-            child.Dispose();
+            
+            // Don't execute the Dispose method on a child
+            // when it is already being disposed (this method
+            // may be called from Dispose on child).
+            if (childIsDisposing == false)
+            {
+                child.Dispose();
+            }
 
             return this;
         }
@@ -430,14 +447,14 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="id">The Id of the PhotinoWindow child instance to be removed</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow RemoveChild(Guid id)
+        public PhotinoWindow RemoveChild(Guid id, bool childIsDisposing = false)
         {
             Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(Guid id)");
 
             PhotinoWindow child = this.Children
                 .FirstOrDefault(c => c.Id == id);
 
-            return this.RemoveChild(child);
+            return this.RemoveChild(child, childIsDisposing);
         }
 
         /// <summary>
@@ -800,7 +817,7 @@ namespace PhotinoNET
             Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Load(Uri uri)");
 
             // Navigation only works after the window was shown once.
-            if (_windowWasShown == false)
+            if (this.WasShown == false)
             {
                 this.Show();
             }
@@ -848,7 +865,7 @@ namespace PhotinoNET
             Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".LoadRawString(string content)");
 
             // Navigation only works after the window was shown once.
-            if (_windowWasShown == false)
+            if (this.WasShown == false)
             {
                 this.Show();
             }
@@ -995,7 +1012,7 @@ namespace PhotinoNET
             // Because of WKWebView limitations, this can only be called during the constructor
             // before the first call to Show. To enforce this, it's private and is only called
             // in response to the constructor options.
-            if (_windowWasShown == true)
+            if (this.WasShown == true)
             {
                 throw new InvalidOperationException("Can only register custom scheme handlers from within the PhotinoWindowOptions context.");
             }

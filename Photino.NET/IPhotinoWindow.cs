@@ -36,8 +36,8 @@ namespace PhotinoNET
         event EventHandler<string> WebMessageReceived;
 
         PhotinoWindow AddChild(PhotinoWindow child);
-        PhotinoWindow RemoveChild(PhotinoWindow child);
-        PhotinoWindow RemoveChild(Guid id);
+        PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing);
+        PhotinoWindow RemoveChild(Guid id, bool childIsDisposing);
 
         PhotinoWindow SetIconFile(string path);
 
