@@ -23,6 +23,7 @@ namespace PhotinoNET
         Structs.Monitor MainMonitor { get; }
         uint ScreenDpi { get; }
         bool IsOnTop { get; set; }
+        bool WasShown { get; }
 
         event EventHandler WindowCreating;
         event EventHandler WindowCreated;
