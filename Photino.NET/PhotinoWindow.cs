@@ -379,12 +379,16 @@ namespace PhotinoNET
         // and associated events.
         public void Dispose()
         {
-            // Remove the window from a parent window.
-            // Don't dispose of child in RemoveChild method (or it'll be recursive).
+            // Remove the window from a potential parent window.
+            // Prevent disposal of child by marking the child
+            // window as being in the process of being disposed.
+            // This prevents the recursive execution of Dispose().
             this.Parent?.RemoveChild(this, true);
 
             // Make sure all children of a window get closed.
-            this.Children.ForEach(child => { child.Close(); });
+            this.Children
+                .ToList()
+                .ForEach(child => { child.Close(); });
 
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, null));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, null));
