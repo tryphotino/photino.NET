@@ -243,8 +243,8 @@ namespace PhotinoNET
             }
         }
 
-        private bool _windowWasShown = false;
-        public bool WasShown => _windowWasShown;
+        private bool _wasShown = false;
+        public bool WasShown => _wasShown;
 
         // Static API Members
         public static bool IsWindowsPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
@@ -508,7 +508,7 @@ namespace PhotinoNET
             // scheme handlers can only be executed on
             // the native window before it was shown the
             // first time.
-            _windowWasShown = true;
+            _wasShown = true;
 
             return this;
         }
