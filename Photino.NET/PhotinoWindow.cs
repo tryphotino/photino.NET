@@ -202,7 +202,7 @@ namespace PhotinoNET
         ///<summary>0 = Critical Only, 1 = Critical and Warning, 2 = Verbose, >2 = All Details</summary>
         public int LogVerbosity
         {
-            get => this._logVerbosity;
+            get => _logVerbosity;
             set { _logVerbosity = value; }
         }
 
@@ -425,7 +425,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow AddChild(PhotinoWindow child)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".AddChild(PhotinoWindow child)");
 
             this.Children.Add(child);
@@ -440,7 +440,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing = false)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(PhotinoWindow child)");
 
             this.Children.Remove(child);
@@ -463,7 +463,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow RemoveChild(Guid id, bool childIsDisposing = false)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(Guid id)");
 
             PhotinoWindow child = this.Children
@@ -479,7 +479,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow SetIconFile(string path)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".SetIconFile(string path)");
 
             // ToDo:
@@ -497,7 +497,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Show()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Show()");
 
             Invoke(() => Photino_Show(_nativeInstance));
@@ -519,7 +519,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Hide()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Hide()");
             
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
@@ -531,7 +531,7 @@ namespace PhotinoNET
         /// </summary>
         public void Close()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Close()");
 
             this.Dispose();
@@ -543,7 +543,7 @@ namespace PhotinoNET
         /// </summary>
         public void WaitForClose()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".WaitForClose()");
 
             Invoke(() => Photino_WaitForExit(_nativeInstance));
@@ -568,7 +568,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Resize(Size size)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(Size size)");
 
             if (LogVerbosity > 2)
@@ -607,7 +607,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Resize(int width, int height, string unit = "px")
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(int width, int height, bool isPercentage)");
 
             Size size;
@@ -651,7 +651,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Minimize()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Minimize()");
             
             throw new NotImplementedException("Minimize is not yet implemented in PhotinoNET.");
@@ -663,7 +663,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Maximize()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Maximize()");
 
             Size workArea = this.MainMonitor.WorkArea.Size;
@@ -681,7 +681,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Fullscreen()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Fullscreen()");
             
             throw new NotImplementedException("Fullscreen is not yet implemented in PhotinoNET.");
@@ -693,7 +693,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Restore()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Restore()");
 
             if (LogVerbosity > 2)
@@ -725,7 +725,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea = false)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Move(Point location)");
 
             if (LogVerbosity > 2)
@@ -792,7 +792,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Move(int left, int top)");
             
             return this.MoveTo(new Point(left, top), allowOutsideWorkArea);
@@ -806,7 +806,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(Point offset)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Offset(Point offset)");
             
             Point location = this.Location;
@@ -826,7 +826,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(int left, int top)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Offset(int left, int top)");
             
             return this.Offset(new Point(left, top));
@@ -838,7 +838,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Center()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Center()");
 
             Size workAreaSize = this.MainMonitor.WorkArea.Size;
@@ -858,7 +858,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(Uri uri)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Load(Uri uri)");
 
             // Navigation only works after the window was shown once.
@@ -883,7 +883,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(string path)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Load(string path)");
             
             // ––––––––––––––––––––––
@@ -908,7 +908,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow LoadRawString(string content)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".LoadRawString(string content)");
 
             // Navigation only works after the window was shown once.
@@ -930,7 +930,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow OpenAlertWindow(string title, string message)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OpenAlertWindow(string title, string message)");
             
             // Bug:
@@ -948,7 +948,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow SendWebMessage(string message)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".SendWebMessage(string message)");
             
             Invoke(() => Photino_SendMessage(_nativeInstance, message));
@@ -1003,7 +1003,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterWindowClosingHandler(EventHandler handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowClosingHandler(EventHandler handler)");
             
             this.WindowClosing += handler;
@@ -1021,7 +1021,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         private PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowCreatingHandler(EventHandler handler)");
             
             this.WindowCreating += handler;
@@ -1037,7 +1037,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         private PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowCreatedHandler(EventHandler handler)");
             
             this.WindowCreated += handler;
@@ -1108,7 +1108,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterSizeChangedHandler(EventHandler<Size> handler)");
             
             this.SizeChanged += handler;
@@ -1123,7 +1123,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterLocationChangedHandler(EventHandler<Point> handler)");
             
             this.LocationChanged += handler;
@@ -1138,7 +1138,7 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
             
             this.WebMessageReceived += handler;
@@ -1149,7 +1149,7 @@ namespace PhotinoNET
         // Invoke public event handlers
         private void OnWindowCreating()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowCreating()");
 
             this.WindowCreating?.Invoke(this, null);
@@ -1157,7 +1157,7 @@ namespace PhotinoNET
         
         private void OnWindowCreated()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowCreated()");
 
             this.WindowCreated?.Invoke(this, null);
@@ -1165,7 +1165,7 @@ namespace PhotinoNET
 
         private void OnWindowClosing()
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowClosing()");
 
             this.WindowClosing?.Invoke(this, null);
@@ -1178,7 +1178,7 @@ namespace PhotinoNET
         // garbage collector along with existing ones.
         private void OnSizeChanged(int width, int height)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnSizeChanged(int width, int height)");
 
             this.SizeChanged?.Invoke(this, new Size(width, height));
@@ -1186,7 +1186,7 @@ namespace PhotinoNET
 
         private void OnLocationChanged(int left, int top)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnLocationChanged(int left, int top)");
 
             this.LocationChanged?.Invoke(this, new Point(left, top));
@@ -1194,7 +1194,7 @@ namespace PhotinoNET
 
         private void OnWebMessageReceived(string message)
         {
-            if (LogVerbosity > 1)
+            if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnMWebessageReceived(string message)");
 
             this.WebMessageReceived?.Invoke(this, message);
