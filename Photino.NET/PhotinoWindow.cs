@@ -289,6 +289,9 @@ namespace PhotinoNET
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
             // Native Interop Events
+            var onClosingDelegate = (ClosingDelegate)this.OnClosing;
+            _gcHandlesToFree.Add(GCHandle.Alloc(onClosingDelegate));
+
             var onSizedChangedDelegate = (SizeChangedDelegate)this.OnSizeChanged;
             _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
 
@@ -323,6 +326,7 @@ namespace PhotinoNET
 
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, onSizedChangedDelegate));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, onLocationChangedDelegate));
+            Invoke(() => Photino_SetClosingCallback(_nativeInstance, onClosingDelegate));
 
             // Manage parent / child relationship
             if (_parent != null)
@@ -414,8 +418,6 @@ namespace PhotinoNET
             _hGlobalToFree.Clear();
 
             Photino_dtor(_nativeInstance);
-
-            this.OnWindowClosing();
         }
 
         /// <summary>
@@ -534,7 +536,7 @@ namespace PhotinoNET
             if (this.LogVerbosity > 1)
                 Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Close()");
 
-            this.Dispose();
+            Invoke(() => Photino_Close(_nativeInstance));
         }
 
         /// <summary>
@@ -1176,6 +1178,11 @@ namespace PhotinoNET
         // the native window context and are not handled.
         // Don't forget to add new handlers to the
         // garbage collector along with existing ones.
+        private void OnClosing()
+        {
+
+        }
+
         private void OnSizeChanged(int width, int height)
         {
             if (this.LogVerbosity > 1)
@@ -1212,6 +1219,7 @@ namespace PhotinoNET
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate IntPtr WebResourceRequestDelegate(string url, out int numBytes, out string contentType);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void SizeChangedDelegate(int width, int height);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void LocationChangedDelegate(int x, int y);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void ClosingDelegate();
         #endregion
 
         #region DllImports
@@ -1223,6 +1231,7 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Close(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Invoke(IntPtr instance, InvokeCallback callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToString(IntPtr instance, string content);
@@ -1239,6 +1248,7 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetPosition(IntPtr instance, out int x, out int y);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetPosition(IntPtr instance, int x, int y);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetMovedCallback(IntPtr instance, LocationChangedDelegate callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetClosingCallback(IntPtr instance, ClosingDelegate callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetTopmost(IntPtr instance, int topmost);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetIconFile(IntPtr instance, string filename);
         #endregion
