@@ -25,12 +25,6 @@ If you want to build this library itself, you will need:
  * Windows, Mac, or Linux
  * Make sure the Photino.Native Nuget package is added and up to date.
  * If you're on Windows:
-   * Use Visual Studio with C++ support enabled. You *must* build in x64 configuration (*not* AnyCPU, which is the default).
    * Install Microsoft Edge Dev: https://www.microsoftedgeinsider.com/en-us/download
- * If you're on macOS:
-   * Install Xcode so that you have the whole `gcc` toolchain available on the command line.
-   * Inspect the repo .yml file for the exact build command for macOS
- * If you're on Linux (tested with Ubuntu):
-   * Inspect the repo .yml file for the exact build command for Linux
  * If you're on Windows Subsystem for Linux (WSL), then as well as the above, you will need a local X server ([example setup](https://virtualizationreview.com/articles/2017/02/08/graphical-programs-on-windows-subsystem-on-linux.aspx)).
 

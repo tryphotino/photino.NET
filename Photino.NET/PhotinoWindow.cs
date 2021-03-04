@@ -404,6 +404,9 @@ namespace PhotinoNET
 
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, null));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, null));
+            Invoke(() => Photino_SetClosingCallback(_nativeInstance, null));
+
+            Photino_dtor(_nativeInstance);
 
             foreach (var gcHandle in _gcHandlesToFree)
             {
@@ -416,8 +419,6 @@ namespace PhotinoNET
                 Marshal.FreeHGlobal(handle);
             }
             _hGlobalToFree.Clear();
-
-            Photino_dtor(_nativeInstance);
         }
 
         /// <summary>
