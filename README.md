@@ -9,7 +9,7 @@ Photino uses the OSs built-in WebKit-based browser control for Windows, macOS an
 Photino is the lightest cross-platform framework. Compared to Electron, a Photino app is up to 110 times smaller! And it uses far less system memory too!
 
 
-## Photino.NET
+## <span>Photino.</span>NET
 
 This project represents the .NET 5 wrapper for the Photino.Native project, which makes it available for all operating systems (Windows, macOS, Linux).
 This library is used for all the sample projects provided by Photino, which include Blazor, Vue.JS, Angular, React, or the basic HTML app: 
