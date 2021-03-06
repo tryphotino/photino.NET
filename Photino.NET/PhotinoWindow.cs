@@ -1,3 +1,4 @@
+using PhotinoNET.Structs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -5,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using PhotinoNET.Structs;
 
 namespace PhotinoNET
 {
@@ -33,13 +33,18 @@ namespace PhotinoNET
         }
 
         // Internal State
-        private bool _windowWasShown = false;
         private Size _lastSize;
         private Point _lastLocation;
 
         // API Members
         private PhotinoWindow _parent;
-        public PhotinoWindow Parent => _parent;
+        public PhotinoWindow Parent {
+            get => _parent;
+            private set
+            {
+                _parent = value;
+            }
+        }
 
         private List<PhotinoWindow> _children = new List<PhotinoWindow>();
         public List<PhotinoWindow> Children
@@ -193,6 +198,14 @@ namespace PhotinoNET
             }
         }
 
+        private int _logVerbosity;
+        ///<summary>0 = Critical Only, 1 = Critical and Warning, 2 = Verbose, >2 = All Details</summary>
+        public int LogVerbosity
+        {
+            get => _logVerbosity;
+            set { _logVerbosity = value; }
+        }
+
         public IReadOnlyList<Structs.Monitor> Monitors
         {
             get
@@ -229,6 +242,9 @@ namespace PhotinoNET
                 }
             }
         }
+
+        private bool _wasShown = false;
+        public bool WasShown => _wasShown;
 
         // Static API Members
         public static bool IsWindowsPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
@@ -273,6 +289,9 @@ namespace PhotinoNET
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
             // Native Interop Events
+            var onClosingDelegate = (ClosingDelegate)this.OnClosing;
+            _gcHandlesToFree.Add(GCHandle.Alloc(onClosingDelegate));
+
             var onSizedChangedDelegate = (SizeChangedDelegate)this.OnSizeChanged;
             _gcHandlesToFree.Add(GCHandle.Alloc(onSizedChangedDelegate));
 
@@ -307,19 +326,17 @@ namespace PhotinoNET
 
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, onSizedChangedDelegate));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, onLocationChangedDelegate));
-
-            // Fire post-create event handlers
-            this.OnWindowCreated();
+            Invoke(() => Photino_SetClosingCallback(_nativeInstance, onClosingDelegate));
 
             // Manage parent / child relationship
             if (_parent != null)
             {
+                this.Parent = _parent;
                 this.Parent.AddChild(this);
             }
 
-            // Auto-show to simplify the API, but more importantly because 
-            // you can't do things like navigate until it has been shown
-            this.Show();
+            // Fire post-create event handlers
+            this.OnWindowCreated();
         }
 
         static PhotinoWindow()
@@ -374,13 +391,22 @@ namespace PhotinoNET
         // and associated events.
         public void Dispose()
         {
-            this.OnWindowClosing();
+            // Remove the window from a potential parent window.
+            // Prevent disposal of child by marking the child
+            // window as being in the process of being disposed.
+            // This prevents the recursive execution of Dispose().
+            this.Parent?.RemoveChild(this, true);
 
             // Make sure all children of a window get closed.
-            this.Children.ForEach(child => { child.Close(); });
+            this.Children
+                .ToList()
+                .ForEach(child => { child.Close(); });
 
             Invoke(() => Photino_SetResizedCallback(_nativeInstance, null));
             Invoke(() => Photino_SetMovedCallback(_nativeInstance, null));
+            Invoke(() => Photino_SetClosingCallback(_nativeInstance, null));
+
+            Photino_dtor(_nativeInstance);
 
             foreach (var gcHandle in _gcHandlesToFree)
             {
@@ -393,8 +419,6 @@ namespace PhotinoNET
                 Marshal.FreeHGlobal(handle);
             }
             _hGlobalToFree.Clear();
-
-            Photino_dtor(_nativeInstance);
         }
 
         /// <summary>
@@ -404,7 +428,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow AddChild(PhotinoWindow child)
         {
-            Console.WriteLine("Executing: PhotinoWindow.AddChild(PhotinoWindow child)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".AddChild(PhotinoWindow child)");
 
             this.Children.Add(child);
 
@@ -416,13 +441,20 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="child">The PhotinoWindow child instance to be removed</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow RemoveChild(PhotinoWindow child)
+        public PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing = false)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RemoveChild(PhotinoWindow child)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(PhotinoWindow child)");
 
             this.Children.Remove(child);
-
-            child.Dispose();
+            
+            // Don't execute the Dispose method on a child
+            // when it is already being disposed (this method
+            // may be called from Dispose on child).
+            if (childIsDisposing == false)
+            {
+                child.Dispose();
+            }
 
             return this;
         }
@@ -432,14 +464,15 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="id">The Id of the PhotinoWindow child instance to be removed</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow RemoveChild(Guid id)
+        public PhotinoWindow RemoveChild(Guid id, bool childIsDisposing = false)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RemoveChild(Guid id)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(Guid id)");
 
             PhotinoWindow child = this.Children
                 .FirstOrDefault(c => c.Id == id);
 
-            return this.RemoveChild(child);
+            return this.RemoveChild(child, childIsDisposing);
         }
 
         /// <summary>
@@ -449,7 +482,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow SetIconFile(string path)
         {
-            Console.WriteLine("Executing: PhotinoWindow.SetIconFile(string path)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".SetIconFile(string path)");
 
             // ToDo:
             // Determine if Path.GetFullPath is always safe to use.
@@ -466,7 +500,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Show()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Show()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Show()");
 
             Invoke(() => Photino_Show(_nativeInstance));
 
@@ -476,7 +511,7 @@ namespace PhotinoNET
             // scheme handlers can only be executed on
             // the native window before it was shown the
             // first time.
-            _windowWasShown = true;
+            _wasShown = true;
 
             return this;
         }
@@ -487,7 +522,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Hide()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Hide()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Hide()");
             
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
         }
@@ -498,9 +534,10 @@ namespace PhotinoNET
         /// </summary>
         public void Close()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Close()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Close()");
 
-            this.Dispose();
+            Invoke(() => Photino_Close(_nativeInstance));
         }
 
         /// <summary>
@@ -509,17 +546,18 @@ namespace PhotinoNET
         /// </summary>
         public void WaitForClose()
         {
-            Console.WriteLine("Executing: PhotinoWindow.WaitForClose()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".WaitForClose()");
 
             Invoke(() => Photino_WaitForExit(_nativeInstance));
         }
 
         /// <summary>
-        /// Sets whether the current window is resizable or not.
+        /// Sets whether the user can resize the current window or not.
         /// </summary>
-        /// <param name="isResizable"></param>
+        /// <param name="isResizable">Let user resize window</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow IsResizable(bool isResizable = true)
+        public PhotinoWindow UserCanResize(bool isResizable = true)
         {
             this.Resizable = isResizable;
 
@@ -533,15 +571,20 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Resize(Size size)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Resize(Size size)");
-            Console.WriteLine($"Current size: {this.Size}");
-            Console.WriteLine($"New size: {size}");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(Size size)");
+
+            if (LogVerbosity > 2)
+            {
+                Console.WriteLine($"Current size: {this.Size}");
+                Console.WriteLine($"New size: {size}");
+            }
 
             // Save last size
             _lastSize = this.Size;
 
             // Don't allow window size values smaller than 0px
-            if (size.Width < 0 || size.Height < 0)
+            if (size.Width <= 0 || size.Height <= 0)
             {
                 throw new ArgumentOutOfRangeException($"Window width and height must be greater than 0. (Invalid Size: {size}.)");
             }
@@ -563,12 +606,46 @@ namespace PhotinoNET
         /// </summary>
         /// <param name="width">The width for the window</param>
         /// <param name="height">The height for the window</param>
+        /// <param name="unit">Unit of the given dimensions: px (default), %, percent</param>
         /// <returns>The current PhotinoWindow instance</returns>
-        public PhotinoWindow Resize(int width, int height)
+        public PhotinoWindow Resize(int width, int height, string unit = "px")
         {
-            Console.WriteLine("Executing: PhotinoWindow.Resize(int width, int height)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(int width, int height, bool isPercentage)");
+
+            Size size;
+
+            switch (unit) {
+                case "px":
+                case "pixel":
+                    size = new Size(width, height);
+
+                    break;
+                case "%":
+                case "percent":
+                case "percentage":
+                    // Check if the given values are in range. Prevents divide by zero.
+                    if (width < 1 || width > 100)
+                    {
+                        throw new ArgumentOutOfRangeException("Resize width % must be between 1 and 100.");
+                    }
+                    
+                    if (height < 1 || height > 100)
+                    {
+                        throw new ArgumentOutOfRangeException("Resize height % must be between 1 and 100.");
+                    }
+
+                    // Calculate window size based on main monitor work area
+                    size = new Size();
+                    size.Width = (int)Math.Round((decimal)(this.MainMonitor.WorkArea.Width / 100 * width), 0);
+                    size.Height = (int)Math.Round((decimal)(this.MainMonitor.WorkArea.Height / 100 * height), 0);
+
+                    break;
+                default:
+                    throw new ArgumentException($"Unit \"{unit}\" is not a valid unit for window resize.");
+            }
             
-            return this.Resize(new Size(width, height));
+            return this.Resize(size);
         }
 
         /// <summary>
@@ -577,7 +654,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Minimize()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Minimize()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Minimize()");
             
             throw new NotImplementedException("Minimize is not yet implemented in PhotinoNET.");
         }
@@ -588,7 +666,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Maximize()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Maximize()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Maximize()");
 
             Size workArea = this.MainMonitor.WorkArea.Size;
 
@@ -605,7 +684,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Fullscreen()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Fullscreen()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Fullscreen()");
             
             throw new NotImplementedException("Fullscreen is not yet implemented in PhotinoNET.");
         }
@@ -616,15 +696,21 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Restore()
         {
-            Console.WriteLine("Executing: PhotinoWindow.Restore()");
-            Console.WriteLine($"Last location: {_lastLocation}");
-            Console.WriteLine($"Last size: {_lastSize}");
-            
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Restore()");
+
+            if (LogVerbosity > 2)
+            {
+                Console.WriteLine($"Last location: {_lastLocation}");
+                Console.WriteLine($"Last size: {_lastSize}");
+            }
+
             bool isRestorable = _lastSize.Width > 0 && _lastSize.Height > 0;
 
             if (isRestorable == false)
             {
-                Console.WriteLine("Can't restore previous window state.");
+                if (LogVerbosity > 0)
+                    Console.WriteLine("Can't restore previous window state.");
                 return this;
             }
 
@@ -642,10 +728,15 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea = false)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Move(Point location)");
-            Console.WriteLine($"Current location: {this.Location}");
-            Console.WriteLine($"New location: {location}");
-            
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Move(Point location)");
+
+            if (LogVerbosity > 2)
+            {
+                Console.WriteLine($"Current location: {this.Location}");
+                Console.WriteLine($"New location: {location}");
+            }
+
             // Save last location
             _lastLocation = this.Location;
 
@@ -704,7 +795,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Move(int left, int top)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Move(int left, int top)");
             
             return this.MoveTo(new Point(left, top), allowOutsideWorkArea);
         }
@@ -717,7 +809,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(Point offset)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Offset(Point offset)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Offset(Point offset)");
             
             Point location = this.Location;
 
@@ -736,9 +829,29 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Offset(int left, int top)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Offset(int left, int top)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Offset(int left, int top)");
             
             return this.Offset(new Point(left, top));
+        }
+
+        /// <summary>
+        /// Centers the window on the main monitor work area.
+        /// </summary>
+        /// <returns>The current PhotinoWindow instance</returns>
+        public PhotinoWindow Center()
+        {
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Center()");
+
+            Size workAreaSize = this.MainMonitor.WorkArea.Size;
+
+            Point centeredPosition = new Point(
+                ((workAreaSize.Width / 2) - (this.Width / 2)),
+                ((workAreaSize.Height / 2) - (this.Height / 2))
+            );
+
+            return this.MoveTo(centeredPosition);
         }
 
         /// <summary>
@@ -748,7 +861,14 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(Uri uri)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Load(Uri uri)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Load(Uri uri)");
+
+            // Navigation only works after the window was shown once.
+            if (this.WasShown == false)
+            {
+                this.Show();
+            }
             
             // ––––––––––––––––––––––
             // SECURITY RISK!
@@ -766,16 +886,22 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow Load(string path)
         {
-            Console.WriteLine("Executing: PhotinoWindow.Load(string path)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Load(string path)");
             
             // ––––––––––––––––––––––
             // SECURITY RISK!
             // This needs validation!
             // ––––––––––––––––––––––
-            string absolutePath = Path.GetFullPath(path);
-            Load(new Uri(absolutePath, UriKind.Absolute));
+            // Open a web URL string path
+            if (path.Contains("http://") || path.Contains("https://"))
+            {
+                return this.Load(new Uri(path));
+            }
 
-            return this;
+            // Open a file resource string path
+            string absolutePath = Path.GetFullPath(path);
+            return this.Load(new Uri(absolutePath, UriKind.Absolute));
         }
 
         /// <summary>
@@ -785,7 +911,14 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance</returns>
         public PhotinoWindow LoadRawString(string content)
         {
-            Console.WriteLine("Executing: PhotinoWindow.LoadRawString(string content)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".LoadRawString(string content)");
+
+            // Navigation only works after the window was shown once.
+            if (this.WasShown == false)
+            {
+                this.Show();
+            }
 
             Photino_NavigateToString(_nativeInstance, content);
 
@@ -800,7 +933,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow OpenAlertWindow(string title, string message)
         {
-            Console.WriteLine("Executing: PhotinoWindow.OpenAlertWindow(string title, string message)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OpenAlertWindow(string title, string message)");
             
             // Bug:
             // Closing the message shown with the OpenAlertWindow
@@ -817,7 +951,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow SendWebMessage(string message)
         {
-            Console.WriteLine("Executing: PhotinoWindow.SendWebMessage(string message)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".SendWebMessage(string message)");
             
             Invoke(() => Photino_SendMessage(_nativeInstance, message));
 
@@ -871,7 +1006,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterWindowClosingHandler(EventHandler handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowClosingHandler(EventHandler handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowClosingHandler(EventHandler handler)");
             
             this.WindowClosing += handler;
 
@@ -888,7 +1024,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         private PhotinoWindow RegisterWindowCreatingHandler(EventHandler handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatingHandler(EventHandler handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowCreatingHandler(EventHandler handler)");
             
             this.WindowCreating += handler;
 
@@ -903,7 +1040,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         private PhotinoWindow RegisterWindowCreatedHandler(EventHandler handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWindowCreatedHandler(EventHandler handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWindowCreatedHandler(EventHandler handler)");
             
             this.WindowCreated += handler;
 
@@ -929,7 +1067,7 @@ namespace PhotinoNET
             // Because of WKWebView limitations, this can only be called during the constructor
             // before the first call to Show. To enforce this, it's private and is only called
             // in response to the constructor options.
-            if (_windowWasShown == true)
+            if (this.WasShown == true)
             {
                 throw new InvalidOperationException("Can only register custom scheme handlers from within the PhotinoWindowOptions context.");
             }
@@ -973,7 +1111,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterSizeChangedHandler(EventHandler<Size> handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterSizeChangedHandler(EventHandler<Size> handler)");
             
             this.SizeChanged += handler;
 
@@ -987,7 +1126,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterLocationChangedHandler(EventHandler<Point> handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterLocationChangedHandler(EventHandler<Point> handler)");
             
             this.LocationChanged += handler;
 
@@ -1001,7 +1141,8 @@ namespace PhotinoNET
         /// <returns>The current PhotinoWindow instance.</returns>
         public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
         {
-            Console.WriteLine("Executing: PhotinoWindow.RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RegisterWebMessageReceivedHandler(EventHandler<string> handler)");
             
             this.WebMessageReceived += handler;
 
@@ -1011,19 +1152,25 @@ namespace PhotinoNET
         // Invoke public event handlers
         private void OnWindowCreating()
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnWindowCreating()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowCreating()");
+
             this.WindowCreating?.Invoke(this, null);
         }
         
         private void OnWindowCreated()
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnWindowCreated()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowCreated()");
+
             this.WindowCreated?.Invoke(this, null);
         }
 
         private void OnWindowClosing()
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnWindowClosing()");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnWindowClosing()");
+
             this.WindowClosing?.Invoke(this, null);
         }
 
@@ -1032,21 +1179,32 @@ namespace PhotinoNET
         // the native window context and are not handled.
         // Don't forget to add new handlers to the
         // garbage collector along with existing ones.
+        private void OnClosing()
+        {
+
+        }
+
         private void OnSizeChanged(int width, int height)
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnSizeChanged(int width, int height)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnSizeChanged(int width, int height)");
+
             this.SizeChanged?.Invoke(this, new Size(width, height));
         }
 
         private void OnLocationChanged(int left, int top)
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnLocationChanged(int left, int top)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnLocationChanged(int left, int top)");
+
             this.LocationChanged?.Invoke(this, new Point(left, top));
         }
 
         private void OnWebMessageReceived(string message)
         {
-            Console.WriteLine("Executing: PhotinoWindow.OnMWebessageReceived(string message)");
+            if (this.LogVerbosity > 1)
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".OnMWebessageReceived(string message)");
+
             this.WebMessageReceived?.Invoke(this, message);
         }
 
@@ -1062,6 +1220,7 @@ namespace PhotinoNET
         [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] delegate IntPtr WebResourceRequestDelegate(string url, out int numBytes, out string contentType);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void SizeChangedDelegate(int width, int height);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void LocationChangedDelegate(int x, int y);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void ClosingDelegate();
         #endregion
 
         #region DllImports
@@ -1073,6 +1232,7 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Close(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Invoke(IntPtr instance, InvokeCallback callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_NavigateToString(IntPtr instance, string content);
@@ -1089,6 +1249,7 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_GetPosition(IntPtr instance, out int x, out int y);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetPosition(IntPtr instance, int x, int y);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetMovedCallback(IntPtr instance, LocationChangedDelegate callback);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetClosingCallback(IntPtr instance, ClosingDelegate callback);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_SetTopmost(IntPtr instance, int topmost);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetIconFile(IntPtr instance, string filename);
         #endregion

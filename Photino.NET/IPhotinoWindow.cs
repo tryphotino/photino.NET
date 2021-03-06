@@ -23,6 +23,7 @@ namespace PhotinoNET
         Structs.Monitor MainMonitor { get; }
         uint ScreenDpi { get; }
         bool IsOnTop { get; set; }
+        bool WasShown { get; }
 
         event EventHandler WindowCreating;
         event EventHandler WindowCreated;
@@ -35,8 +36,8 @@ namespace PhotinoNET
         event EventHandler<string> WebMessageReceived;
 
         PhotinoWindow AddChild(PhotinoWindow child);
-        PhotinoWindow RemoveChild(PhotinoWindow child);
-        PhotinoWindow RemoveChild(Guid id);
+        PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing);
+        PhotinoWindow RemoveChild(Guid id, bool childIsDisposing);
 
         PhotinoWindow SetIconFile(string path);
 
@@ -45,9 +46,9 @@ namespace PhotinoNET
         void Close();
         void WaitForClose();
 
-        PhotinoWindow IsResizable(bool isResizable);
+        PhotinoWindow UserCanResize(bool isResizable);
         PhotinoWindow Resize(Size size);
-        PhotinoWindow Resize(int width, int height);
+        PhotinoWindow Resize(int width, int height, string unit);
         PhotinoWindow Minimize();
         PhotinoWindow Maximize();
         PhotinoWindow Fullscreen();
@@ -57,6 +58,7 @@ namespace PhotinoNET
         PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea);
         PhotinoWindow Offset(Point offset);
         PhotinoWindow Offset(int left, int top);
+        PhotinoWindow Center();
 
         PhotinoWindow Load(Uri uri);
         PhotinoWindow Load(string path);

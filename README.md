@@ -28,4 +28,3 @@ If you want to build this library itself, you will need:
    * Install Microsoft Edge Dev, Beta or Canary: https://www.microsoftedgeinsider.com/en-us/download
  * If you're on Windows Subsystem for Linux (WSL), then as well as the above, you will need a local X server: 
   https://tryphotino.kavadocs.com/Running-Photino-in-WSL
-
