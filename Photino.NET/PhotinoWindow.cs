@@ -901,6 +901,22 @@ namespace PhotinoNET
 
             // Open a file resource string path
             string absolutePath = Path.GetFullPath(path);
+
+            // For bundled app it can be necessary to consider
+            // the app context base directory. Check there too.
+            if (File.Exists(absolutePath) == false)
+            {
+                absolutePath = $"{System.AppContext.BaseDirectory}/{path}";
+
+                // If the file does not exist on this path,
+                // send an error message to user.
+                if (File.Exists(absolutePath) == false)
+                {
+                    Console.WriteLine($"File \"{path}\" could not be found.");
+                    return this;
+                }
+            }
+
             return this.Load(new Uri(absolutePath, UriKind.Absolute));
         }
 
