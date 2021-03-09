@@ -24,10 +24,10 @@ jobs:
         version: 5.0.100
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
-    # - task: CmdLine@2
-    #   displayName: 'Add NuGet source'
-    #   inputs:
-    #     script: 'dotnet nuget add source https://pkgs.dev.azure.com/tryphotino/Photino.Native/_packaging/PhotinoPackages/nuget/v3/index.json -n DevOpsArtifacts'
+    - task: CmdLine@2
+      displayName: 'Add NuGet source'
+      inputs:
+        script: 'dotnet nuget add source https://pkgs.dev.azure.com/tryphotino/Photino.Native/_packaging/PhotinoPackages/nuget/v3/index.json -n DevOpsArtifacts'
 
     - task: NuGetAuthenticate@0
       displayName: 'NuGet Authenticate'
