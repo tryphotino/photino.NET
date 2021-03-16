@@ -762,24 +762,6 @@ namespace PhotinoNET
                 location = locationInsideWorkArea;
             }
 
-            // Bug:
-            // For some reason the vertical position is not handled correctly.
-            // Whenever a positive value is set, the window appears at the
-            // very bottom of the screen and the only visible thing is the
-            // application window title bar. As a workaround we make a 
-            // negative value out of the vertical position to "pull" the window up.
-            // Note: 
-            // This behavior seems to be a macOS thing. In the Photino.Native
-            // project files it is commented to be expected behavior for macOS.
-            // There is some code trying to mitigate this problem but it might
-            // not work as expected. Further investigation is necessary.
-            if (PhotinoWindow.IsMacOsPlatform) {
-                Size workArea = this.MainMonitor.WorkArea.Size;
-                location.Y = location.Y >= 0
-                    ? location.Y - workArea.Height
-                    : location.Y;
-            }
-
             this.Location = location;
 
             return this;
