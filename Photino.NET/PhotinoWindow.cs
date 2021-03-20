@@ -263,12 +263,12 @@ namespace PhotinoNET
         public event EventHandler<string> WebMessageReceived;
 
         /// <summary>
-        /// Creates a new IPhotinoWindow instance with
+        /// Creates a new PhotinoWindow instance with
         /// the supplied arguments. Register WindowCreating and
         /// WindowCreated handlers in the configure action, they
         /// are triggered in the constructor, whereas handlers
         /// that are registered otherwise will be triggered
-        /// after the native IPhotinoWindow instance was created.
+        /// after the native PhotinoWindow instance was created.
         /// </summary>
         /// <param name="title">The window title</param>
         /// <param name="configure">PhotinoWindow options configuration</param>
@@ -343,7 +343,7 @@ namespace PhotinoNET
         {
             // Workaround for a crashing issue on Linux. Without this, applications
             // are crashing when running in Debug mode (but not Release) if the very
-            // first line of code in Program::Main references the IPhotinoWindow type.
+            // first line of code in Program::Main references the PhotinoWindow type.
             // It's unclear why.
             Thread.Sleep(1);
 
@@ -359,7 +359,7 @@ namespace PhotinoNET
         }
 
         /// <summary>
-        /// IPhotinoWindow Destructor
+        /// PhotinoWindow Destructor
         /// </summary>
         ~PhotinoWindow()
         {
@@ -429,7 +429,7 @@ namespace PhotinoNET
         public IPhotinoWindow AddChild(IPhotinoWindow child)
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".AddChild(IPhotinoWindow child)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".AddChild(IPhotinoWindow child)");
 
             this.Children.Add(child);
 
@@ -444,7 +444,7 @@ namespace PhotinoNET
         public IPhotinoWindow RemoveChild(IPhotinoWindow child, bool childIsDisposing = false)
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".RemoveChild(IPhotinoWindow child)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(IPhotinoWindow child)");
 
             this.Children.Remove(child);
             
@@ -467,7 +467,7 @@ namespace PhotinoNET
         public IPhotinoWindow RemoveChild(Guid id, bool childIsDisposing = false)
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".RemoveChild(Guid id)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".RemoveChild(Guid id)");
 
             IPhotinoWindow child = this.Children
                 .FirstOrDefault(c => c.Id == id);
@@ -483,7 +483,7 @@ namespace PhotinoNET
         public IPhotinoWindow SetIconFile(string path)
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".SetIconFile(string path)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".SetIconFile(string path)");
 
             // ToDo:
             // Determine if Path.GetFullPath is always safe to use.
@@ -501,7 +501,7 @@ namespace PhotinoNET
         public IPhotinoWindow Show()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Show()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Show()");
 
             Invoke(() => Photino_Show(_nativeInstance));
 
@@ -523,7 +523,7 @@ namespace PhotinoNET
         public IPhotinoWindow Hide()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Hide()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Hide()");
             
             throw new NotImplementedException("Hide is not yet implemented in PhotinoNET.");
         }
@@ -535,7 +535,7 @@ namespace PhotinoNET
         public void Close()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Close()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Close()");
 
             Invoke(() => Photino_Close(_nativeInstance));
         }
@@ -547,7 +547,7 @@ namespace PhotinoNET
         public void WaitForClose()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".WaitForClose()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".WaitForClose()");
 
             Invoke(() => Photino_WaitForExit(_nativeInstance));
         }
@@ -572,7 +572,7 @@ namespace PhotinoNET
         public IPhotinoWindow Resize(Size size)
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Resize(Size size)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(Size size)");
 
             if (LogVerbosity > 2)
             {
@@ -611,7 +611,7 @@ namespace PhotinoNET
         public IPhotinoWindow Resize(int width, int height, string unit = "px")
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Resize(int width, int height, bool isPercentage)");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Resize(int width, int height, bool isPercentage)");
 
             Size size;
 
@@ -655,7 +655,7 @@ namespace PhotinoNET
         public IPhotinoWindow Minimize()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Minimize()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Minimize()");
             
             throw new NotImplementedException("Minimize is not yet implemented in PhotinoNET.");
         }
@@ -667,7 +667,7 @@ namespace PhotinoNET
         public IPhotinoWindow Maximize()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Maximize()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Maximize()");
 
             Size workArea = this.MainMonitor.WorkArea.Size;
 
@@ -685,7 +685,7 @@ namespace PhotinoNET
         public IPhotinoWindow Fullscreen()
         {
             if (this.LogVerbosity > 1)
-                Console.WriteLine($"Executing: \"{this.Title ?? "IPhotinoWindow"}\".Fullscreen()");
+                Console.WriteLine($"Executing: \"{this.Title ?? "PhotinoWindow"}\".Fullscreen()");
             
             throw new NotImplementedException("Fullscreen is not yet implemented in PhotinoNET.");
         }
