@@ -8,8 +8,8 @@ namespace PhotinoNET
     {
         IntPtr WindowHandle { get; }
 
-        PhotinoWindow Parent { get; }
-        List<PhotinoWindow> Children { get; }
+        IPhotinoWindow Parent { get; }
+        List<IPhotinoWindow> Children { get; }
 
         string Title { get; set; }
         bool Resizable { get; set; }
@@ -35,44 +35,47 @@ namespace PhotinoNET
         
         event EventHandler<string> WebMessageReceived;
 
-        PhotinoWindow AddChild(PhotinoWindow child);
-        PhotinoWindow RemoveChild(PhotinoWindow child, bool childIsDisposing);
-        PhotinoWindow RemoveChild(Guid id, bool childIsDisposing);
+        IPhotinoWindow AddChild(IPhotinoWindow child);
+        IPhotinoWindow RemoveChild(IPhotinoWindow child, bool childIsDisposing);
+        IPhotinoWindow RemoveChild(Guid id, bool childIsDisposing);
 
-        PhotinoWindow SetIconFile(string path);
+        IPhotinoWindow SetIconFile(string path);
 
-        PhotinoWindow Show();
-        PhotinoWindow Hide();
+        IPhotinoWindow Show();
+        IPhotinoWindow Hide();
         void Close();
         void WaitForClose();
 
-        PhotinoWindow UserCanResize(bool isResizable);
-        PhotinoWindow Resize(Size size);
-        PhotinoWindow Resize(int width, int height, string unit);
-        PhotinoWindow Minimize();
-        PhotinoWindow Maximize();
-        PhotinoWindow Fullscreen();
-        PhotinoWindow Restore();
+        IPhotinoWindow UserCanResize(bool isResizable);
+        IPhotinoWindow Resize(Size size);
+        IPhotinoWindow Resize(int width, int height, string unit="px");
+        IPhotinoWindow Minimize();
+        IPhotinoWindow Maximize();
+        IPhotinoWindow Fullscreen();
+        IPhotinoWindow Restore();
 
-        PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea);
-        PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea);
-        PhotinoWindow Offset(Point offset);
-        PhotinoWindow Offset(int left, int top);
-        PhotinoWindow Center();
+        IPhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea);
+        IPhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea);
+        IPhotinoWindow Offset(Point offset);
+        IPhotinoWindow Offset(int left, int top);
+        IPhotinoWindow Center();
 
-        PhotinoWindow Load(Uri uri);
-        PhotinoWindow Load(string path);
-        PhotinoWindow LoadRawString(string content);
+        IPhotinoWindow Load(Uri uri);
+        IPhotinoWindow Load(string path);
+        IPhotinoWindow LoadRawString(string content);
 
-        PhotinoWindow OpenAlertWindow(string title, string message);
+        IPhotinoWindow OpenAlertWindow(string title, string message);
 
-        PhotinoWindow SendWebMessage(string message);
+        IPhotinoWindow SendWebMessage(string message);
 
-        PhotinoWindow RegisterWindowClosingHandler(EventHandler handler);
+        IPhotinoWindow RegisterWindowClosingHandler(EventHandler handler);
         
-        PhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler);
-        PhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler);
+        IPhotinoWindow RegisterSizeChangedHandler(EventHandler<Size> handler);
+        IPhotinoWindow RegisterLocationChangedHandler(EventHandler<Point> handler);
 
-        PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler);
+        IPhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler);
+        void Dispose();
+
+        Guid Id { get; }
     }
 }
