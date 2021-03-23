@@ -46,9 +46,14 @@ jobs:
       run: |
         mkdir ${{ env.nugetFolder }}
         dotnet restore ${{ env.project }}
-        PACKAGE=$(dotnet pack --configuration ${{ env.configuration }} --no-restore --output ${{ env.nugetFolder }} ${{ env.project }})
-        echo ${PACKAGE}
-        dotnet nuget push ${PACKAGE} --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
+        dotnet pack --configuration ${{ env.configuration }} --no-restore --output ${{ env.nugetFolder }} ${{ env.project }}
+
+        for f in ${{ env.nugetFolder }}/*.nupkg 
+        do
+        	echo "Pushing $f"
+            dotnet nuget push ${{ env.nugetFolder }}/$f --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
+        done        
+        
 #        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
 #        nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
 #        nuget push ${{ env.nugetFolder }}/*.nupkg -src "GitHub"
