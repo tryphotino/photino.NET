@@ -55,9 +55,12 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls -l **/nuget.exe
+          c=${cwd}
+          cd /
+          find . -iname NuGet.CommandLine.XPlat.dll 
+          cd $c
 
-          ./nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
+          dotnet NuGet.CommandLine.XPlat.dll push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
 #        dpkg-deb -xv {$deb} {.}
 
