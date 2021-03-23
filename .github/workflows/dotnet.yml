@@ -45,9 +45,10 @@ jobs:
     - name: Build, Pack and Publish to GitHub
       run: |
         mkdir ${{ env.nugetFolder }}
-        dotnet restore
-        dotnet pack --configuration ${{ env.configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
-        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
+        dotnet restore ${{ env.project }}
+        package = dotnet pack --configuration ${{ env.configuration }} --no-restore --output ${{ env.nugetFolder }} ${{ env.project }}
+        echo $package
+        dotnet nuget push $package --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
 #        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
 #        nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
 #        nuget push ${{ env.nugetFolder }}/*.nupkg -src "GitHub"
