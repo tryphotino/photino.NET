@@ -15,12 +15,14 @@ jobs:
       nugetConfig: ./.github/workflows/nuget.config
       nugetFolder: ./nuget
       configuration: Debug
+      token: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - run: |
         echo ${{ env.project }}
         echo ${{ env.nugetConfig }}
         echo ${{ env.nugetFolder }}
+        echo ${{ env.token }}
     - uses: actions/checkout@v2
 
     - name: Unshallow Fetch
@@ -44,6 +46,6 @@ jobs:
 
     - name: Publish
       run: |
-        sed -i 's/\$GITHUBACTIONS/${{ secrets.GITUHUB_TOKEN }}/g' ${{ env.nugetConfig }}
+        sed -i 's/\$GITHUBACTIONS/${{ env.token }}/g' ${{ env.nugetConfig }}
         nuget push ${{ env.nugetFolder }}/*.nupkg -src 'github' -ConfigFile ${{ env.nugetConfig }}
         
