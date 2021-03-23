@@ -31,11 +31,17 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: [5.0.x, 3.0.x]
         source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
+        
+    - name: Set API Key
+      run: dotnet nuget setApiKey
 
     - name: Build, Pack and Publish to GitHub
       run: |
+        dotnet new tool-manifest
+        dotnet tool install gpr --local
+        
         mkdir ${{ env.nugetFolder }}
         
         dotnet restore ${{ env.project }}
@@ -44,7 +50,10 @@ jobs:
         
         ls -l ${{ env.nugetFolder }} 
 
-        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
+        gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
+        gpr push ${{ env.nugetFolder }}/*.nupkg
+        
+#        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
         
 #        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
 #        nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
