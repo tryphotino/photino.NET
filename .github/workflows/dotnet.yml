@@ -14,7 +14,7 @@ jobs:
       project: Photino.NET/Photino.NET.csproj
       nugetFolder: ./nuget
       configuration: Debug
-      repository: https://nuget.pkg.github.com/sharpninja/index.json 
+      repository: "https://nuget.pkg.github.com/sharpninja/index.json" 
 
     steps:
     - run: |
