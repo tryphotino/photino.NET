@@ -25,10 +25,10 @@ jobs:
       uses: brandedoutcast/publish-nuget@latest
       with:
         # Filepath of the project to be packaged, relative to root of repository
-        PROJECT_FILE_PATH: ${{ GITHUB_WORKSPACE }}/Photino.NET/Photino.NET.csproj
+        PROJECT_FILE_PATH: ${{ env.GITHUB_WORKSPACE }}/Photino.NET/Photino.NET.csproj
         # API key to authenticate with NuGet server
         NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
         # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-        NUGET_SOURCE: https://nuget.pkg.github.com/${{ GITHUB_ACTOR }}/index.json
+        NUGET_SOURCE: https://nuget.pkg.github.com/${{ env.GITHUB_ACTOR }}/index.json
         # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
         INCLUDE_SYMBOLS: true
