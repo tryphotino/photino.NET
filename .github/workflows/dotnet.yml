@@ -58,7 +58,7 @@ jobs:
         
         ls -l $nugetFolder 
 
-        dotnet nuget add source $source -n $gpr -u $user -p $pw
+        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
         dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
         
 #        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
