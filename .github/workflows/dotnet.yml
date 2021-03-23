@@ -39,9 +39,9 @@ jobs:
         run: |
           nugetPath="/home/runner/nuget.exe"
           curl https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -o $nugetPath 
-          
+
           chmod +x $nugetPath 
-          
+
           project=${{ env.project }}
 
           dotnet restore $project 
@@ -56,7 +56,7 @@ jobs:
           mkdir $nugetFolder 
 
           dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
-      
+
       - name: Push Github
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,13 +67,12 @@ jobs:
           source="${{ env.repository }}"
 
           /home/runner/nuget.exe setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}
-          /home/runner/nuget.exe push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate
 
-#        for package in $nugetFolder/*.nupkg
-#        do
-#          echo $package
-#          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
-#        done;
+          for package in $nugetFolder/*.nupkg
+          do
+              echo "/home/runner/nuget.exe push $package ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate" 
+              /home/runner/nuget.exe push $package ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate
+          done;
 
 #               nugetDir="/home/runner/nuget"
 #
