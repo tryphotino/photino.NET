@@ -12,29 +12,19 @@ jobs:
 
     env:
       project: Photino.NET/Photino.NET.csproj
-      nugetConfig: ./.github/workflows/nuget.config
       nugetFolder: ./nuget
       configuration: Debug
-      nugetRepository: 'https://nuget.pkg.github.com/sharpninja/index.json'
-      #token: ${{ secrets.API_KEY }}
-      #token: ${{ secrets.GITHUBACTIONS }}
 
     steps:
     - run: |
         echo ${{ env.project }}
-        echo ${{ env.nugetConfig }}
         echo ${{ env.nugetFolder }}
-        echo ${{ env.token }}
+        echo ${{ env.configuration }}
 
-        if [ ${{ env.token }} -eq "" ]
-        then
-          echo "Empty token." 1>&2
-          exit 64
-        fi
     - uses: actions/checkout@v2
 
-    - name: Unshallow Fetch
-      run: git fetch --unshallow
+#    - name: Unshallow Fetch
+#      run: git fetch --unshallow
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
@@ -42,7 +32,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         dotnet-version: 5.0.x
-        source-url: https://nuget.pkg.github.com/${{ env.owner }}/index.json
+        source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
 
     - name: Build, Pack and Publish to GitHub
       run: |
