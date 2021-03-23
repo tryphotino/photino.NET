@@ -58,8 +58,8 @@ jobs:
         
         ls -l $nugetFolder 
 
-        dotnet nuget add source -n $gpr -Source $source -u $user -p $pw
-        nuget push $nugetFolder/*.nupkg -source $gpr -SkipDuplicate
+        dotnet nuget add source $source -n $gpr -u $user -p $pw
+        dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
         
 #        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
         
