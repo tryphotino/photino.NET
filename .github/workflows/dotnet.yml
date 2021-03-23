@@ -43,13 +43,13 @@ jobs:
         source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
 
     - name: Set API Key
-      run: dotnet nuget setApiKey
-
-    - name: Build, Pack and Publish to GitHub
       run: |
         dotnet new tool-manifest
         dotnet tool install gpr --local
-        
+        gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
+
+    - name: Build, Pack and Publish to GitHub
+      run: |        
         mkdir ${{ env.nugetFolder }}
         
         dotnet restore ${{ env.project }}
@@ -58,7 +58,6 @@ jobs:
         
         ls -l ${{ env.nugetFolder }} 
 
-        gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
         gpr push ${{ env.nugetFolder }}/*.nupkg
         
 #        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
