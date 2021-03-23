@@ -26,14 +26,22 @@ jobs:
     - name: Unshallow Fetch
       run: git fetch --unshallow
 
-    - name: Setup .NET
+    - name: Setup .NET 3.0.x
       uses: actions/setup-dotnet@v1
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        dotnet-version: [5.0.x, 3.0.x]
+        dotnet-version: 3.0.x
         source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
-        
+
+    - name: Setup .NET 5.0.x
+      uses: actions/setup-dotnet@v1
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        dotnet-version: 5.0.x
+        source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
+
     - name: Set API Key
       run: dotnet nuget setApiKey
 
