@@ -1,0 +1,7 @@
+mode: Mainline
+next-version: 1.0.0
+branches:
+  master:
+    tag: sharpNinja
+ignore:
+  sha: []
