@@ -18,7 +18,7 @@ jobs:
       nugetRepository: 'https://nuget.pkg.github.com/sharpninja/index.json'
       #token: ${{ secrets.API_KEY }}
       #token: ${{ secrets.GITHUBACTIONS }}
-      token: ${{ secrets.GITHUB_TOKEN }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - run: |
@@ -41,18 +41,21 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+        source-url: https://nuget.pkg.github.com/${{ env.owner }}/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ env.TOKEN }}
 
     - name: Build, Pack and Publish to GitHub
       run: |
         mkdir ${{ env.nugetFolder }}
+        
         dotnet restore ${{ env.project }}
-        dotnet pack --configuration ${{ env.configuration }} --no-restore --output ${{ env.nugetFolder }} ${{ env.project }}
+        
+        dotnet pack --configuration ${{ env.configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
+        
+        ls -l ${{ env.nugetFolder }} 
 
-        for f in ${{ env.nugetFolder }}/*.nupkg 
-        do
-        	echo "Pushing $f"
-            dotnet nuget push $f --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
-        done        
+        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
         
 #        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
 #        nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
