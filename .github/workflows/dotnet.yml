@@ -14,6 +14,7 @@ jobs:
       project: Photino.NET/Photino.NET.csproj
       nugetFolder: ./nuget
       configuration: Debug
+      repository: https://nuget.pkg.github.com/sharpninja/index.json 
 
     steps:
     - run: |
@@ -26,28 +27,10 @@ jobs:
     - name: Unshallow Fetch
       run: git fetch --unshallow
 
-    - name: Setup .NET 3.0.x
-      uses: actions/setup-dotnet@v1
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        dotnet-version: 3.0.x
-        source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
-
     - name: Setup .NET 5.0.x
       uses: actions/setup-dotnet@v1
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         dotnet-version: 5.0.x
-        source-url: 'https://nuget.pkg.github.com/sharpninja/index.json'
-
-    - name: Set API Key
-      run: |
-        dotnet nuget sources add -name "GPR" -Source 'https://nuget.pkg.github.com/sharpninja/index.json' -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
-#        dotnet new tool-manifest
-#        dotnet tool install gpr --local
-#        dotnet gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
 
     - name: Build, Pack and Publish to GitHub
       run: |        
@@ -59,6 +42,7 @@ jobs:
         
         ls -l ${{ env.nugetFolder }} 
 
+        dotnet nuget sources add -name "GPR" -Source ${{ env.repository }} -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
         nuget push ${{ env.nugetFolder }}/*.nupkg -source "GPR" -SkipDuplicate
         
 #        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
