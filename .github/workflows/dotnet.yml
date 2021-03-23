@@ -38,13 +38,12 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
-    - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2
-      with:
-        PROJECT_FILE_PATH: Photino.NET/Photino.NET.csproj
-        VERSION_STATIC: ${{ steps.gitversion.outputs.nuGetVersion }}
-        NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/${{ github.actor }}/index.json
-        INCLUDE_SYMBOLS: true
-        NO_BUILD: false
-        
+
+    - name: Build
+      run: dotnet build Photino.NET/Photino.NET.csproj -c Debug --no-restore --version ${{ steps.gitversion.outputs.nuGetVersion }} 
+
+    - name: Pack Nuget Package
+      run: dotnet pack Photino.NET/Photino.NET.csproj -c Debug --no-restore --no-build --include-symbols --include-source
+
+    - name: Push Nuget Package
+      run: nuget push -Source https://nuget.pkg.github.com/${{ github.actor }}/index.json -ApiKey ${{ secrets.GITHUB_TOKEN }} -NonInteractive   
