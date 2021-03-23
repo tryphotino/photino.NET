@@ -58,9 +58,9 @@ jobs:
           nugetDir="/home/runner/nuget"
           
           mkdir $nugetDir
-          cp -r /home/runner/.nuget/packages/nuget.commandline.xplat/5.9.0/lib/net5.0/ $nugetDir/ 
-          cp -r /home/runner/.nuget/packages/nuget.commands/5.9.0/lib/net5.0/ $nugetDir/ 
-          cp -r /home/runner/.nuget/packages/nuget.common/5.9.0/lib/netstandard2.0/ $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.commandline.xplat/5.9.0/lib/net5.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.commands/5.9.0/lib/net5.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.common/5.9.0/lib/netstandard2.0/* $nugetDir/ 
           
           ls -al $nugetDir 
 
