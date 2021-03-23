@@ -13,6 +13,9 @@ jobs:
       semVer: ${{ steps.gitversion.outputs.semVer }}
 
     steps:
+    - name: Unshallow Fetch
+      run: git fetch --unshallow
+          
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
