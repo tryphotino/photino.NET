@@ -29,6 +29,6 @@ jobs:
         # API key to authenticate with NuGet server
         NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
         # NuGet server uri hosting the packages, defaults to https://api.nuget.org
-        NUGET_SOURCE: https://nuget.pkg.github.com/sharpninja/index.json
+        NUGET_SOURCE: https://nuget.pkg.github.com/${{ GITHUB_ACTOR }}/index.json
         # Flag to toggle pushing symbols along with nuget package to the server, disabled by default
         INCLUDE_SYMBOLS: true
