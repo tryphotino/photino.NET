@@ -53,7 +53,7 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.7
 
     - name: Display GitVersion outputs
-        run: |
+      run: |
           echo "Major: ${{ steps.gitversion.outputs.major }}"
           echo "Minor: ${{ steps.gitversion.outputs.minor }}"
           echo "Patch: ${{ steps.gitversion.outputs.patch }}"
