@@ -69,8 +69,8 @@ jobs:
           pw="${{ secrets.GITHUB_TOKEN }}"
           source="${{ env.repository }}"
 
-          setApi="$nugetPath setApiKey ${{ secrets.GITHUB_TOKEN }} -s ${{ env.repository }}"
-          push="$nugetPath push ${{ env.nugetFolder }}/*.nupkg -NoSymbols -SkipDuplicate"
+          setApi="$nugetPath setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}"
+          push="$nugetPath push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -NoSymbols -SkipDuplicate"
 
           echo $setApi          
           bash -c $setApi
