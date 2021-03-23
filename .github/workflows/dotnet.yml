@@ -46,7 +46,7 @@ jobs:
       run: |
         dotnet new tool-manifest
         dotnet tool install gpr --local
-        gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
+        dotnet gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
 
     - name: Build, Pack and Publish to GitHub
       run: |        
@@ -58,7 +58,7 @@ jobs:
         
         ls -l ${{ env.nugetFolder }} 
 
-        gpr push ${{ env.nugetFolder }}/*.nupkg
+        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
         
 #        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
         
