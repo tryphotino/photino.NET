@@ -14,12 +14,13 @@ jobs:
       project: Photino.NET/Photino.NET.csproj
       nugetConfig: ./.github/workflows/nuget.config
       nugetFolder: ./nuget
+      configuration: Debug
 
     steps:
     - run: |
-        echo $project, ${{ env.project }}, ${{ env.PROJECT }}
-        echo $nugetConfig, ${{ env.nugetConfig }}, ${{ env.NUGET_CONFIG }}
-        echo $nugetFolder, ${{ env.nugetFolder }}, ${{ env.NUGET_FOLDER }}
+        echo ${{ env.project }}
+        echo ${{ env.nugetConfig }}
+        echo ${{ env.nugetFolder }}
     - uses: actions/checkout@v2
 
     - name: Unshallow Fetch
@@ -34,15 +35,15 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Debug --no-restore $project 
+      run: dotnet build --configuration ${{ env:configuration }} --no-restore ${{ env.project }} 
 
     - name: Pack Nuget Package
       run: |
-        mkdir $nugetFolder
-        dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output $nugetFolder $project
+        mkdir ${{ env.nugetFolder }}
+        dotnet pack --configuration ${{ env:configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
 
     - name: Publish
       run: |
-        sed -i 's/\$GITHUBACTIONS/${{ secrets.GITUHUB_TOKEN }}/g' $nugetConfig
-        nuget push $nugetFolder/*.nupkg -src 'github' -ConfigFile $nugetConfig
+        sed -i 's/\$GITHUBACTIONS/${{ secrets.GITUHUB_TOKEN }}/g' ${{ env.nugetConfig }}
+        nuget push ${{ env.nugetFolder }}/*.nupkg -src 'github' -ConfigFile ${{ env.nugetConfig }}
         
