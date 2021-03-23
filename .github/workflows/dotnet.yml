@@ -35,12 +35,12 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration ${{ env:configuration }} --no-restore ${{ env.project }} 
+      run: dotnet build --configuration ${{ env.configuration }} --no-restore ${{ env.project }} 
 
     - name: Pack Nuget Package
       run: |
         mkdir ${{ env.nugetFolder }}
-        dotnet pack --configuration ${{ env:configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
+        dotnet pack --configuration ${{ env.configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
 
     - name: Publish
       run: |
