@@ -14,60 +14,60 @@ jobs:
       project: Photino.NET/Photino.NET.csproj
       nugetFolder: ./nuget
       configuration: Debug
-      repository: "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" 
+      repository: "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
     steps:
-    - run: |
-        echo ${{ env.project }}
-        echo ${{ env.nugetFolder }}
-        echo ${{ env.configuration }}
+      - run: |
+          echo ${{ env.project }}
+          echo ${{ env.nugetFolder }}
+          echo ${{ env.configuration }}
 
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Unshallow Fetch
-      run: git fetch --unshallow
+      - name: Unshallow Fetch
+        run: git fetch --unshallow
 
-    - name: Setup .NET 5.0.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-        source-url: ${{ env.repository }}
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Build, Pack and Publish to GitHub
-      run: |        
-        gpr="GPR"
-        user="${{ github.repository_owner }}"
-        pw="${{ secrets.GITHUB_TOKEN }}"
-        source="${{ env.repository }}"
-        nugetFolder=${{ env.nugetFolder }}
-        project=${{ env.project }}
-        configuration=${{ env.configuration }}
+      - name: Setup .NET 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+          source-url: ${{ env.repository }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        mkdir $nugetFolder 
-        
-        dotnet restore $project 
-        
-        dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
-        
-    - name: PushGithub
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        curl -o nuget.deb http://archive.ubuntu.com/ubuntu/pool/universe/n/nuget/nuget_2.8.7+md510+dhx1-1_all.deb
-        ar x {nuget.deb}
-        tar xvf control.tar.gz
-        tar data.tar.gz
-        ls -al
+      - name: Build, Pack and Publish to GitHub
+        run: |
+          gpr="GPR"
+          user="${{ github.repository_owner }}"
+          pw="${{ secrets.GITHUB_TOKEN }}"
+          source="${{ env.repository }}"
+          nugetFolder=${{ env.nugetFolder }}
+          project=${{ env.project }}
+          configuration=${{ env.configuration }}
+
+          mkdir $nugetFolder 
+
+          dotnet restore $project 
+
+          dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
+
+      - name: PushGithub
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -o nuget.deb http://archive.ubuntu.com/ubuntu/pool/universe/n/nuget/nuget_2.8.7+md510+dhx1-1_all.deb
+          ar x {nuget.deb}
+          tar xvf control.tar.gz
+          tar data.tar.gz
+          ls -al
+
+          ./nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
 #        dpkg-deb -xv {nuget.deb} {.}
-             
-        ./nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
-    #        for package in $nugetFolder/*.nupkg
-    #        do
-    #          echo $package
-    #          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
-    #        done;
+#        for package in $nugetFolder/*.nupkg
+#        do
+#          echo $package
+#          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
+#        done;
     
