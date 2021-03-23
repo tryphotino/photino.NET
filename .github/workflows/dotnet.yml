@@ -14,7 +14,7 @@ jobs:
       project: Photino.NET/Photino.NET.csproj
       nugetFolder: ./nuget
       configuration: Debug
-      repository: "https://nuget.pkg.github.com/sharpninja/index.json" 
+      repository: "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" 
 
     steps:
     - run: |
@@ -31,36 +31,36 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-
+        source-url: ${{ env.repository }}
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
     - name: Build, Pack and Publish to GitHub
       run: |        
         gpr="GPR"
-        user="sharpninja"
+        user="${{ github.repository_owner }}"
         pw="${{ secrets.GITHUB_TOKEN }}"
         source="${{ env.repository }}"
         nugetFolder=${{ env.nugetFolder }}
         project=${{ env.project }}
         configuration=${{ env.configuration }}
 
-        echo "[$gpr]"
-        echo "[$user]"
-        echo "[$pw]"
-        echo "[$source]"
-        echo "[$nugetFolder]"
-        echo "[$project]"
-        echo "[$configuration]"
-        
         mkdir $nugetFolder 
         
         dotnet restore $project 
         
         dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
         
-        for package in $nugetFolder/*.nupkg
-        do
-          echo $package
-          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
-        done;
+#        for package in $nugetFolder/*.nupkg
+#        do
+#          echo $package
+#          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
+#        done;
+    
+    - name: PushGithub
+      run: nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
 #        dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
 
