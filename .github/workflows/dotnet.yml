@@ -41,7 +41,6 @@ jobs:
           curl https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -o $nugetPath 
           
           chmod +x $nugetPath 
-          bash -c $nugetPath
           
           project=${{ env.project }}
 
@@ -62,21 +61,13 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          nugetPath="/home/runner/nuget.exe"
-          
           gpr="GPR"
           user="${{ github.repository_owner }}"
           pw="${{ secrets.GITHUB_TOKEN }}"
           source="${{ env.repository }}"
 
-          setApi="$nugetPath setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}"
-          push="$nugetPath push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -NoSymbols -SkipDuplicate"
-
-          echo $setApi          
-          bash -c $setApi
-          
-          echo $push
-          bash -c $push
+          /home/runner/nuget.exe setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}
+          /home/runner/nuget.exe push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -NoSymbols -SkipDuplicate
 
 #        for package in $nugetFolder/*.nupkg
 #        do
