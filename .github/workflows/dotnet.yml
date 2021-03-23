@@ -59,6 +59,7 @@ jobs:
           
           mkdir $nugetDir
           cp /home/runner/.nuget/packages/nuget.commandline.xplat/5.9.0/lib/net5.0/NuGet.CommandLine.XPlat.dll $nugetDir/NuGet.CommandLine.XPlat.dll 
+          cp /home/runner/.nuget/packages/nuget.commands/5.9.0/lib/net5.0/NuGet.Commands.dll $nugetDir/NuGet.Commands.dll 
           cp /home/runner/.nuget/packages/nuget.common/5.9.0/lib/netstandard2.0/NuGet.Common.dll $nugetDir/NuGet.Common.dll 
 
           nuget="$nugetDir/NuGet.CommandLine.XPlat.dll"

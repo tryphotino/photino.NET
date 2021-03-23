@@ -30,6 +30,8 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="NuGet.CommandLine.XPlat" Version="5.9.0" />
+    <PackageReference Include="NuGet.Commands" Version="5.9.0" />
+    <PackageReference Include="NuGet.Common" Version="5.9.0" />
     <PackageReference Include="Photino.Native" Version="1.1.1" />
   </ItemGroup>
   
