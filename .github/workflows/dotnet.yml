@@ -49,7 +49,7 @@ jobs:
       run: nuget setApiKey ${{ secrets.API_KEY }} -src 'github' -ConfigFile ./.github/workflows/nuget.config
       
     - name: Publish
-      run: cd ./nuget; nuget push *.nupkg -src 'github' -ConfigFile ./.github/workflows/nuget.config 
+      run: cd ./nuget; nuget push *.nupkg -src 'github' -ConfigFile ../.github/workflows/nuget.config 
 
 #    - name: Publish to GitHub
 #      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
