@@ -66,7 +66,7 @@ jobs:
           pw="${{ secrets.API_KEY }}"
           source="${{ env.repository }}"
 
-          /home/runner/nuget.exe sources add -Name $gpr -Username $user -Password $pw -src $source -StorePasswordInClearText
+          /home/runner/nuget.exe sources Update -Name $gpr -Username $user -Password $pw -src $source -StorePasswordInClearText
 
           for package in $nugetFolder/*.nupkg
           do
