@@ -65,6 +65,13 @@ jobs:
           cp -r /home/runner/.nuget/packages/nuget.versioning/5.9.0/lib/netstandard2.0/* $nugetDir/
           cp -r /home/runner/.nuget/packages/nuget.common/5.9.0/lib/netstandard2.0/* $nugetDir/ 
           cp -r /home/runner/.nuget/packages/nuget.configuration/5.9.0/lib/netstandard2.0/* $nugetDir/ 
+
+          cp -r /home/runner/.nuget/packages/nuget.credentials/5.9.0/lib/net5.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.dependencyresolver.core/5.9.0/lib/net5.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.frameworks/5.9.0/lib/netstandard2.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.librarymodel/5.9.0/lib/netstandard2.0/* $nugetDir/ 
+          cp -r /home/runner/.nuget/packages/nuget.projectmodel/5.9.0/lib/net5.0/* $nugetDir/ 
+
           cp -r /home/runner/.nuget/packages/microsoft.extensions.commandlineutils/1.1.1/lib/netstandard1.3/* $nugetDir/
           cp -r /home/runner/.nuget/packages/netstandard.library/2.0.3/build/netstandard2.0/ref/* $nugetDir/
           
