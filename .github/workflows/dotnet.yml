@@ -35,28 +35,10 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build, Pack and Publish to GitHub
-        run: |
-          gpr="GPR"
-          user="${{ github.repository_owner }}"
-          pw="${{ secrets.GITHUB_TOKEN }}"
-          source="${{ env.repository }}"
-          nugetFolder=${{ env.nugetFolder }}
-          project=${{ env.project }}
-          configuration=${{ env.configuration }}
-
-          mkdir $nugetFolder 
-
-          dotnet restore $project 
-
-          dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
-
-      - name: PushGithub
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Restore
         run: |
           nugetDir="/home/runner/nuget"
-          
+
           mkdir $nugetDir
           cp -r /home/runner/.nuget/packages/nuget.commandline.xplat/5.9.0/lib/net5.0/* $nugetDir/ 
           cp -r /home/runner/.nuget/packages/nuget.commands/5.9.0/lib/net5.0/* $nugetDir/ 
@@ -75,9 +57,34 @@ jobs:
           cp -r /home/runner/.nuget/packages/newtonsoft.json/9.0.1/lib/netstandard1.0/* $nugetDir/
           cp -r /home/runner/.nuget/packages/microsoft.extensions.commandlineutils/1.1.1/lib/netstandard1.3/* $nugetDir/
           cp -r /home/runner/.nuget/packages/netstandard.library/2.0.3/build/netstandard2.0/ref/* $nugetDir/
-          
+
+
+      
+      - name: Build, Pack and Publish to GitHub
+        run: |
+          gpr="GPR"
+          user="${{ github.repository_owner }}"
+          pw="${{ secrets.GITHUB_TOKEN }}"
+          source="${{ env.repository }}"
+          nugetFolder=${{ env.nugetFolder }}
+          project=${{ env.project }}
+          configuration=${{ env.configuration }}
+
+          mkdir $nugetFolder 
+
+          dotnet restore $project 
+
+          dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
+
+      
+      - name: Push Github
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          nugetDir="/home/runner/nuget"          
           nuget="$nugetDir/NuGet.CommandLine.XPlat.dll"
 
+          dotnet $nuget setApiKey ${{ secrets.GITHUB_TOKEN }} -s ${{ env.repository }} 
           dotnet $nuget push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
 #        dpkg-deb -xv {$deb} {.}
