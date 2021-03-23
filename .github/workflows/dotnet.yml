@@ -42,14 +42,12 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Publish
+    - name: Build, Pack and Publish to GitHub
       run: |
         mkdir ${{ env.nugetFolder }}
+        dotnet restore
         dotnet pack --configuration ${{ env.configuration }} --no-restore --include-symbols --include-source --output ${{ env.nugetFolder }} ${{ env.project }}
-        sed -i 's/\$GITHUBACTIONS/${{ env.token }}/g' ${{ env.nugetConfig }}
+        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
         nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
-        nuget push ${{ env.nugetFolder }}/*.nupkg -src ${{ env.nugetRepository }}
+        nuget push ${{ env.nugetFolder }}/*.nupkg -src "GitHub"
         
