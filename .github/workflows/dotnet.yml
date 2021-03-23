@@ -55,4 +55,3 @@ jobs:
         repo-owner:  ${{ github.actor }}
         gh-user:  ${{ github.actor }}
         token:  ${{ secrets.API_TOKEN }}
-        config-file: './.github/workflows/nuget.config' 
