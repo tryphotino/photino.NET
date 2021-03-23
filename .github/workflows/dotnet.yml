@@ -46,4 +46,4 @@ jobs:
       run: mkdir ./nuget; dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output ./nuget Photino.NET/Photino.NET.csproj
 
     - name: Push Nuget Package
-      run: nuget push ./nuget/*.nupkg ${{ secrets.GITHUB_TOKEN }} -src https://nuget.pkg.github.com/${{ github.actor }}/index.json -NonInteractive   
+      run: cd ./nuget; nuget push *.nupkg ${{ secrets.GITHUB_TOKEN }} -src https://nuget.pkg.github.com/${{ github.actor }}/index.json  
