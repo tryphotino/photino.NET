@@ -18,18 +18,18 @@ jobs:
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.7
-
-    display-semver:
-      name: Display Semantic Version
-      runs-on: ubuntu-latest
-      needs: calculate-version
-      env:
-        SEMVER: ${{ needs.calculate-version.outputs.semVer }}
-      steps:
-        - name: Display version
-          run: |
-            echo SemVer: $SEMVER
-            
+        
+  display-semver:
+    name: Display Semantic Version
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    env:
+      SEMVER: ${{ needs.calculate-version.outputs.semVer }}
+    steps:
+      - name: Display version
+        run: |
+          echo SemVer: $SEMVER
+          
   build:
     runs-on: ubuntu-latest
     outputs:
