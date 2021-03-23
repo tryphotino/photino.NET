@@ -46,7 +46,7 @@ jobs:
       run: mkdir ./nuget; dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output ./nuget Photino.NET/Photino.NET.csproj
 
     - name: Set ApiKey
-      run: nuget setApiKey ${{ secrets.API_KEY }} -src 'github' -ConfigFile ./.github/workflows/nuget.config
+      run: nuget setApiKey ${{ secrets.GITHUBACTIONS }} -src 'github' -ConfigFile ./.github/workflows/nuget.config
       
     - name: Publish
       run: cd ./nuget; nuget push *.nupkg -src 'github' -ConfigFile ../.github/workflows/nuget.config 
