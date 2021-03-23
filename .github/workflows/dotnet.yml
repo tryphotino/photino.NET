@@ -51,25 +51,15 @@ jobs:
         
         dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
         
-#        for package in $nugetFolder/*.nupkg
-#        do
-#          echo $package
-#          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
-#        done;
-    
     - name: PushGithub
-      run: nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
-#        dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
+      run: |
+        nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
-        
-#        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
-        
-#        dotnet nuget push ${{ env.nugetFolder }}/*.nupkg --skip-duplicate --no-symbols true
-        
-#        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
-#        nuget setApiKey ${{ env.token }} -src ${{ env.nugetRepository }}  
-#        nuget push ${{ env.nugetFolder }}/*.nupkg -src "GitHub"
-        
+    #        for package in $nugetFolder/*.nupkg
+    #        do
+    #          echo $package
+    #          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
+    #        done;
+    
