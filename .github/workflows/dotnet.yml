@@ -55,7 +55,7 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          nugetDir="~/nuget"
+          nugetDir="/home/runner/nuget"
           
           mkdir $nugetDir
           cp /home/runner/.nuget/packages/nuget.commandline.xplat/5.9.0/lib/net5.0/NuGet.CommandLine.XPlat.dll $nugetDir/NuGet.CommandLine.XPlat.dll 
