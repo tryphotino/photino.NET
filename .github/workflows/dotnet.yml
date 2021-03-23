@@ -15,7 +15,9 @@ jobs:
       nugetConfig: ./.github/workflows/nuget.config
       nugetFolder: ./nuget
       configuration: Debug
-      token: ${{ secrets.GITHUBACTIONS }}
+      #token: ${{ secrets.API_KEY }}
+      #token: ${{ secrets.GITHUBACTIONS }}
+      token: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - run: |
