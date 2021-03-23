@@ -56,10 +56,9 @@ jobs:
         
         dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
         
-        ls -l $nugetFolder 
-
-        for $package in $nugetFolder/*.nupkg
+        for package in $nugetFolder/*.nupkg
         do
+          echo $package
           curl -vX PUT -u "$user:$pw" -F package=@$package $source;
         done;
 #        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
