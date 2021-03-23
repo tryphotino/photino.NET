@@ -48,10 +48,13 @@ jobs:
 #    - name: Set ApiKey
 #      run: nuget setApiKey ${{ secrets.GITHUB_TOKEN }} -src 'github' -ConfigFile ./.github/workflows/nuget.config
 
+    - run: echo "[${{ secrets.ApiToken }}]" 
+
     - name: Publish to GitHub
       uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
       with:
         nupkg-path:  './nuget/*.nupkg'
         repo-owner:  ${{ github.actor }}
         gh-user:  ${{ github.actor }}
-        token:  ${{ secrets.API_TOKEN }}
+        token:  ${{ secrets.ApiToken }}
+        
