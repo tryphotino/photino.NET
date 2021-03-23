@@ -38,13 +38,13 @@ jobs:
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         dotnet-version: 5.0.x
         source-url: https://nuget.pkg.github.com/${{ env.owner }}/index.json
 
     - name: Build, Pack and Publish to GitHub
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         mkdir ${{ env.nugetFolder }}
         
