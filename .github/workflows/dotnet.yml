@@ -67,7 +67,7 @@ jobs:
           source="${{ env.repository }}"
 
           /home/runner/nuget.exe setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}
-          /home/runner/nuget.exe push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -NoSymbols -SkipDuplicate
+          /home/runner/nuget.exe push ${{ env.nugetFolder }}/*.nupkg ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate
 
 #        for package in $nugetFolder/*.nupkg
 #        do
