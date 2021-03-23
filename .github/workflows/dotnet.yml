@@ -22,7 +22,7 @@ jobs:
     - name: Publish NuGet
       uses: brandedoutcast/publish-nuget@v2
       with:
-        PROJECT_FILE_PATH: $GITHUB_WORKSPACE/Photino.NET/Photino.NET.csproj
+        PROJECT_FILE_PATH: Photino.NET/Photino.NET.csproj
         NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/$GITHUB_ACTOR/index.json
+        NUGET_SOURCE: https://nuget.pkg.github.com/${{ github.actor }}/index.json
         INCLUDE_SYMBOLS: true
