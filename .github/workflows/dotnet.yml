@@ -40,6 +40,7 @@ jobs:
           nugetPath="/home/runner/nuget.exe"
           curl https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -o $nugetPath 
           
+          chmod +x $nugetPath 
           bash -c $nugetPath
           
           project=${{ env.project }}
