@@ -51,7 +51,7 @@ jobs:
         for f in ${{ env.nugetFolder }}/*.nupkg 
         do
         	echo "Pushing $f"
-            dotnet nuget push ${{ env.nugetFolder }}/$f --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
+            dotnet nuget push $f --api-key ${{ env.token }} --source ${{ env.nugetRepository }}
         done        
         
 #        nuget source Add -Name "GitHub" -Source ${{ env.nugetRepository }}
