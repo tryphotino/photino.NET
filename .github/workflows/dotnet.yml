@@ -55,7 +55,7 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
+        ${{ env.DOTNET_ROOT }}/nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
     #        for package in $nugetFolder/*.nupkg
     #        do
