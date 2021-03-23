@@ -55,15 +55,16 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          curl -o nuget.deb http://archive.ubuntu.com/ubuntu/pool/universe/n/nuget/nuget_2.8.7+md510+dhx1-1_all.deb
-          ar x {nuget.deb}
+          deb="./nuget.deb"
+          curl -o $deb http://archive.ubuntu.com/ubuntu/pool/universe/n/nuget/nuget_2.8.7+md510+dhx1-1_all.deb
+          ar x {$deb}
           tar xvf control.tar.gz
           tar data.tar.gz
           ls -al
 
           ./nuget.exe push ${{ env.nugetFolder }}/*.nupkg --no-symbols --skip-duplicate
 
-#        dpkg-deb -xv {nuget.deb} {.}
+#        dpkg-deb -xv {$deb} {.}
 
 #        for package in $nugetFolder/*.nupkg
 #        do
