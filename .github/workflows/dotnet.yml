@@ -61,13 +61,11 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.API_KEY }}
         run: |
-          gpr="GPR"
+          gpr="Source"
           user="${{ github.repository_owner }}"
           pw="${{ secrets.API_KEY }}"
           source="${{ env.repository }}"
 
-          /home/runner/nuget.exe sources
-          
           /home/runner/nuget.exe sources Update -Name $gpr -Username $user -Password $pw -src $source -StorePasswordInClearText
 
           for package in $nugetFolder/*.nupkg
