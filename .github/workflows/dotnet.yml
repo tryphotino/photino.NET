@@ -46,13 +46,16 @@ jobs:
       run: mkdir ./nuget; dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output ./nuget Photino.NET/Photino.NET.csproj
 
     - name: Set ApiKey
-      run: nuget setApiKey ${{ secrets.API_KEY }} -src 'https://nuget.pkg.github.com/${{ github.actor }}'
+      run: nuget setApiKey ${{ secrets.API_KEY }} -src 'github' -ConfigFile ./.github/workflows/nuget.config
+      
+    - name: Publish
+      run: cd ./nuget; nuget push *.nupkg -src 'github' -ConfigFile ./.github/workflows/nuget.config 
 
-    - name: Publish to GitHub
-      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-      with:
-        nupkg-path:  './nuget/*.nupkg'
-        repo-owner:  ${{ github.actor }}
-        gh-user:  ${{ github.actor }}
-        token:  ${{ secrets.API_KEY }}
+#    - name: Publish to GitHub
+#      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+#      with:
+#        nupkg-path:  './nuget/*.nupkg'
+#        repo-owner:  ${{ github.actor }}
+#        gh-user:  ${{ github.actor }}
+#        token:  ${{ secrets.API_KEY }}
         
