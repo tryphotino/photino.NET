@@ -62,7 +62,8 @@ jobs:
           cp -r /home/runner/.nuget/packages/nuget.commands/5.9.0/lib/net5.0/* $nugetDir/ 
           cp -r /home/runner/.nuget/packages/nuget.common/5.9.0/lib/netstandard2.0/* $nugetDir/ 
           cp -r /home/runner/.nuget/packages/microsoft.extensions.commandlineutils/1.0.1/lib/netstandard1.3/* $nugetDir/
-          cp -r /home/runner/.nuget/packages/system.resources.resourcemanager/4.3.0/ref/netcore50/* $nugetDir/
+          cp -r /home/runner/.nuget/packages/netstandard.library/2.0.3/build/netstandard2.0/ref/* $nugetDir/
+          
           ls -al $nugetDir 
 
           nuget="$nugetDir/NuGet.CommandLine.XPlat.dll"

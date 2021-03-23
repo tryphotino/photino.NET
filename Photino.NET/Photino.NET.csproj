@@ -28,7 +28,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
     <PackageReference Include="NuGet.CommandLine.XPlat" Version="5.9.0" />
     <PackageReference Include="NuGet.Commands" Version="5.9.0" />
     <PackageReference Include="NuGet.Common" Version="5.9.0" />
