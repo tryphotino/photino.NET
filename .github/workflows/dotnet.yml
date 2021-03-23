@@ -24,10 +24,11 @@ jobs:
         echo ${{ env.nugetFolder }}
         echo ${{ env.token }}
 
-        if [ ${{ env.token }} -eq "" ] {
+        if [ ${{ env.token }} -eq "" ]
+        then
           echo "Empty token." 1>&2
           exit 64
-        }
+        fi
     - uses: actions/checkout@v2
 
     - name: Unshallow Fetch
