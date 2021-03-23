@@ -33,7 +33,7 @@ jobs:
           dotnet-version: 5.0.x
           source-url: ${{ env.repository }}
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.API_KEY }}
 
       - name: Restore
         run: |
@@ -59,19 +59,19 @@ jobs:
 
       - name: Push Github
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.API_KEY }}
         run: |
           gpr="GPR"
           user="${{ github.repository_owner }}"
-          pw="${{ secrets.GITHUB_TOKEN }}"
+          pw="${{ secrets.API_KEY }}"
           source="${{ env.repository }}"
 
-          /home/runner/nuget.exe setApiKey ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }}
+          /home/runner/nuget.exe sources add -Name $gpr -Username $user -Password $pw -src $source -StorePasswordInClearText
 
           for package in $nugetFolder/*.nupkg
           do
-              echo "/home/runner/nuget.exe push $package ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate" 
-              /home/runner/nuget.exe push $package ${{ secrets.GITHUB_TOKEN }} -src ${{ env.repository }} -NoSymbols -SkipDuplicate
+              echo "/home/runner/nuget.exe push $package -src $gpr -NoSymbols -SkipDuplicate" 
+              /home/runner/nuget.exe push $package -src $gpr -NoSymbols -SkipDuplicate
           done;
 
 #               nugetDir="/home/runner/nuget"
