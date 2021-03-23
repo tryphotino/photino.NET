@@ -58,8 +58,13 @@ jobs:
         
         ls -l $nugetFolder 
 
-        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
-        dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
+        for $package in $nugetFolder/*.nupkg
+        do
+          curl -vX PUT -u "$user:$pw" -F package=@$package $source;
+        done;
+#        dotnet nuget add source $source -n $gpr -u $user -p $pw --store-password-in-clear-text
+#        dotnet nuget push $nugetFolder/*.nupkg -s $gpr -d --skip-duplicate
+
         
 #        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
         
