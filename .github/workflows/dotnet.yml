@@ -40,10 +40,10 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --project Photino.NET/Photino.NET.csproj --configuration Debug --no-restore 
+      run: dotnet build --configuration Debug --no-restore Photino.NET/Photino.NET.csproj 
 
     - name: Pack Nuget Package
-      run: dotnet pack --project Photino.NET/Photino.NET.csproj --configuration Debug --no-restore --no-build --include-symbols --include-source
+      run: dotnet pack --configuration Debug --no-restore --include-symbols --include-source Photino.NET/Photino.NET.csproj
 
     - name: Push Nuget Package
       run: nuget push -Source https://nuget.pkg.github.com/${{ github.actor }}/index.json -ApiKey ${{ secrets.GITHUB_TOKEN }} -NonInteractive   
