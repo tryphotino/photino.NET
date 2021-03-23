@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-    - project: Photino.NET/Photino.NET.csproj
-    - nugetConfig: ./.github/workflows/nuget.config
-    - nugetFolder: ./nuget
+      project: Photino.NET/Photino.NET.csproj
+      nugetConfig: ./.github/workflows/nuget.config
+      nugetFolder: ./nuget
 
     steps:
     - run: |
-        echo $project
-        echo $nugetConfig
-        echo $nugetFolder
+        echo $project, ${{ env.project }}, ${{ env.PROJECT }}
+        echo $nugetConfig, ${{ env.nugetConfig }}, ${{ env.NUGET_CONFIG }}
+        echo $nugetFolder, ${{ env.nugetFolder }}, ${{ env.NUGET_FOLDER }}
     - uses: actions/checkout@v2
 
     - name: Unshallow Fetch
