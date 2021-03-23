@@ -44,7 +44,7 @@ jobs:
 
     - name: Set API Key
       run: |
-        dotnet nuget sources add -name "GPR" -Source ${{ env.nugetRepository }} -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget sources add -name "GPR" -Source ${{ env.source-url }} -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
 #        dotnet new tool-manifest
 #        dotnet tool install gpr --local
 #        dotnet gpr setApiKey ${{ secrets.GITHUB_TOKEN }} ${{ env.nugetRepository }}
