@@ -18,7 +18,7 @@ jobs:
       nugetRepository: 'https://nuget.pkg.github.com/sharpninja/index.json'
       #token: ${{ secrets.API_KEY }}
       #token: ${{ secrets.GITHUBACTIONS }}
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - run: |
@@ -42,8 +42,6 @@ jobs:
       with:
         dotnet-version: 5.0.x
         source-url: https://nuget.pkg.github.com/${{ env.owner }}/index.json
-        env:
-          NUGET_AUTH_TOKEN: ${{ env.TOKEN }}
 
     - name: Build, Pack and Publish to GitHub
       run: |
