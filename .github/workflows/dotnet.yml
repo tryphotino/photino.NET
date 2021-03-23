@@ -43,7 +43,7 @@ jobs:
         
         ls -l ${{ env.nugetFolder }} 
 
-        dotnet nuget sources add -name $gpr -Source ${{ env.repository }} -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget add source -name $gpr -Source ${{ env.repository }} -Username sharpninja -Password ${{ secrets.GITHUB_TOKEN }}
         nuget push ${{ env.nugetFolder }}/*.nupkg -source $gpr -SkipDuplicate
         
 #        dotnet gpr push ${{ env.nugetFolder }}/*.nupkg
