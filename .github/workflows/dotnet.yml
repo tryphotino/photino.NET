@@ -37,6 +37,10 @@ jobs:
 
       - name: Restore
         run: |
+          project=${{ env.project }}
+
+          dotnet restore $project 
+
           nugetDir="/home/runner/nuget"
 
           mkdir $nugetDir
@@ -58,8 +62,6 @@ jobs:
           cp -r /home/runner/.nuget/packages/microsoft.extensions.commandlineutils/1.1.1/lib/netstandard1.3/* $nugetDir/
           cp -r /home/runner/.nuget/packages/netstandard.library/2.0.3/build/netstandard2.0/ref/* $nugetDir/
 
-
-      
       - name: Build, Pack and Publish to GitHub
         run: |
           nugetFolder=${{ env.nugetFolder }}
@@ -67,8 +69,6 @@ jobs:
           configuration=${{ env.configuration }}
 
           mkdir $nugetFolder 
-
-          dotnet restore $project 
 
           dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
       
