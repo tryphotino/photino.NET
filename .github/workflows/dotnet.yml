@@ -62,10 +62,6 @@ jobs:
       
       - name: Build, Pack and Publish to GitHub
         run: |
-          gpr="GPR"
-          user="${{ github.repository_owner }}"
-          pw="${{ secrets.GITHUB_TOKEN }}"
-          source="${{ env.repository }}"
           nugetFolder=${{ env.nugetFolder }}
           project=${{ env.project }}
           configuration=${{ env.configuration }}
@@ -75,12 +71,16 @@ jobs:
           dotnet restore $project 
 
           dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
-
       
       - name: Push Github
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gpr="GPR"
+          user="${{ github.repository_owner }}"
+          pw="${{ secrets.GITHUB_TOKEN }}"
+          source="${{ env.repository }}"
+
           nugetDir="/home/runner/nuget"          
           nuget="$nugetDir/NuGet.CommandLine.XPlat.dll"
 
