@@ -9,8 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      semVer: ${{ steps.gitversion.outputs.semVer }}
+#    outputs:
+#      semVer: ${{ steps.gitversion.outputs.semVer }}
 
     steps:
     - uses: actions/checkout@v2
@@ -23,27 +23,27 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: '5.x'
-        includePrerelease: true
-
-    - name: Determine Version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      with:
-        useConfigFile: true
-        configFilePath: .github/workflows/gitversion.yml
-        
+#    - name: Install GitVersion
+#      uses: gittools/actions/gitversion/setup@v0.9.7
+#      with:
+#        versionSpec: '5.x'
+#        includePrerelease: true
+#
+#    - name: Determine Version
+#      id: gitversion
+#      uses: gittools/actions/gitversion/execute@v0.9.7
+#      with:
+#        useConfigFile: true
+#        configFilePath: .github/workflows/gitversion.yml
+#        
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
-      run: dotnet build Photino.NET/Photino.NET.csproj -c Debug --no-restore --version ${{ steps.gitversion.outputs.nuGetVersion }} 
+      run: dotnet build -p Photino.NET/Photino.NET.csproj -c Debug --no-restore 
 
     - name: Pack Nuget Package
-      run: dotnet pack Photino.NET/Photino.NET.csproj -c Debug --no-restore --no-build --include-symbols --include-source
+      run: dotnet pack -p Photino.NET/Photino.NET.csproj -c Debug --no-restore --no-build --include-symbols --include-source
 
     - name: Push Nuget Package
       run: nuget push -Source https://nuget.pkg.github.com/${{ github.actor }}/index.json -ApiKey ${{ secrets.GITHUB_TOKEN }} -NonInteractive   
