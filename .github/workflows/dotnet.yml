@@ -9,10 +9,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    outputs:
-#      semVer: ${{ steps.gitversion.outputs.semVer }}
+
+    with:
+    - project: Photino.NET/Photino.NET.csproj
+    - nugetConfig: ./.github/workflows/nuget.config
+    - nugetFolder: ./nuget
 
     steps:
+    - run: |
+        echo $project
+        echo $nugetConfig
+        echo $nugetFolder
     - uses: actions/checkout@v2
 
     - name: Unshallow Fetch
@@ -23,40 +30,19 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
-#    - name: Install GitVersion
-#      uses: gittools/actions/gitversion/setup@v0.9.7
-#      with:
-#        versionSpec: '5.x'
-#        includePrerelease: true
-#
-#    - name: Determine Version
-#      id: gitversion
-#      uses: gittools/actions/gitversion/execute@v0.9.7
-#      with:
-#        useConfigFile: true
-#        configFilePath: .github/workflows/gitversion.yml
-#        
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --configuration Debug --no-restore Photino.NET/Photino.NET.csproj 
+      run: dotnet build --configuration Debug --no-restore $project 
 
     - name: Pack Nuget Package
-      run: mkdir ./nuget; dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output ./nuget Photino.NET/Photino.NET.csproj
+      run: |
+        mkdir $nugetFolder
+        dotnet pack --configuration Debug --no-restore --include-symbols --include-source --output $nugetFolder $project
 
     - name: Publish
       run: |
-        sed -i 's/\$GITHUBACTIONS/${{ secrets.GITHUBACTIONS }}/g' ./.github/workflows/nuget.config
-        more ./.github/workflows/nuget.config
-        cd ./nuget
-        nuget push *.nupkg -src 'github' -ConfigFile ../.github/workflows/nuget.config
-
-#    - name: Publish to GitHub
-#      uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-#      with:
-#        nupkg-path:  './nuget/*.nupkg'
-#        repo-owner:  ${{ github.actor }}
-#        gh-user:  ${{ github.actor }}
-#        token:  ${{ secrets.API_KEY }}
+        sed -i 's/\$GITHUBACTIONS/${{ secrets.GITUHUB_TOKEN }}/g' $nugetConfig
+        nuget push $nugetFolder/*.nupkg -src 'github' -ConfigFile $nugetConfig
         
