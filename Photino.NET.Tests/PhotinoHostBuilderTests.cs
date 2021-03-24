@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PhotinoNET;
 using Xunit;
 
@@ -17,7 +18,7 @@ namespace Photino.NET.Tests
         [Fact]
         public void ConfigureHostConfiguration_ValidJson()
         {
-            var builder = new PhotinoHostBuilder(APP_NAME);
+            var builder = new PhotinoHostBuilder<Startup>(APP_NAME);
 
             builder.Should().NotBeNull();
             builder.Title.Should().Be(APP_NAME);
@@ -29,22 +30,22 @@ namespace Photino.NET.Tests
                     source.Optional = false;
                     source.Path = "appSettings.Test.json";
                 });
+
+                var hostConfiguration = configurationBuilder.Build();
+            
+                hostConfiguration.Should().NotBeNull();
+                hostConfiguration.GetChildren().Should().NotBeEmpty();
+                hostConfiguration.GetSection("AppSettings").Should().NotBeNull();
+                hostConfiguration.GetSection("AppSettings").GetChildren().Should().NotBeEmpty();
+                hostConfiguration.GetSection("AppSettings").GetChildren().First().Key.Should().Be("Value1");
+                hostConfiguration.GetSection("AppSettings").GetChildren().First().Value.Should().Be("1");
             });
-
-            var host = builder.Build() as PhotinoHost;
-
-            host.HostConfiguration.Should().NotBeNull();
-            host.HostConfiguration.GetChildren().Should().NotBeEmpty();
-            host.HostConfiguration.GetSection("AppSettings").Should().NotBeNull();
-            host.HostConfiguration.GetSection("AppSettings").GetChildren().Should().NotBeEmpty();
-            host.HostConfiguration.GetSection("AppSettings").GetChildren().First().Key.Should().Be("Value1");
-            host.HostConfiguration.GetSection("AppSettings").GetChildren().First().Value.Should().Be("1");
         }
 
         [Fact]
         public void ConfigureAppConfiguration_ValidJson()
         {
-            var builder = new PhotinoHostBuilder(APP_NAME);
+            var builder = new PhotinoHostBuilder<Startup>(APP_NAME);
 
             builder.Should().NotBeNull();
             builder.Title.Should().Be(APP_NAME);
@@ -60,20 +61,21 @@ namespace Photino.NET.Tests
                 });
             });
 
-            var host = builder.Build() as PhotinoHost;
+            var host = builder.Build();
 
-            host.Configuration.Should().NotBeNull();
-            host.Configuration.GetChildren().Should().NotBeEmpty();
-            host.Configuration.GetSection("AppSettings").Should().NotBeNull();
-            host.Configuration.GetSection("AppSettings").GetChildren().Should().NotBeEmpty();
-            host.Configuration.GetSection("AppSettings").GetChildren().First().Key.Should().Be("Value1");
-            host.Configuration.GetSection("AppSettings").GetChildren().First().Value.Should().Be("1");
+            var configuration = host.Services.GetService<IConfiguration>();
+            configuration.Should().NotBeNull();
+            configuration.GetChildren().Should().NotBeEmpty();
+            configuration.GetSection("AppSettings").Should().NotBeNull();
+            configuration.GetSection("AppSettings").GetChildren().Should().NotBeEmpty();
+            configuration.GetSection("AppSettings").GetChildren().First().Key.Should().Be("Value1");
+            configuration.GetSection("AppSettings").GetChildren().First().Value.Should().Be("1");
         }
 
         [Fact]
         public void ConfigureContainer_Object()
         {
-            var builder = new PhotinoHostBuilder(APP_NAME);
+            var builder = new PhotinoHostBuilder<Startup>(APP_NAME);
 
             builder.Should().NotBeNull();
             builder.Title.Should().Be(APP_NAME);
@@ -82,11 +84,10 @@ namespace Photino.NET.Tests
             {
                 context.Should().NotBeNull();
                 context.HostingEnvironment.Should().NotBeNull();
-                context.HostingEnvironment.ApplicationName.Should().Be(APP_NAME);
                 containerBuilder.Should().NotBeNull();
             });
 
-            var host = builder.Build() as PhotinoHost;
+            var host = builder.Build();
 
             host.Should().NotBeNull();
         }
@@ -98,7 +99,7 @@ namespace Photino.NET.Tests
 
             var location = new Point(100, 100);
             var size = new Size(500, 250);
-            var builder = new PhotinoHostBuilder(APP_NAME)
+            var builder = new PhotinoHostBuilder<Startup>(APP_NAME)
                 .WithIsFullscreen(false)
                 .WithPosition(location)
                 .WithSize(size)
@@ -124,11 +125,10 @@ namespace Photino.NET.Tests
             {
                 context.Should().NotBeNull();
                 context.HostingEnvironment.Should().NotBeNull();
-                context.HostingEnvironment.ApplicationName.Should().Be(APP_NAME);
                 containerBuilder.Should().NotBeNull();
             });
 
-            using var host = builder.Build() as PhotinoHost;
+            using var host = builder.Build();
 
             host.Should().NotBeNull();
 
@@ -140,8 +140,10 @@ namespace Photino.NET.Tests
             task.IsCanceled.Should().BeFalse();
             task.IsCompletedSuccessfully.Should().BeTrue();
 
-            host.Window.Should().NotBeNull();
-            host.Window.Title.Should().Be(APP_NAME);
+            var photinoWindow = host.Services.GetService<PhotinoWindow>();
+
+            photinoWindow.Should().NotBeNull();
+            photinoWindow.Title.Should().Be(APP_NAME);
 
             mre.Wait();
 
@@ -155,7 +157,7 @@ namespace Photino.NET.Tests
 
             var location = new Point(100, 100);
             var size = new Size(500, 250);
-            var builder = new PhotinoHostBuilder(APP_NAME)
+            var builder = new PhotinoHostBuilder<Startup>(APP_NAME)
                 .WithIsFullscreen(false)
                 .WithPosition(location)
                 .WithSize(size)
@@ -181,11 +183,10 @@ namespace Photino.NET.Tests
             {
                 context.Should().NotBeNull();
                 context.HostingEnvironment.Should().NotBeNull();
-                context.HostingEnvironment.ApplicationName.Should().Be(APP_NAME);
                 containerBuilder.Should().NotBeNull();
             });
 
-            using var host = builder.Build() as PhotinoHost;
+            using var host = builder.Build();
 
             host.Should().NotBeNull();
 
@@ -197,8 +198,10 @@ namespace Photino.NET.Tests
             task.IsCanceled.Should().BeFalse();
             task.IsCompletedSuccessfully.Should().BeTrue();
 
-            host.Window.Should().NotBeNull();
-            host.Window.Title.Should().Be(APP_NAME);
+            var photinoWindow = host.Services.GetService<PhotinoWindow>();
+            photinoWindow.Should().NotBeNull();
+            photinoWindow.Title.Should().Be(APP_NAME);
+            photinoWindow.Show();
 
             mre.Wait();
 

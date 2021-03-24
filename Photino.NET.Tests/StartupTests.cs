@@ -15,7 +15,7 @@ namespace Photino.NET.Tests
         [Fact]
         public void UseStartup_Configure()
         {
-            var host = (new PhotinoHostBuilder(APP_NAME)
+            var host = (new PhotinoHostBuilder<Startup>(APP_NAME)
                     .ConfigureHostConfiguration(builder =>
                     {
                         builder.AddJsonFile(source =>
@@ -23,14 +23,15 @@ namespace Photino.NET.Tests
                             source.Optional = false;
                             source.Path = "appSettings.Test.json";
                         });
-                    }) as PhotinoHostBuilder)?
-                .WithStartup<Startup>()
-                .Build() as PhotinoHost;
+                    }) as PhotinoHostBuilder<Startup>)?
+                .Build();
 
             host.Should().NotBeNull();
-            host.Configuration.Should().NotBeNull();
-            host.Configuration.GetSection("Logging").Should().NotBeNull();
-            host.Configuration.GetSection("Logging").GetSection("Console").Should().NotBeNull();
+
+            var configuration = host.Services.GetService<IConfiguration>();
+            configuration.Should().NotBeNull();
+            configuration.GetSection("Logging").Should().NotBeNull();
+            configuration.GetSection("Logging").GetSection("Console").Should().NotBeNull();
 
             var logger = host.Services.GetService<ILogger<StartupTests>>();
             logger.Should().NotBeNull();
@@ -40,7 +41,7 @@ namespace Photino.NET.Tests
         [Fact]
         public void UseStartup_ConfigureServices()
         {
-            var host = (new PhotinoHostBuilder(APP_NAME)
+            var host = (new PhotinoHostBuilder<Startup>(APP_NAME)
                     .ConfigureHostConfiguration(builder =>
                     {
                         builder.AddJsonFile(source =>
@@ -48,19 +49,19 @@ namespace Photino.NET.Tests
                             source.Optional = false;
                             source.Path = "appSettings.Test.json";
                         });
-                    }) as PhotinoHostBuilder)?
-                .WithStartup<Startup>()
-                .Build() as PhotinoHost;
+                    }))?
+                .Build();
 
             host.Should().NotBeNull();
-            host.Configuration.Should().NotBeNull();
-            host.Configuration.GetSection("Logging").Should().NotBeNull();
-            host.Configuration.GetSection("Logging").GetSection("Console").Should().NotBeNull();
+
+            var configuration = host.Services.GetService<IConfiguration>();
+            configuration.Should().NotBeNull();
+            configuration.GetSection("Logging").Should().NotBeNull();
+            configuration.GetSection("Logging").GetSection("Console").Should().NotBeNull();
 
             var startup = host.Services.GetService<Startup>();
             startup.Should().NotBeNull();
             startup.Configuration.Should().NotBeNull();
-            startup.Configuration.Should().BeSameAs(host.HostConfiguration);
         }
     }
 
