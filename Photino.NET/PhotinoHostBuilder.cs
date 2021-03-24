@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -10,102 +13,151 @@ using Microsoft.Extensions.Hosting.Internal;
 
 namespace PhotinoNET
 {
-    public class PhotinoHostBuilder : IHostBuilder
+    public class PhotinoHostBuilder<TStartup> : IHostBuilder
+        where TStartup : class
     {
-        private Type _startType;
-        private IConfigurationRoot _hostConfigurationRoot;
-        private IConfigurationRoot _appConfiguration;
-        private IServiceProvider _services;
+        private TStartup _startup;
+
         private Point _point;
         private Size _size;
         private bool _isFs;
-
         private Action<PhotinoWindowOptions> _options;
 
-        private readonly IDictionary<object, object> _properties = 
-            new Dictionary<object, object>();
-
-        private ConfigurationBuilder _hostConfigurationBuilder;
-        private ConfigurationBuilder _appConfigurationBuilder;
-        private readonly HostBuilderContext _hostBuilderContext;
-        private ServiceCollection _serviceCollection;
+        private readonly IHostBuilder _builder;
 
         public PhotinoHostBuilder(string title)
         {
-            _hostBuilderContext = new HostBuilderContext(Properties)
-            {
-                HostingEnvironment = new HostingEnvironment
+            _builder = Host.CreateDefaultBuilder()
+                .ConfigureServices(collection =>
                 {
-                    ApplicationName = title,
-                    ContentRootPath = Directory.GetCurrentDirectory(),
-                    ContentRootFileProvider = new PhysicalFileProvider(
-                        Directory.GetCurrentDirectory())
-                }
-            };
+                    collection.AddSingleton(provider =>
+                        new PhotinoWindow(Title, Options, Width, Height, Left, Top, Fullscreen)
+                    );
 
-            _serviceCollection = new ServiceCollection();
+                    collection.AddSingleton<PhotinoHostedService<TStartup>>();
+                });
 
             Title = title;
         }
 
-        public Type StartupType => _startType; 
-
         public string Title { get; }
 
-        public int Width => _size.Width;
+        private int Width => _size.Width;
 
-        public int Height => _size.Height;
+        private int Height => _size.Height;
 
-        public int Left => _point.X;
+        private int Left => _point.X;
 
-        public int Top => _point.Y;
+        private int Top => _point.Y;
 
-        public bool Fullscreen => _isFs;
+        private bool Fullscreen => _isFs;
 
-        public IServiceProvider Services => _services;
-
-        public Action<PhotinoWindowOptions> Options => _options;
+        private Action<PhotinoWindowOptions> Options => _options;
 
         public override string ToString()
         {
             return Title;
         }
 
-        public IDictionary<object, object> Properties => _properties;
-
-        public IConfigurationRoot HostConfiguration => _hostConfigurationRoot;
-
-        public IConfigurationRoot AppConfiguration => _appConfiguration;
+        public IDictionary<object, object> Properties => _builder.Properties;
 
         public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
         {
-            _hostConfigurationBuilder ??= new ConfigurationBuilder();
-            configureDelegate(_hostConfigurationBuilder);
+            _builder.ConfigureHostConfiguration(configureDelegate);
 
             return this;
+        }
+
+        private void ConfigureHostConfiguration(IConfigurationBuilder builder)
+        {
+            var hostConfigurationRoot = builder.Build();
+
+            try
+            {
+                var ctors = typeof(TStartup).GetConstructors();
+
+                var ctorWithConfig = ctors.FirstOrDefault(c =>
+                    c.GetParameters().Length == 1 &&
+                    c.GetParameters()
+                        .FirstOrDefault(pi =>
+                            pi?.ParameterType?.FullName?.Equals(typeof(IConfiguration).FullName) ?? false) != null);
+
+                if (ctorWithConfig != null)
+                {
+                    _startup = (TStartup) ctorWithConfig.Invoke(new object[] {hostConfigurationRoot});
+                }
+                else
+                {
+                    _startup = Activator.CreateInstance<TStartup>();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Could not create instance of {typeof(TStartup)}.", ex);
+            }
         }
 
         public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
         {
-            _appConfigurationBuilder ??= new ConfigurationBuilder();
-            configureDelegate(_hostBuilderContext, _appConfigurationBuilder);
-
+            _builder.ConfigureAppConfiguration(configureDelegate);
             return this;
+        }
+
+        private void ConfigureAppConfiguration(HostBuilderContext context, IConfigurationBuilder _)
+        {
+            if (_startup is null) return;
+
+            try
+            {
+                var methodInfo =
+                    typeof(TStartup).GetMethod("Configure", BindingFlags.Public | BindingFlags.Instance);
+
+                if (methodInfo != null)
+                {
+                    methodInfo.Invoke(_startup, new object[] {this, context.HostingEnvironment});
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"{typeof(TStartup).Name}.Configure could not be invoked.{Environment.NewLine}{ex}");
+            }
         }
 
         public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
         {
-            configureDelegate(_hostBuilderContext, _serviceCollection);
+            _builder.ConfigureServices(configureDelegate);
 
             return this;
+        }
+
+        private void ConfigureServices(HostBuilderContext context, IServiceCollection serviceCollection)
+        {
+            if (_startup is null) return;
+
+            serviceCollection.AddSingleton(_startup);
+
+            try
+            {
+                var methodInfo =
+                    typeof(TStartup).GetMethod("ConfigureServices", BindingFlags.Public | BindingFlags.Instance);
+
+                if (methodInfo != null)
+                {
+                    methodInfo.Invoke(_startup, new object[] {serviceCollection});
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"{typeof(TStartup).Name}.ConfigureServices could not be invoked.{Environment.NewLine}{ex}");
+            }
         }
 
         public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(
             IServiceProviderFactory<TContainerBuilder> factory)
         {
-            var builder = factory.CreateBuilder(_serviceCollection);
-            
-            _services = factory.CreateServiceProvider(builder);
+            _builder.UseServiceProviderFactory(factory);
 
             return this;
         }
@@ -113,11 +165,7 @@ namespace PhotinoNET
         public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(
             Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
         {
-            var fac = factory(_hostBuilderContext);
-
-            var builder = fac.CreateBuilder(_serviceCollection);
-            
-            _services = fac.CreateServiceProvider(builder);
+            _builder.UseServiceProviderFactory(factory);
 
             return this;
         }
@@ -125,83 +173,48 @@ namespace PhotinoNET
         public IHostBuilder ConfigureContainer<TContainerBuilder>(
             Action<HostBuilderContext, TContainerBuilder> configureDelegate)
         {
-            var builder = Activator.CreateInstance<TContainerBuilder>();
-            configureDelegate(_hostBuilderContext, builder);
+            _builder.ConfigureContainer(configureDelegate);
 
             return this;
         }
 
-        public PhotinoHostBuilder WithPosition(Point point)
+        public PhotinoHostBuilder<TStartup> WithPosition(Point point)
         {
             this._point = point;
 
             return this;
         }
 
-        public PhotinoHostBuilder WithOptions(Action<PhotinoWindowOptions> options)
+        public PhotinoHostBuilder<TStartup> WithOptions(Action<PhotinoWindowOptions> options)
         {
             this._options = options;
 
             return this;
         }
 
-        public PhotinoHostBuilder WithSize(Size size)
+        public PhotinoHostBuilder<TStartup> WithSize(Size size)
         {
             this._size = size;
 
             return this;
         }
 
-        public PhotinoHostBuilder WithIsFullscreen(bool isFs)
+        public PhotinoHostBuilder<TStartup> WithIsFullscreen(bool isFs)
         {
             this._isFs = isFs;
 
             return this;
         }
 
-        public PhotinoHostBuilder WithStartup<TStart>()
-        {
-            this._startType = typeof(TStart);
-
-            return this;
-        }
-
         public IHost Build()
         {
-            _hostConfigurationRoot = _hostConfigurationBuilder?.Build() ?? 
-                                     new ConfigurationRoot(new List<IConfigurationProvider>());
-            
-            dynamic startup = null;
+            _builder.ConfigureHostConfiguration(ConfigureHostConfiguration);
+            _builder.ConfigureAppConfiguration(ConfigureAppConfiguration);
+            _builder.ConfigureServices(ConfigureServices);
 
-            if (StartupType != null)
-            {
-                startup = Activator.CreateInstance(StartupType, _hostConfigurationRoot) ?? 
-                          Activator.CreateInstance(StartupType);
-            }
+            var host = _builder.Build();
 
-            try
-            {
-                startup?.ConfigureServices(_serviceCollection);
-            }
-            catch
-            {
-                // ignore 
-            }
-
-            try
-            {
-                startup?.Configure(this, _hostBuilderContext.HostingEnvironment);
-            }
-            catch
-            {
-                // ignore 
-            }
-
-            _appConfiguration = (_appConfigurationBuilder ?? new ConfigurationBuilder()).Build();
-
-            _services ??= (_serviceCollection ?? new ServiceCollection()).BuildServiceProvider();
-
-            return new PhotinoHost(this, startup);
+            return host;
         }
     }
 }
