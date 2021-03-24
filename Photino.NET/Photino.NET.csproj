@@ -28,14 +28,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-<<<<<<< HEAD
-<<<<<<< HEAD
     <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-=======
->>>>>>> ce4c718... Fixed versions
-=======
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
->>>>>>> d20cf30... Added nuget.config
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Photino.Native" Version="1.1.1" />
   </ItemGroup>
