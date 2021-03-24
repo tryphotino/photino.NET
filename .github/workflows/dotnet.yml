@@ -33,7 +33,7 @@ jobs:
           dotnet-version: 5.0.x
           source-url: ${{ env.repository }}
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.API_KEY }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Restore
         run: |
@@ -59,11 +59,11 @@ jobs:
 
       - name: Push Github
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.API_KEY }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gpr="Source"
           user="${{ github.repository_owner }}"
-          pw="${{ secrets.API_KEY }}"
+          pw="${{ secrets.GITHUB_TOKEN }}"
           source="${{ env.repository }}"
 
           /home/runner/nuget.exe sources Update -Name $gpr -Username $user -Password $pw -src $source -StorePasswordInClearText
