@@ -8,21 +8,66 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+    env:
+      project: Photino.NET/Photino.NET.csproj
+      nugetFolder: ./nuget
+      configuration: Debug
+      repository: "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Publish NuGet
-      uses: brandedoutcast/publish-nuget@v2
-      with:
-        PROJECT_FILE_PATH: $GITHUB_WORKSPACE/Photino.NET/Photino.NET.csproj
-        NUGET_KEY: ${{ secrets.GITHUB_TOKEN }}
-        NUGET_SOURCE: https://nuget.pkg.github.com/$GITHUB_ACTOR/index.json
-        INCLUDE_SYMBOLS: true
+      - uses: actions/checkout@v2
+
+      - name: Unshallow Fetch
+        run: git fetch --unshallow
+
+      - name: Setup .NET 5.0.x
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+          source-url: ${{ env.repository }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore
+        run: |
+          # Download newest nuget.exe
+          nugetPath="/home/runner/nuget.exe"
+          curl https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -o $nugetPath 
+
+          chmod +x $nugetPath 
+
+          project=${{ env.project }}
+
+          dotnet restore $project
+
+      - name: Build, Pack and Publish to GitHub
+        run: |
+          nugetFolder=${{ env.nugetFolder }}
+          project=${{ env.project }}
+          configuration=${{ env.configuration }}
+
+          mkdir $nugetFolder 
+
+          dotnet pack --configuration $configuration --no-restore --include-symbols --include-source --output $nugetFolder $project
+
+      - name: Push Github
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gpr="Source"
+          user="${{ github.repository_owner }}"
+          pw="${{ secrets.GITHUB_TOKEN }}"
+          source="${{ env.repository }}"
+
+          # Ensure the correct username and token are assigned to Source
+          /home/runner/nuget.exe sources Update -Name $gpr -Username $user -Password $pw -StorePasswordInClearText
+
+          for package in $nugetFolder/*.nupkg
+          do
+              echo "/home/runner/nuget.exe push $package -src $gpr -NoSymbols -SkipDuplicate" 
+          
+              # Execute the push
+              /home/runner/nuget.exe push $package -src $gpr -NoSymbols -SkipDuplicate
+          done;
