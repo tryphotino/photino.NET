@@ -31,7 +31,6 @@ jobs:
 
     - task: NuGetAuthenticate@0
       displayName: 'NuGet Authenticate'
-      
 
     #- task: CmdLine@2
     #  displayName: 'Build Photino.NET'
