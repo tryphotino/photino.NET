@@ -876,7 +876,7 @@ namespace PhotinoNET
             // This needs validation!
             // ––––––––––––––––––––––
             // Open a web URL string path
-            if (path.Contains("http://") || path.Contains("https://"))
+            if (path.Contains("http://") || path.Contains("https://") || path.Contains("app://"))
             {
                 return this.Load(new Uri(path));
             }
