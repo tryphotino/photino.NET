@@ -1,6 +1,6 @@
 mode: Mainline
-next-version: 1.0.0
-branches:
+next-version: 1.2.0
+branches: for_pull_request
   master:
     tag: sharpNinja
 ignore:

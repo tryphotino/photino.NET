@@ -5,7 +5,7 @@
     <Company>TryPhotino</Company>
     <Description>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
     <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageDescription>.NET 5 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
     <PackageId>Photino.NET</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -14,12 +14,14 @@
     <RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
     <TargetFramework>net5.0</TargetFramework>
     <Title>PhotinoNET</Title>
+    <UpdateAssemblyInfo>false</UpdateAssemblyInfo>
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
     <PropertyGroup>
       <PackageVersion>$(Version)</PackageVersion>
     </PropertyGroup>
+    <Message Text="GitVersion_InformationalVersion: $(GitVersion_InformationalVersion)"/>
   </Target>
 
   <ItemGroup>
