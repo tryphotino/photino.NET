@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -109,12 +111,40 @@ namespace PhotinoNET
 
             try
             {
-                var methodInfo =
-                    typeof(TStartup).GetMethod("Configure", BindingFlags.Public | BindingFlags.Instance);
-
-                if (methodInfo != null)
+                foreach (var mi in typeof(TStartup).GetMethods(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    methodInfo.Invoke(_startup, new object[] {this, context.HostingEnvironment});
+                    var parms = mi.GetParameters();
+                    var p = new ParameterInfo[2];
+                    parms.CopyTo(p, 0);
+
+                    var o = (parms.Length, p[0]?.ParameterType.Name, p[1]?.ParameterType.Name) switch
+                    {
+                        (2, nameof(PhotinoHostBuilder<TStartup>), nameof(HostingEnvironment)) => mi.Invoke(_startup, new object[] {this, context.HostingEnvironment}), 
+                        _ => mi.Invoke(_startup, new object[parms.Length]) 
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    $"{typeof(TStartup).Name}.Configure could not be invoked.{Environment.NewLine}{ex}");
+            }
+        }
+
+        private void ConfigureAppConfiguration<TBuilder>(TBuilder builder)
+        {
+            if (_startup is null) return;
+
+            try
+            {
+                foreach (var mi in typeof(TStartup).GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    var parms = mi.GetParameters();
+                    
+                    if (parms[0]?.ParameterType.Name == typeof(TBuilder).Name)
+                    {
+                        mi.Invoke(_startup, new object[] {builder});
+                    }
                 }
             }
             catch (Exception ex)
