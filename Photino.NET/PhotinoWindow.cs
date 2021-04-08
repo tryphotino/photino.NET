@@ -339,6 +339,8 @@ namespace PhotinoNET
             this.OnWindowCreated();
         }
 
+
+        //WHERE DID THIS CONSTRUCTOR COME FROM? SHOULD IT BE REMOVED?
         static PhotinoWindow()
         {
             // Workaround for a crashing issue on Linux. Without this, applications
