@@ -243,6 +243,50 @@ namespace PhotinoNET
             }
         }
 
+        private bool _minimized = false;
+        public bool IsMinimized
+        {
+            get
+            {
+                Invoke(() => Photino_IsMinimized(_nativeInstance, out _minimized));
+                return _minimized;
+            }
+
+            set 
+            {
+                if (_minimized != value)
+                {
+                    _minimized = value;
+                    if (_minimized)
+                        Invoke(() => Photino_Minimize(_nativeInstance));
+                    else
+                        Invoke(() => Photino_Restore(_nativeInstance));
+                }
+            }
+        }
+
+        private bool _maximized = false;
+        public bool IsMaximized
+        {
+            get
+            {
+                Invoke(() => Photino_IsMaximized(_nativeInstance, out _maximized));
+                return _maximized;
+            }
+
+            set
+            {
+                if (_maximized != value)
+                {
+                    _maximized = value;
+                    if (_maximized)
+                        Invoke(() => Photino_Maximize(_nativeInstance));
+                    else
+                        Invoke(() => Photino_Restore(_nativeInstance));
+                }
+            }
+        }
+
         private bool _wasShown = false;
         public bool WasShown => _wasShown;
 
@@ -1232,6 +1276,11 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Minimize(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_IsMinimized(IntPtr instance, out bool minimized);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Maximize(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_IsMaximized(IntPtr instance, out bool maximized);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Restore(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Close(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
