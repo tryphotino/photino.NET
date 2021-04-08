@@ -16,6 +16,7 @@ namespace PhotinoNET
         private readonly int _managedThreadId;
         private readonly List<GCHandle> _gcHandlesToFree = new List<GCHandle>();
         private readonly List<IntPtr> _hGlobalToFree = new List<IntPtr>();
+        private const int CW_USEDEFAULT = unchecked((int)0x80000000);
 
         public IntPtr WindowHandle
         {
@@ -280,12 +281,21 @@ namespace PhotinoNET
         public PhotinoWindow(
             string title,
             Action<PhotinoWindowOptions> configure = null,
-            int width = 800,
-            int height = 600,
-            int left = 20,
-            int top = 20,
+            int width = CW_USEDEFAULT,
+            int height = CW_USEDEFAULT,
+            int left = CW_USEDEFAULT,
+            int top = CW_USEDEFAULT,
             bool fullscreen = false)
         {
+            if (IsLinuxPlatform || IsMacOsPlatform)
+            {
+                //This default value is for Windows - not sure if Linux or Mac have a similar concept, so set to reasonable default.
+                if (width == CW_USEDEFAULT) width = 800;
+                if (height == CW_USEDEFAULT) height = 600;
+                if (left == CW_USEDEFAULT) left = 20;
+                if (top == CW_USEDEFAULT) top = 20;
+            }
+
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
             // Native Interop Events
