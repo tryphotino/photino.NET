@@ -244,6 +244,50 @@ namespace PhotinoNET
             }
         }
 
+        private bool _minimized = false;
+        public bool IsMinimized
+        {
+            get
+            {
+                Invoke(() => Photino_IsMinimized(_nativeInstance, out _minimized));
+                return _minimized;
+            }
+
+            set 
+            {
+                if (_minimized != value)
+                {
+                    _minimized = value;
+                    if (_minimized)
+                        Invoke(() => Photino_Minimize(_nativeInstance));
+                    else
+                        Invoke(() => Photino_Restore(_nativeInstance));
+                }
+            }
+        }
+
+        private bool _maximized = false;
+        public bool IsMaximized
+        {
+            get
+            {
+                Invoke(() => Photino_IsMaximized(_nativeInstance, out _maximized));
+                return _maximized;
+            }
+
+            set
+            {
+                if (_maximized != value)
+                {
+                    _maximized = value;
+                    if (_maximized)
+                        Invoke(() => Photino_Maximize(_nativeInstance));
+                    else
+                        Invoke(() => Photino_Restore(_nativeInstance));
+                }
+            }
+        }
+
         private bool _wasShown = false;
         public bool WasShown => _wasShown;
 
@@ -278,14 +322,16 @@ namespace PhotinoNET
         /// <param name="left">The position from the left side of the screen</param>
         /// <param name="top">The position from the top side of the screen</param>
         /// <param name="fullscreen">Open window in fullscreen mode</param>
+        /// <param name="chromeless">Open window with no titlebar or border</param>
         public PhotinoWindow(
             string title,
+            string starturl,
             Action<PhotinoWindowOptions> configure = null,
             int width = CW_USEDEFAULT,
             int height = CW_USEDEFAULT,
             int left = CW_USEDEFAULT,
             int top = CW_USEDEFAULT,
-            bool fullscreen = false)
+            bool chromeless = false)
         {
             if (IsLinuxPlatform || IsMacOsPlatform)
             {
@@ -325,7 +371,7 @@ namespace PhotinoNET
 
             _id = Guid.NewGuid();
             _parent = options.Parent;
-            _nativeInstance = Photino_ctor(_title, (_parent as PhotinoWindow)?._nativeInstance ?? default, onWebMessageReceivedDelegate, fullscreen, left, top, width, height);
+            _nativeInstance = Photino_ctor(_title, (_parent as PhotinoWindow)?._nativeInstance ?? default, onWebMessageReceivedDelegate, fullscreen, left, top, width, height, chromeless);
 
             // Register handlers that depend on an existing
             // Photino.Native instance.
@@ -349,6 +395,8 @@ namespace PhotinoNET
             this.OnWindowCreated();
         }
 
+
+        //WHERE DID THIS CONSTRUCTOR COME FROM? SHOULD IT BE REMOVED?
         static PhotinoWindow()
         {
             // Workaround for a crashing issue on Linux. Without this, applications
@@ -1236,10 +1284,15 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_win32(IntPtr hInstance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern IntPtr Photino_register_mac();
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, WebMessageReceivedDelegate webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(string title, IntPtr parentPhotinoNET, WebMessageReceivedDelegate webMessageReceivedCallback, bool fullscreen, int x, int y, int width, int height, bool chromeless);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Show(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Minimize(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_IsMinimized(IntPtr instance, out bool minimized);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Maximize(IntPtr instance);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_IsMaximized(IntPtr instance, out bool maximized);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Restore(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_Close(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_WaitForExit(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
