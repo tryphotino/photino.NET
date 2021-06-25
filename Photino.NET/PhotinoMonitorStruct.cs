@@ -1,22 +1,22 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET.Structs
+namespace PhotinoNET
 {
     [StructLayout(LayoutKind.Sequential)]
-    struct NativeRect
+    public struct NativeRect
     {
         public int x, y;
         public int width, height;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct NativeMonitor
+    public struct NativeMonitor
     {
         public NativeRect monitor;
         public NativeRect work;
     }
-    
+
     public readonly struct Monitor
     {
         public readonly Rectangle MonitorArea;
