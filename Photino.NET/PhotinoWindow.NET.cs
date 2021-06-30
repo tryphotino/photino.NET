@@ -14,7 +14,6 @@ namespace PhotinoNET
         ///<summary>Parameters sent to Photino.Native to start a new instance of a Photino.Native window.</summary>
         private PhotinoNativeParameters _startupParameters = new PhotinoNativeParameters
         {
-            sz = 88,
             Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
             ContextMenuEnabled = true,
             CustomSchemeNames = new string[16],
