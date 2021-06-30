@@ -11,9 +11,10 @@ namespace PhotinoNET
     public partial class PhotinoWindow
     {
         //PRIVATE FIELDS
-        ///<summary>Parameters set to Photino.Native to start a new instance of a Photino.Native window.</summary>
+        ///<summary>Parameters sent to Photino.Native to start a new instance of a Photino.Native window.</summary>
         private PhotinoNativeParameters _startupParameters = new PhotinoNativeParameters
         {
+            sz = 88,
             Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
             ContextMenuEnabled = true,
             CustomSchemeNames = new string[16],
@@ -1125,7 +1126,7 @@ namespace PhotinoNET
                 OnWindowCreating();
                 try  //All C++ exceptions will bubble up to here.
                 {
-                    Invoke(() => _nativeInstance = Photino_ctor(_startupParameters));
+                    Invoke(() => _nativeInstance = Photino_ctor(ref _startupParameters));
                 }
                 catch (Exception ex)
                 {

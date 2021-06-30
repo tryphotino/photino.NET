@@ -5,9 +5,11 @@ using System.Runtime.InteropServices;
 
 namespace PhotinoNET
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 16, CharSet = CharSet.Auto)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 	internal struct PhotinoNativeParameters
 	{
+		[MarshalAs(UnmanagedType.I4)] internal int sz;
+
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
 		[MarshalAs(UnmanagedType.LPWStr)] internal string StartString;
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>

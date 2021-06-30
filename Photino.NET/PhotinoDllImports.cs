@@ -12,7 +12,7 @@ namespace PhotinoNET
 
 
         //CTOR-DTOR
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(PhotinoNativeParameters parameters);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(ref PhotinoNativeParameters parameters);
         //necessary? - [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);
 
 
