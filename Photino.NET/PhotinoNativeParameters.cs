@@ -9,7 +9,7 @@ namespace PhotinoNET
 	internal struct PhotinoNativeParameters
 	{
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
 		#else
 		[MarshalAs(UnmanagedType.LPStr)]
@@ -17,7 +17,7 @@ namespace PhotinoNET
 		internal string StartString;
 		
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)] 
 		#else
 		[MarshalAs(UnmanagedType.LPStr)]
@@ -25,7 +25,7 @@ namespace PhotinoNET
 		internal string StartUrl;
 
 		///<summary>OPTIONAL: Appears on the title bar of the native window. Default is none.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
 		#else
 		[MarshalAs(UnmanagedType.LPStr)]
@@ -33,7 +33,7 @@ namespace PhotinoNET
 		 internal string Title;
 
 		///<summary>WINDOWS AND LINUX ONLY: OPTIONAL: Path to a local file or a URL. Icon appears on the title bar of the native window (if supported). Default is none.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
 		#else
 		[MarshalAs(UnmanagedType.LPStr)]
@@ -41,7 +41,7 @@ namespace PhotinoNET
 		internal string WindowIconFile;
 
 		///<summary>WINDOWS: OPTIONAL: Path to store temp files for browser control. Defaults is user's AppDataLocal folder.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
 		#else
 		[MarshalAs(UnmanagedType.LPStr)]
@@ -64,7 +64,7 @@ namespace PhotinoNET
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebMessageReceivedDelegate WebMessageReceivedHandler;
 		
 		///<summary>OPTIONAL: Names of custom URL Schemes. e.g. 'app', 'custom'. Array length must be 16. Default is none.</summary>
-		#if IsWindows
+		#if Windows
 		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPWStr, SizeConst = 16)] 
 		#else
 		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPStr, SizeConst = 16)] 
