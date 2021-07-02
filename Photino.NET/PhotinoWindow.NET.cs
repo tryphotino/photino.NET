@@ -403,7 +403,7 @@ namespace PhotinoNET
                 if (Resizable != value)
                 {
                     if (_nativeInstance == IntPtr.Zero)
-                        _startupParameters.FullScreen = value;
+                        _startupParameters.Resizable = value;
                     else
                         Invoke(() => Photino_SetResizable(_nativeInstance, value));
                 }
