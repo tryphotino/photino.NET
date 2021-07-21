@@ -342,7 +342,7 @@ namespace PhotinoNET
                     return _startupParameters.Maximized;
 
                 bool maximized = false;
-                Invoke(() => Photino_IsMaximized(_nativeInstance, maximized));
+                Invoke(() => Photino_GetMaximized(_nativeInstance, maximized));
                 return maximized;
             }
             set
@@ -366,7 +366,7 @@ namespace PhotinoNET
                     return _startupParameters.Minimized;
 
                 bool minimized = false;
-                Invoke(() => Photino_IsMinimized(_nativeInstance, minimized));
+                Invoke(() => Photino_GetMinimized(_nativeInstance, minimized));
                 return minimized;
             }
             set
