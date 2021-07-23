@@ -213,11 +213,9 @@ namespace PhotinoNET
                 if (_nativeInstance == IntPtr.Zero)
                     return _startupParameters.FullScreen;
 
-                var width = 0;
-                var height = 0;
-                Invoke(() => Photino_GetSize(_nativeInstance, out width, out height));
-                return width == MainMonitor.WorkArea.Width
-                    && height == MainMonitor.WorkArea.Height;
+                var fullScreen = false;
+                Invoke(() => Photino_GetFullScreen(_nativeInstance, out fullScreen));
+                return fullScreen;
             }
             set
             {
@@ -226,7 +224,7 @@ namespace PhotinoNET
                     if (_nativeInstance == IntPtr.Zero)
                         _startupParameters.FullScreen = value;
                     else
-                        Invoke(() => Photino_SetSize(_nativeInstance, MainMonitor.WorkArea.Width, MainMonitor.WorkArea.Height));
+                        Invoke(() => Photino_SetFullScreen(_nativeInstance, value));
                 }
             }
         }
