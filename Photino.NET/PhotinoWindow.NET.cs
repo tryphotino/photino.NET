@@ -1182,7 +1182,7 @@ namespace PhotinoNET
             Invoke(() => Photino_ShowMessage(_nativeInstance, title, message, /* MB_OK */ 0));
         }
 
-        ///<summary>Send a message to the ative window's native browser control's JavaScript context. Throws an exception if the window is not initialized.</summary>
+        ///<summary>Send a message to the native window's native browser control's JavaScript context. Throws an exception if the window is not initialized.</summary>
         public void SendWebMessage(string message)
         {
             Log($".SendWebMessage({message})");
