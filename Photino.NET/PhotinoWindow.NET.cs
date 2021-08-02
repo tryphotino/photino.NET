@@ -229,7 +229,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or Sets whether the native browser control grants all requests for access to local resources (camera, microphone, etc.) Default is true.</summary>
+        ///<summary>Gets or Sets whether the native browser control grants all requests for access to local resources (camera, microphone, etc.) Default is true. Not functional on Linux or macOS.</summary>
         public bool GrantBrowserPermissions
         {
             get
@@ -534,7 +534,7 @@ namespace PhotinoNET
         }
 
         ///<summary>Gets or sets whehter the native window is always at the top of the z-order. Default is false.</summary>
-        public bool TopMost
+        public bool Topmost
         {
             get
             {
@@ -547,7 +547,7 @@ namespace PhotinoNET
             }
             set
             {
-                if (TopMost != value)
+                if (Topmost != value)
                 {
                     if (_nativeInstance == IntPtr.Zero)
                         _startupParameters.Topmost = value;
@@ -595,7 +595,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WebMessageReceived. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set handlers for WebMessageReceived event. Set assigns a new handler to the event.</summary>
         public EventHandler<string> WebMessageReceivedHandler
         {
             get
@@ -620,7 +620,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WindowClosing. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set the handlers for WindowClosing event. Set assigns a new handler to the event.</summary>
         public NetClosingDelegate WindowClosingHandler
         {
             get
@@ -633,7 +633,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WindowCreating. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set handlers for WindowCreating event. Set assigns a new handler to the event.</summary>
         public EventHandler WindowCreatingHandler
         {
             get
@@ -646,7 +646,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WindowCreated. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set handlers for WindowCreated event. Set assigns a new handler to the event.</summary>
         public EventHandler WindowCreatedHandler
         {
             get
@@ -659,7 +659,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WindowLocationChanged. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set handlers for WindowLocationChanged event. Set assigns a new handler to the event.</summary>
         public EventHandler<Point> WindowLocationChangedHandler
         {
             get
@@ -672,7 +672,7 @@ namespace PhotinoNET
             }
         }
 
-        ///<summary>Gets or set the event for WindowSizeChanged. Set assigns a new handler to the event.</summary>
+        ///<summary>Gets or set handlers for WindowSizeChanged event. Set assigns a new handler to the event.</summary>
         public EventHandler<Size> WindowSizeChangedHandler
         {
             get
@@ -1058,7 +1058,7 @@ namespace PhotinoNET
         public PhotinoWindow SetTopMost(bool topMost)
         {
             Log($".SetTopMost({topMost})");
-            TopMost = topMost;
+            Topmost = topMost;
             return this;
         }
 
