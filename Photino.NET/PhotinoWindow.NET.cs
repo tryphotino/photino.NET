@@ -725,18 +725,14 @@ namespace PhotinoNET
             _managedThreadId = Thread.CurrentThread.ManagedThreadId;
 
 
-            if (IsWindowsPlatform)
+            //This only has to be done once
+            if (_nativeType == IntPtr.Zero)
             {
-                //This only has to be done once
-                if (_nativeType == IntPtr.Zero)
-                {
-                    _nativeType = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
+                _nativeType = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
+                if (IsWindowsPlatform)
                     Invoke(() => Photino_register_win32(_nativeType));
-                }
-            }
-            else if (IsMacOsPlatform)
-            {
-                Invoke(() => Photino_register_mac());
+                else if (IsMacOsPlatform)
+                    Invoke(() => Photino_register_mac());
             }
 
             //Wire up handlers from C++ to C#
