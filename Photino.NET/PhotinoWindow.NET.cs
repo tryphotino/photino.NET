@@ -994,6 +994,14 @@ namespace PhotinoNET
             return this;
         }
 
+        ///<summary>Sets the native window Width and Height in pixels. Default is 0,0. See also UseOsDefaultSize.</summary>
+        public PhotinoWindow SetSize(int width, int height)
+        {
+            Log($".SetSize({width}, {height})");
+            Size = new Size(width, height);
+            return this;
+        }
+
         ///<summary>Moves the native window to the new Left (X) and Top (Y) coordinates in pixels. Default is 0,0. See also UseOsDefaultLocation.</summary>
         public PhotinoWindow SetLocation(Point location)
         {
