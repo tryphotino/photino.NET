@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Photino.Native" Version="0.9.0-20210803.7" />
+    <PackageReference Include="Photino.Native" Version="2.0.18" />
   </ItemGroup>
 
   
