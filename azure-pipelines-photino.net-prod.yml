@@ -21,7 +21,7 @@ jobs:
       displayName: 'Use .NET Core sdk'
       inputs:
         packageType: sdk
-        version: latest
+        version: 5.0.x
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     #Build and Create NuGet package
