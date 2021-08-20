@@ -1195,6 +1195,13 @@ namespace PhotinoNET
             Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
         }
 
+        public void SendNotification(string title, string body)
+        {
+            Log($".SendNotification({title}, {body})");
+            if (_nativeInstance == IntPtr.Zero)
+                throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
+            Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
+        }
 
 
         private void Log(string message)
