@@ -53,6 +53,12 @@ namespace PhotinoNET
 
 		///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppClosingDelegate ClosingHandler;
+
+		///<summary>SET BY PHOTINOWINDOW CONSTRUCTOR</summary>
+		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppFocusInDelegate FocusInHandler;
+
+		///<summary>SET BY PHOTINOWINDOW CONSTRUCTOR</summary>
+		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppFocusOutDelegate FocusOutHandler;
 		
 		///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppResizedDelegate ResizedHandler;

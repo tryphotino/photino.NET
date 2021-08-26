@@ -7,6 +7,8 @@ namespace PhotinoNET
 
     //These are wired up automatically in the PhotinoWindow (.NET) constructor.
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate byte CppClosingDelegate();    //C++ uses 1 byte for bool, C# uses 4 bytes
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppFocusInDelegate();
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppFocusOutDelegate();
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppResizedDelegate(int width, int height);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppMovedDelegate(int x, int y);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppWebMessageReceivedDelegate(string message);

@@ -41,6 +41,36 @@ namespace PhotinoNET
 
 
 
+        public event EventHandler WindowFocusIn;
+        ///<summary>Registers registered user-defined handler methods to receive callbacks from the native window when it is focused in.</summary>
+        public PhotinoWindow RegisterFocusInHandler(EventHandler handler)
+        {
+            WindowFocusIn += handler;
+            return this;
+        }
+        ///<summary>Invokes registered user-defined handler methods when the native window focuses in.</summary>
+        internal void OnFocusIn()
+        {
+            WindowFocusIn?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
+        public event EventHandler WindowFocusOut;
+        ///<summary>Registers registered user-defined handler methods to receive callbacks from the native window when it is focused out.</summary>
+        public PhotinoWindow RegisterFocusOutHandler(EventHandler handler)
+        {
+            WindowFocusOut += handler;
+            return this;
+        }
+        ///<summary>Invokes registered user-defined handler methods when the native window focuses out.</summary>
+        internal void OnFocusOut()
+        {
+            WindowFocusOut?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
         public event EventHandler<string> WebMessageReceived;
         ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it sends a message.</summary>
         public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)
