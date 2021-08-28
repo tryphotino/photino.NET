@@ -41,6 +41,52 @@ namespace PhotinoNET
 
 
 
+        public event EventHandler WindowMaximized;
+        ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it is maximized.</summary>
+
+        public PhotinoWindow RegisterMaximizedHandler(EventHandler handler)
+        {
+            WindowMaximized += handler;
+            return this;
+        }
+        ///<summary>Invokes registered user-defined handler methods when the native window is maximized.</summary>
+        internal void OnMaximized()
+        {
+            WindowMaximized?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
+        public event EventHandler WindowRestored;
+        ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it is restored.</summary>
+        public PhotinoWindow RegisterRestoredHandler(EventHandler handler)
+        {
+            WindowRestored += handler;
+            return this;
+        }
+        ///<summary>Invokes registered user-defined handler methods when the native window is restored.</summary>
+        internal void OnRestored()
+        {
+            WindowRestored?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
+        public event EventHandler WindowMinimized;
+        ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it is minimized.</summary>
+        public PhotinoWindow RegisterMinimizedHandler(EventHandler handler)
+        {
+            WindowMinimized += handler;
+            return this;
+        }
+        ///<summary>Invokes registered user-defined handler methods when the native window is minimized.</summary>
+        internal void OnMinimized()
+        {
+            WindowMinimized?.Invoke(this, EventArgs.Empty);
+        }
+
+
+
         public event EventHandler<string> WebMessageReceived;
         ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it sends a message.</summary>
         public PhotinoWindow RegisterWebMessageReceivedHandler(EventHandler<string> handler)

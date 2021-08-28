@@ -56,7 +56,16 @@ namespace PhotinoNET
 		
 		///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppResizedDelegate ResizedHandler;
-		
+
+        ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
+		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppMaximizedDelegate MaximizedHandler;
+
+        ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
+		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppRestoredDelegate RestoredHandler;
+
+        ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
+		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppMinimizedDelegate MinimizedHandler;
+
 		///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppMovedDelegate MovedHandler;
 		
