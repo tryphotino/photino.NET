@@ -687,20 +687,38 @@ namespace PhotinoNET
 
         ///<summary>Gets or set handlers for WindowMaximized event. Set assigns a new handler to the event.</summary>
         public EventHandler WindowMaximizedHandler {
-            get => WindowMaximized;
-            set => WindowMaximized += value;
+            get 
+            {
+                return WindowMaximized;
+            }
+            set 
+            {
+                WindowMaximized += value;
+            }
         }
 
         ///<summary>Gets or set handlers for WindowRestored event. Set assigns a new handler to the event.</summary>
         public EventHandler WindowRestoredHandler {
-            get => WindowRestored;
-            set => WindowRestored += value;
+            get
+            {
+                return WindowRestored;
+            }
+            set
+            {
+                WindowRestored += value;
+            }
         }
 
         ///<summary>Gets or set handlers for WindowMinimized event. Set assigns a new handler to the event.</summary>
         public EventHandler WindowMinimizedHandler {
-            get => WindowMinimized;
-            set => WindowMinimized += value;
+            get
+            {
+                return WindowMinimized;
+            }
+            set
+            {
+                WindowMinimized += value;
+            }
         }
 
 
