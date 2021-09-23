@@ -9,43 +9,33 @@ namespace PhotinoNET
 	internal struct PhotinoNativeParameters
 	{
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
-		#else
+		internal string StartStringWide;
 		[MarshalAs(UnmanagedType.LPStr)]
-		#endif
 		internal string StartString;
 		
 		///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)] 
-		#else
+		internal string StartUrlWide;
 		[MarshalAs(UnmanagedType.LPStr)]
-		#endif
 		internal string StartUrl;
 
 		///<summary>OPTIONAL: Appears on the title bar of the native window. Default is none.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
-		#else
+		internal string TitleWide;
 		[MarshalAs(UnmanagedType.LPStr)]
-		#endif
-		 internal string Title;
+		internal string Title;
 
 		///<summary>WINDOWS AND LINUX ONLY: OPTIONAL: Path to a local file or a URL. Icon appears on the title bar of the native window (if supported). Default is none.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
-		#else
+		internal string WindowIconFileWide;
 		[MarshalAs(UnmanagedType.LPStr)]
-		#endif
 		internal string WindowIconFile;
 
 		///<summary>WINDOWS: OPTIONAL: Path to store temp files for browser control. Defaults is user's AppDataLocal folder.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.LPWStr)]
-		#else
+		internal string TemporaryFilesPathWide;
 		[MarshalAs(UnmanagedType.LPStr)]
-		#endif
 		internal string TemporaryFilesPath;
 
 		///<summary>OPTIONAL: If native window is created from another native windowm this is the pointer to the parent window. It is set automatically in WaitforExit().</summary>
@@ -64,11 +54,9 @@ namespace PhotinoNET
 		[MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebMessageReceivedDelegate WebMessageReceivedHandler;
 		
 		///<summary>OPTIONAL: Names of custom URL Schemes. e.g. 'app', 'custom'. Array length must be 16. Default is none.</summary>
-		#if Windows
 		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPWStr, SizeConst = 16)] 
-		#else
+		internal string[] CustomSchemeNamesWide;
 		[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPStr, SizeConst = 16)] 
-		#endif
 		internal string[] CustomSchemeNames;
 
 
@@ -137,8 +125,12 @@ namespace PhotinoNET
 		internal List<string> GetParamErrors()
 		{
 			var response = new List<string>();
+			var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+			var startUrl = isWindows ? StartUrlWide : StartUrl;
+			var startString = isWindows ? StartStringWide : StartString;
+			var windowIconFile = isWindows ? WindowIconFileWide : WindowIconFile;
 
-			if (string.IsNullOrWhiteSpace(StartUrl) && string.IsNullOrWhiteSpace(StartString))
+			if (string.IsNullOrWhiteSpace(startUrl) && string.IsNullOrWhiteSpace(startString))
 				response.Add("An initial URL or HTML string must be supplied in StartUrl or StartString for the browser control to naviage to.");
 
 			if (Maximized && Minimized)
@@ -147,8 +139,10 @@ namespace PhotinoNET
 			if (FullScreen && (Maximized || Minimized))
 				response.Add("FullScreen cannot be combined with Maximized or Minimized");
 
-			if (!string.IsNullOrWhiteSpace(WindowIconFile) && !File.Exists(WindowIconFile))
-				response.Add($"WindowIconFile: {WindowIconFile} cannot be found");
+			if (!string.IsNullOrWhiteSpace(windowIconFile) && !File.Exists(windowIconFile))
+			{
+				response.Add($"WindowIconFile: {windowIconFile} cannot be found");
+			}
 
 			Size = Marshal.SizeOf(typeof(PhotinoNativeParameters));
 
