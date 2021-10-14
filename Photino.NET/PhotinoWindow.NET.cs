@@ -1233,6 +1233,7 @@ namespace PhotinoNET
             Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
         }
 
+        ///<summary>Sends a native notification to the OS. Sometimes referred to as Toast notifications. Throws an exception if the window is not initialized.</summary>
         public void SendNotification(string title, string body)
         {
             Log($".SendNotification({title}, {body})");
