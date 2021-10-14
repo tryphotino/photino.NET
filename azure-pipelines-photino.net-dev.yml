@@ -21,7 +21,7 @@ jobs:
       displayName: 'Use .NET Core sdk'
       inputs:
         packageType: sdk
-        version: 5.0.100
+        version: 5.0.302
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: CmdLine@2
