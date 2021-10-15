@@ -714,6 +714,32 @@ namespace PhotinoNET
             }
         }
 
+        ///<summary>Gets or set handlers for WindowFocusIn event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowFocusInHandler
+        {
+            get
+            {
+                return WindowFocusIn;
+            }
+            set
+            {
+                WindowFocusIn += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowFocusOut event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowFocusOutHandler
+        {
+            get
+            {
+                return WindowFocusOut;
+            }
+            set
+            {
+                WindowFocusOut += value;
+            }
+        }
+
 
         ///<summary>Gets or sets the native browser control zoom. e.g. 100 = 100%  Default is 100;</summary>
         public int Zoom
@@ -768,6 +794,8 @@ namespace PhotinoNET
             _startupParameters.ClosingHandler = OnWindowClosing;
             _startupParameters.ResizedHandler = OnSizeChanged;
             _startupParameters.MovedHandler = OnLocationChanged;
+            _startupParameters.FocusInHandler = OnFocusIn;
+            _startupParameters.FocusOutHandler = OnFocusOut;
             _startupParameters.WebMessageReceivedHandler = OnWebMessageReceived;
             _startupParameters.CustomSchemeHandler = OnCustomScheme;
         }
