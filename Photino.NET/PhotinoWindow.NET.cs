@@ -739,6 +739,42 @@ namespace PhotinoNET
                 WindowFocusOut += value;
             }
         }
+        
+        ///<summary>Gets or set handlers for WindowMaximized event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowMaximizedHandler {
+            get 
+            {
+                return WindowMaximized;
+            }
+            set 
+            {
+                WindowMaximized += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowRestored event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowRestoredHandler {
+            get
+            {
+                return WindowRestored;
+            }
+            set
+            {
+                WindowRestored += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowMinimized event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowMinimizedHandler {
+            get
+            {
+                return WindowMinimized;
+            }
+            set
+            {
+                WindowMinimized += value;
+            }
+        }
 
 
         ///<summary>Gets or sets the native browser control zoom. e.g. 100 = 100%  Default is 100;</summary>
@@ -793,6 +829,9 @@ namespace PhotinoNET
             //Wire up handlers from C++ to C#
             _startupParameters.ClosingHandler = OnWindowClosing;
             _startupParameters.ResizedHandler = OnSizeChanged;
+            _startupParameters.MaximizedHandler = OnMaximized;
+            _startupParameters.RestoredHandler = OnRestored;
+            _startupParameters.MinimizedHandler = OnMinimized;
             _startupParameters.MovedHandler = OnLocationChanged;
             _startupParameters.FocusInHandler = OnFocusIn;
             _startupParameters.FocusOutHandler = OnFocusOut;
