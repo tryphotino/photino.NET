@@ -714,6 +714,68 @@ namespace PhotinoNET
             }
         }
 
+        ///<summary>Gets or set handlers for WindowFocusIn event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowFocusInHandler
+        {
+            get
+            {
+                return WindowFocusIn;
+            }
+            set
+            {
+                WindowFocusIn += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowFocusOut event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowFocusOutHandler
+        {
+            get
+            {
+                return WindowFocusOut;
+            }
+            set
+            {
+                WindowFocusOut += value;
+            }
+        }
+        
+        ///<summary>Gets or set handlers for WindowMaximized event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowMaximizedHandler {
+            get 
+            {
+                return WindowMaximized;
+            }
+            set 
+            {
+                WindowMaximized += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowRestored event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowRestoredHandler {
+            get
+            {
+                return WindowRestored;
+            }
+            set
+            {
+                WindowRestored += value;
+            }
+        }
+
+        ///<summary>Gets or set handlers for WindowMinimized event. Set assigns a new handler to the event.</summary>
+        public EventHandler WindowMinimizedHandler {
+            get
+            {
+                return WindowMinimized;
+            }
+            set
+            {
+                WindowMinimized += value;
+            }
+        }
+
 
         ///<summary>Gets or sets the native browser control zoom. e.g. 100 = 100%  Default is 100;</summary>
         public int Zoom
@@ -767,7 +829,12 @@ namespace PhotinoNET
             //Wire up handlers from C++ to C#
             _startupParameters.ClosingHandler = OnWindowClosing;
             _startupParameters.ResizedHandler = OnSizeChanged;
+            _startupParameters.MaximizedHandler = OnMaximized;
+            _startupParameters.RestoredHandler = OnRestored;
+            _startupParameters.MinimizedHandler = OnMinimized;
             _startupParameters.MovedHandler = OnLocationChanged;
+            _startupParameters.FocusInHandler = OnFocusIn;
+            _startupParameters.FocusOutHandler = OnFocusOut;
             _startupParameters.WebMessageReceivedHandler = OnWebMessageReceived;
             _startupParameters.CustomSchemeHandler = OnCustomScheme;
         }
@@ -1233,6 +1300,14 @@ namespace PhotinoNET
             Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
         }
 
+        ///<summary>Sends a native notification to the OS. Sometimes referred to as Toast notifications. Throws an exception if the window is not initialized.</summary>
+        public void SendNotification(string title, string body)
+        {
+            Log($".SendNotification({title}, {body})");
+            if (_nativeInstance == IntPtr.Zero)
+                throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
+            Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
+        }
 
 
         private void Log(string message)
