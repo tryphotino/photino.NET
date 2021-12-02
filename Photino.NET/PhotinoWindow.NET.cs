@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -22,7 +22,7 @@ namespace PhotinoNET
             GrantBrowserPermissions = true,
             TemporaryFilesPathWide = IsWindowsPlatform
                 ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
-                : null,            
+                : null,
             TemporaryFilesPath = IsWindowsPlatform
                 ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
                 : null,
@@ -32,7 +32,7 @@ namespace PhotinoNET
             UseOsDefaultSize = true,
             Zoom = 100,
         };
-        
+
         //Pointers to the type and instance.
         private static IntPtr _nativeType = IntPtr.Zero;
         private IntPtr _nativeInstance;
@@ -505,7 +505,7 @@ namespace PhotinoNET
                 {
                     if (_nativeInstance != IntPtr.Zero)
                         throw new ApplicationException($"{nameof(tfp)} cannot be changed after Photino Window is initialized");
-                    if (IsWindowsPlatform)                    
+                    if (IsWindowsPlatform)
                         _startupParameters.TemporaryFilesPathWide = value;
                     else
                         _startupParameters.TemporaryFilesPath = value;
@@ -967,9 +967,9 @@ namespace PhotinoNET
             // For some reason the vertical position is not handled correctly.
             // Whenever a positive value is set, the window appears at the
             // very bottom of the screen and the only visible thing is the
-            // application window title bar. As a workaround we make a 
+            // application window title bar. As a workaround we make a
             // negative value out of the vertical position to "pull" the window up.
-            // Note: 
+            // Note:
             // This behavior seems to be a macOS thing. In the Photino.Native
             // project files it is commented to be expected behavior for macOS.
             // There is some code trying to mitigate this problem but it might
@@ -1200,14 +1200,22 @@ namespace PhotinoNET
             return this;
         }
 
+        /// <summary> Set runtime path for WebView2 so that developers can use Photino on Windows using the "Fixed Version" deployment module of the WebView2 runtime. See https://docs.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution </summary>
+        public PhotinoWindow Win32SetWebView2Path (string data) {
+            if (IsWindowsPlatform)
+                Invoke(() => Photino_setWebView2RuntimePath_win32(_nativeType, data));
+            else
+                Log("Win32SetWebView2Path is only supported on the Windows platform");
 
+            return this;
+        }
 
 
 
         //NON-FLUENT METHODS - CAN ONLY BE CALLED AFTER WINDOW IS INITIALIZED
 
         //ONE OF THESE 2 METHODS *MUST* BE CALLED TO CREATE THE WINDOW
-        
+
         ///<summary>Initializes the main (first) native window and blocks until the window is closed. Also used to initialize child windows in which case it does not block. Only the main native window runs a message loop.</summary>
         public void WaitForClose()
         {
@@ -1222,8 +1230,8 @@ namespace PhotinoNET
                 i++;
             }
 
-            _startupParameters.NativeParent = _dotNetParent == null 
-                ? IntPtr.Zero 
+            _startupParameters.NativeParent = _dotNetParent == null
+                ? IntPtr.Zero
                 : _dotNetParent._nativeInstance;
 
             var errors = _startupParameters.GetParamErrors();
