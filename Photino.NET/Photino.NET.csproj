@@ -15,6 +15,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Title>PhotinoNET</Title>
     <RootNamespace>PhotinoNET</RootNamespace>
+    <PackageIcon>photino.png</PackageIcon>
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
@@ -26,6 +27,13 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Photino.Native" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="photino.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   
