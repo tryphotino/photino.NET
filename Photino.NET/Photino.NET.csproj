@@ -24,7 +24,6 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Photino.Native" Version="2.1.4" />
   </ItemGroup>
 
