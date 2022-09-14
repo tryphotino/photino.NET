@@ -19,6 +19,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <IsPackable>true</IsPackable> 
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
