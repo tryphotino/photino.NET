@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.FileProviders;
 
 namespace PhotinoNET;
 
@@ -20,6 +21,7 @@ public class PhotinoServer
             args,
             startPort: 8000,
             portRange: 100,
+            webRootFolder: "wwwroot",
             out baseUrl);
     }
 
@@ -27,14 +29,27 @@ public class PhotinoServer
         string[] args,
         int startPort,
         int portRange,
+        string webRootFolder,
         out string baseUrl)
     {
         var builder = WebApplication
             .CreateBuilder(new WebApplicationOptions()
             {
                 Args = args,
-                WebRootPath = "wwwroot"
+                WebRootPath = webRootFolder
             });
+
+        var manifestEmbeddedFileProvider =
+            new ManifestEmbeddedFileProvider(
+                System.Reflection.Assembly.GetEntryAssembly(),
+                $"Resources/{webRootFolder}");
+
+        var physicalFileProvider = builder.Environment.WebRootFileProvider;
+
+        var compositeWebProvider =
+            new CompositeFileProvider(manifestEmbeddedFileProvider, physicalFileProvider);
+
+        builder.Environment.WebRootFileProvider = compositeWebProvider;
 
         int port = startPort;
 
