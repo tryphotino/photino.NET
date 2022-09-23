@@ -44,4 +44,4 @@ jobs:
         command: push
         packagesToPush: 'Photino.NET/bin/$(buildConfiguration)/*.nupkg'
         nuGetFeedType: external
-        publishFeedCredentials: 'PhotinoNuGet'
+        publishFeedCredentials: 'PhotinoNetNuGet'
