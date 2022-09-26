@@ -44,21 +44,10 @@ public class PhotinoServer
                 System.Reflection.Assembly.GetEntryAssembly(),
                 $"Resources/{webRootFolder}");
 
-        bool hasEmbeddedContents = manifestEmbeddedFileProvider
-            .GetDirectoryContents("")
-            .Any();
-
         var physicalFileProvider = builder.Environment.WebRootFileProvider;
 
-        CompositeFileProvider compositeWebProvider;
-        if (hasEmbeddedContents)
-        {
-            compositeWebProvider = new(manifestEmbeddedFileProvider, physicalFileProvider);
-        }
-        else
-        {
-            compositeWebProvider = new(physicalFileProvider);
-        }
+        CompositeFileProvider compositeWebProvider
+            = new(manifestEmbeddedFileProvider, physicalFileProvider);
 
         builder.Environment.WebRootFileProvider = compositeWebProvider;
 
