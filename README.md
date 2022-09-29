@@ -3,7 +3,7 @@
 Photino is a lightweight open-source framework for building native,  
 cross-platform desktop applications with Web UI technology.
 
-Photino enables developers to use fast, natively compiled languages like C#, C++, Java and more. Use your favorite development frameworks like .NET 5, and build desktop apps with Web UI frameworks, like Blazor, React, Angular, Vue, etc.!
+Photino enables developers to use fast, natively compiled languages like C#, C++, Java and more. Use your favorite development frameworks like .NET 6, and build desktop apps with Web UI frameworks, like Blazor, React, Angular, Vue, etc.!
 
 Photino uses the OSs built-in WebKit-based browser control for Windows, macOS and Linux.
 Photino is the lightest cross-platform framework. Compared to Electron, a Photino app is up to 110 times smaller! And it uses far less system memory too!
@@ -11,7 +11,7 @@ Photino is the lightest cross-platform framework. Compared to Electron, a Photin
 
 ## <span>Photino.</span>NET
 
-This project represents the .NET 5 wrapper for the Photino.Native project, which makes it available for all operating systems (Windows, macOS, Linux).
+This project represents the .NET 6 wrapper for the Photino.Native project, which makes it available for all operating systems (Windows, macOS, Linux).
 This library is used for all the sample projects provided by Photino, which include Blazor, Vue.JS, Angular, React, or the basic HTML app: 
 https://github.com/tryphotino/photino.Samples
 
