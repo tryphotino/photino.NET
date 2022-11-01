@@ -1,7 +1,6 @@
 # Build native, cross-platform desktop apps
 
-Photino is a lightweight open-source framework for building native,  
-cross-platform desktop applications with Web UI technology.
+Photino is a lightweight open-source framework for building native, cross-platform desktop applications with Web UI technology.
 
 Photino enables developers to use fast, natively compiled languages like C#, C++, Java and more. Use your favorite development frameworks like .NET 6, and build desktop apps with Web UI frameworks, like Blazor, React, Angular, Vue, etc.!
 
@@ -22,7 +21,5 @@ https://www.nuget.org/packages/Photino.NET
 ## How to build this repo
 
 If you want to build this library itself, you will need:
- * Windows 10, Mac 10.15+, or Linux (Tested with Ubuntu 18.04+)
+ * Windows 10+, Mac 10.15+, or Linux (Tested with Ubuntu 18.04+)
  * Make sure the Photino.Native Nuget package is added and up to date.
- * If you're on Windows Subsystem for Linux (WSL), then as well as the above, you will need a local X server: 
-  https://tryphotino.kavadocs.com/Running-Photino-in-WSL
