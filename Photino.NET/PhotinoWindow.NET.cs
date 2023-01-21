@@ -1196,6 +1196,16 @@ public partial class PhotinoWindow
         return this;
     }
 
+    public PhotinoWindow ClearBrowserAutoFill()
+    {
+        if (IsWindowsPlatform)
+            Invoke(() => Photino_ClearBrowserAutoFill(_nativeInstance));
+        else
+            Log("ClearBrowserAutoFill is only supported on the Windows platform");
+
+        return this;
+    }
+
     //NON-FLUENT METHODS - CAN ONLY BE CALLED AFTER WINDOW IS INITIALIZED
     //ONE OF THESE 2 METHODS *MUST* BE CALLED TO CREATE THE WINDOW
 
