@@ -1,3 +1,9 @@
+## <span>NEXT PHOTINO FEATURES POLL</span>
+Hello Photino Community! Please take a moment to check out our Photino poll and vote on the next features to be implemented, here:
+
+[PHOTINO POLL](https://github.com/tryphotino/photino.NET/discussions/117)
+
+
 # Build native, cross-platform desktop apps
 
 https://tryphotino.io
