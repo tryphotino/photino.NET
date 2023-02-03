@@ -341,3 +341,4 @@ healthchecksdb
 
 .vscode
 .DS_Store
+/Photino.NET/Properties/launchSettings.json
