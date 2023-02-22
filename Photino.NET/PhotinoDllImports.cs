@@ -68,9 +68,19 @@ namespace PhotinoNET
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_Center(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_ClearBrowserAutoFill(IntPtr instance);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_SendWebMessage(IntPtr instance, string message);
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_ShowNotification(IntPtr instance, string title, string body);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_WaitForExit(IntPtr instance);
+
+
+        //DIALOG
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr Photino_ShowOpenFile(IntPtr inst, string title, string defaultPath, bool multiSelect, string[] filters, int filtersCount, out int resultCount);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr Photino_ShowOpenFolder(IntPtr inst, string title, string defaultPath, bool multiSelect, out int resultCount);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern PhotinoDialogResult Photino_ShowMessage(IntPtr inst, string title, string text, PhotinoDialogButtons buttons, PhotinoDialogIcon icon);
     }
 }
