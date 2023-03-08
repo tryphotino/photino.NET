@@ -18,10 +18,17 @@ jobs:
 
     steps:
     - task: UseDotNet@2
-      displayName: 'Use .NET Core sdk'
+      displayName: 'Use .NET 6 sdk'
       inputs:
         packageType: sdk
         version: 6.0.x
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET 7 sdk'
+      inputs:
+        packageType: sdk
+        version: 7.0.x
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: CmdLine@2
