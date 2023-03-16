@@ -813,7 +813,12 @@ public partial class PhotinoWindow
         //This only has to be done once
         if (_nativeType == IntPtr.Zero)
         {
+#if NET7_0_OR_GREATER
+            _nativeType = NativeLibrary.GetMainProgramHandle();
+#else
             _nativeType = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
+#endif
+
             if (IsWindowsPlatform)
                 Invoke(() => Photino_register_win32(_nativeType));
             else if (IsMacOsPlatform)

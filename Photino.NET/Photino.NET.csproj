@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Authors>TryPhotino</Authors>
     <Company>TryPhotino</Company>
-    <Description>.NET 6 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
+    <Description>.NET 6/7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
     <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageDescription>.NET 6 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
+    <PackageDescription>.NET 6/7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
     <PackageId>Photino.NET</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Product>Photino.NET</Product>
@@ -18,7 +18,7 @@
   
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <IsPackable>true</IsPackable> 
   </PropertyGroup>
 
