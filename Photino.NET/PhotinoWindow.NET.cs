@@ -1287,16 +1287,7 @@ public partial class PhotinoWindow
             throw new ApplicationException("Close cannot be called until after the Photino window is initialized.");
         Invoke(() => Photino_Close(_nativeInstance));
     }
-
-    ///<summary>Opens a native alert (MessageBox) on the native window with a title and message. Throws an exception if the window is not initialized.</summary>
-    public void OpenAlertWindow(string title, string message)
-    {
-        Log($".OpenAlertWindow({title}, {message})");
-        if (_nativeInstance == IntPtr.Zero)
-            throw new ApplicationException("OpenAlertWindow cannot be called until after the Photino window is initialized.");
-        Invoke(() => Photino_ShowMessage(_nativeInstance, title, message, /* MB_OK */ 0));
-    }
-
+    
     ///<summary>Send a message to the native window's native browser control's JavaScript context. Throws an exception if the window is not initialized.</summary>
     public void SendWebMessage(string message)
     {
@@ -1314,10 +1305,87 @@ public partial class PhotinoWindow
             throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
         Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
     }
+    
+    /// <summary>
+    /// Show an open file dialog native to the OS. Throws an exception if the window is not initialized.<br />
+    /// Note: Filter names are not used on macOS.
+    /// </summary>
+    public string[] ShowOpenFile(string title = "Choose file", string defaultPath = null, bool multiSelect = false, (string Name, string[] Extensions)[] filters = null) => ShowOpenDialog(false, title, defaultPath, multiSelect, filters);
+
+    ///<summary>Show an open folder dialog native to the OS. Throws an exception if the window is not initialized.</summary>
+    public string[] ShowOpenFolder(string title = "Select folder", string defaultPath = null, bool multiSelect = false) => ShowOpenDialog(true, title, defaultPath, multiSelect, null);
+
+    ///<summary>
+    /// Show an save folder dialog native to the OS. Throws an exception if the window is not initialized.
+    /// Note: Filter names are not used on macOS.
+    /// </summary>
+    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    {
+        defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        filters ??= Array.Empty<(string, string[])>();
+
+        string result = null;
+        var nativeFilters = GetNativeFilters(filters);
+
+        Invoke(() => {
+            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length);
+            result = Marshal.PtrToStringAuto(ptrResult);
+        });
+
+        return result;
+    }
+
+    ///<summary>Show a message dialog native to the OS. Throws an exception if the window is not initialized.</summary>
+    public PhotinoDialogResult ShowMessage(string title, string text, PhotinoDialogButtons buttons = PhotinoDialogButtons.Ok, PhotinoDialogIcon icon = PhotinoDialogIcon.Info)
+    {
+        var result = PhotinoDialogResult.Cancel;
+        Invoke(() => result = Photino_ShowMessage(_nativeInstance, title, text, buttons, icon));
+        return result;
+    }
+
+    private string[] ShowOpenDialog(bool foldersOnly, string title, string defaultPath, bool multiSelect, (string Name, string[] Extensions)[] filters)
+    {
+        defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        filters ??= Array.Empty<(string, string[])>();
+
+        var results = Array.Empty<string>();
+        var nativeFilters = GetNativeFilters(filters, foldersOnly);
+
+        Invoke(() => {
+            var ptrResults = foldersOnly ? 
+                Photino_ShowOpenFolder(_nativeInstance, title, defaultPath, multiSelect, out var resultCount) :
+                Photino_ShowOpenFile(_nativeInstance, title, defaultPath, multiSelect, nativeFilters, nativeFilters.Length, out resultCount);
+            if (resultCount == 0) return;
+
+            var ptrArray = new IntPtr[resultCount];
+            results = new string[resultCount];
+            Marshal.Copy(ptrResults, ptrArray, 0, resultCount);
+            for (var i = 0; i < resultCount; i++)
+            {
+                results[i] = Marshal.PtrToStringAuto(ptrArray[i]);
+            }
+        });
+
+        return results;
+    }
 
     private void Log(string message)
     {
         if (LogVerbosity < 1) return;
         Console.WriteLine($"Photino.NET: \"{Title ?? "PhotinoWindow"}\"{message}");
     }
+
+    private static string[] GetNativeFilters((string Name, string[] Extensions)[] filters, bool empty = false)
+    {
+        var nativeFilters = Array.Empty<string>();
+        if (!empty && filters is { Length: > 0 })
+        {
+            nativeFilters = IsMacOsPlatform ?
+                filters.SelectMany(t => t.Extensions.Select(s => s == "*" ? s : s.TrimStart('*', '.'))).ToArray() :
+                filters.Select(t => $"{t.Name}|{t.Extensions.Select(s => s.StartsWith('.') ? $"*{s}" : !s.StartsWith("*.") ? $"*.{s}" : s).Aggregate((e1, e2) => $"{e1};{e2}")}").ToArray();
+        }
+        return nativeFilters;
+    }
+
+    
 }
