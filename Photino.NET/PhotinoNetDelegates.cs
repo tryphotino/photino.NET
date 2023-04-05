@@ -55,7 +55,7 @@ namespace PhotinoNET
         }
 
 
-        
+
         public event EventHandler WindowMaximized;
         ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it is maximized.</summary>
 
@@ -101,7 +101,7 @@ namespace PhotinoNET
         }
 
 
-        
+
         public event EventHandler WindowMinimized;
         ///<summary>Registers user-defined handler methods to receive callbacks from the native window when it is minimized.</summary>
         public PhotinoWindow RegisterMinimizedHandler(EventHandler handler)
