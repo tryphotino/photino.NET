@@ -187,16 +187,12 @@ namespace PhotinoNET
         //NOTE: There is 1 callback from C++ to C# which is automatically registered. The .NET callback appropriate for the custom scheme is handled in OnCustomScheme().
 
         public delegate Stream NetCustomSchemeDelegate(object sender, string scheme, string url, out string contentType);
-        internal Dictionary<string, NetCustomSchemeDelegate> CustomSchemes = new Dictionary<string, NetCustomSchemeDelegate>();
+        internal Dictionary<string, NetCustomSchemeDelegate> CustomSchemes = new();
         ///<summary>Registers user-defined custom schemes (other than 'http', 'https' and 'file') and handler methods to receive callbacks when the native browser control encounters them.</summary>
         public PhotinoWindow RegisterCustomSchemeHandler(string scheme, NetCustomSchemeDelegate handler)
         {
             if (string.IsNullOrWhiteSpace(scheme))
                 throw new ArgumentException("A scheme must be provided. (for example 'app' or 'custom'");
-
-            if (handler == null)
-                throw new ArgumentException("A handler (method) with a signature matching NetCustomSchemeDelegate must be supplied.");
-
             scheme = scheme.ToLower();
 
             if (_nativeInstance == IntPtr.Zero)
@@ -214,7 +210,7 @@ namespace PhotinoNET
                 Photino_AddCustomSchemeName(_nativeInstance, scheme);
             }
 
-            CustomSchemes[scheme] += handler;
+            CustomSchemes[scheme] += handler ?? throw new ArgumentException("A handler (method) with a signature matching NetCustomSchemeDelegate must be supplied.");
 
             return this;
         }
@@ -226,7 +222,7 @@ namespace PhotinoNET
             if (colonPos < 0)
                 throw new ApplicationException($"URL: '{url}' does not contain a colon.");
 
-            var scheme = url.Substring(0, colonPos).ToLower();
+            var scheme = url[..colonPos].ToLower();
 
             if (!CustomSchemes.ContainsKey(scheme))
                 throw new ApplicationException($"A handler for the custom scheme '{scheme}' has not been registered.");
