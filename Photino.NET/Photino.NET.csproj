@@ -20,6 +20,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <IsPackable>true</IsPackable> 
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
