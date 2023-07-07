@@ -1766,10 +1766,12 @@ public partial class PhotinoWindow
     //ONE OF THESE 2 METHODS *MUST* BE CALLED TO CREATE THE WINDOW
 
     /// <summary>
-    /// The WaitForClose method is responsible for the initialization of the primary native window and remains in operation until the window is closed.
+    /// Responsible for the initialization of the primary native window and remains in operation until the window is closed.
     /// This method is also applicable for initializing child windows, but in this case, it does not inhibit operation.
-    /// The operation of the message loop is exclusive to the main native window only.
     /// </summary>
+    /// <remarks>
+    /// The operation of the message loop is exclusive to the main native window only.
+    /// </remarks>
     public void WaitForClose()
     {
         //fill in the fixed size array of custom scheme names
