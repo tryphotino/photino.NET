@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace PhotinoNET
 {
+    /// <summary>
+    /// The PhotinoWindow class represents a window in a Photino-based desktop application.
+    /// </summary>
     public partial class PhotinoWindow
     {
         const string DllName = "Photino.Native";
