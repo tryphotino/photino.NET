@@ -2236,6 +2236,17 @@ public partial class PhotinoWindow
         Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
     }
 
+    public async Task SendWebMessageAsync(string message)
+    {
+        await Task.Run(() =>
+        {
+            Log($".SendWebMessage({message})");
+            if (_nativeInstance == IntPtr.Zero)
+                throw new ApplicationException("SendWebMessage cannot be called until after the Photino window is initialized.");
+            Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
+        });
+    }
+
     /// <summary>
     /// Sends a native notification to the OS.
     /// Sometimes referred to as Toast notifications.
