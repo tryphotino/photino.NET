@@ -38,6 +38,11 @@ namespace PhotinoNET
         [MarshalAs(UnmanagedType.LPStr)]
         internal string TemporaryFilesPath;
 
+        [MarshalAs(UnmanagedType.LPWStr)]
+        internal string UserAgentWide;
+        [MarshalAs(UnmanagedType.LPStr)]
+        internal string UserAgent;
+
         ///<summary>OPTIONAL: If native window is created from another native windowm this is the pointer to the parent window. It is set automatically in WaitforExit().</summary>
         internal IntPtr NativeParent;
 
@@ -143,11 +148,6 @@ namespace PhotinoNET
 
         ///<summary>OPTIONAL: If true, requests for access to local resources (camera, microphone, etc.) will automatically be granted. Default is true.</summary>
         [MarshalAs(UnmanagedType.I1)] internal bool GrantBrowserPermissions;
-        
-        [MarshalAs(UnmanagedType.LPWStr)]
-        internal string UserAgentWide;
-        [MarshalAs(UnmanagedType.LPStr)]
-        internal string UserAgent;
         [MarshalAs(UnmanagedType.I1)] internal bool MediaAutoplayEnabled;
         [MarshalAs(UnmanagedType.I1)] internal bool FileSystemAccessEnabled;
         [MarshalAs(UnmanagedType.I1)] internal bool WebSecurityEnabled;
