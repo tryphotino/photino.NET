@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace PhotinoNET;
 
@@ -34,6 +35,13 @@ public partial class PhotinoWindow
         CustomSchemeNames = new string[16],
         DevToolsEnabled = true,
         GrantBrowserPermissions = true,
+        UserAgent = "Photino WebView",
+        MediaAutoplayEnabled = true,
+        FileSystemAccessEnabled = true,
+        WebSecurityEnabled = true,
+        JavascriptClipboardAccessEnabled = true,
+        MediaStreamEnabled = true,
+        SmoothScrollingEnabled = true,
         TemporaryFilesPathWide = IsWindowsPlatform
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
             : null,
@@ -299,6 +307,168 @@ public partial class PhotinoWindow
             }
         }
     }
+
+    public bool MediaAutoplayEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.MediaAutoplayEnabled;
+            
+            var enabled = false;
+            Invoke(() => Photino_GetMediaAutoplayEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (MediaAutoplayEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.MediaAutoplayEnabled = value;
+                else
+                    Invoke(() => Photino_SetMediaAutoplayEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    public string UserAgent
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.UserAgent;
+            
+            var userAgent = string.Empty;
+            Invoke(() => Photino_GetUserAgent(_nativeInstance, out userAgent));
+            return userAgent;
+        }
+        set
+        {
+            if (UserAgent != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.UserAgent = value;
+                else
+                    Invoke(() => Photino_SetUserAgent(_nativeInstance, value));
+            }
+        }
+    }
+
+    public bool FileSystemAccessEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.FileSystemAccessEnabled;
+            
+            var enabled = false;
+            Invoke(() => Photino_GetFileSystemAccessEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (FileSystemAccessEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.FileSystemAccessEnabled = value;
+                else
+                    Invoke(() => Photino_SetFileSystemAccessEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    public bool WebSecurityEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.WebSecurityEnabled;
+            
+            var enabled = true;
+            Invoke(() => Photino_GetWebSecurityEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (WebSecurityEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.WebSecurityEnabled = value;
+                else
+                    Invoke(() => Photino_SetWebSecurityEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    public bool JavascriptClipboardAccessEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.JavascriptClipboardAccessEnabled;
+            
+            var enabled = true;
+            Invoke(() => Photino_GetJavascriptClipboardAccessEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (JavascriptClipboardAccessEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.JavascriptClipboardAccessEnabled = value;
+                else
+                    Invoke(() => Photino_SetJavascriptClipboardAccessEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    public bool MediaStreamEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.MediaStreamEnabled;
+            
+            var enabled = true;
+            Invoke(() => Photino_GetMediaStreamEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (MediaStreamEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.MediaStreamEnabled = value;
+                else
+                    Invoke(() => Photino_SetMediaStreamEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    public bool SmoothScrollingEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.SmoothScrollingEnabled;
+            
+            var enabled = false;
+            Invoke(() => Photino_GetSmoothScrollingEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (SmoothScrollingEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.SmoothScrollingEnabled = value;
+                else
+                    Invoke(() => Photino_SetSmoothScrollingEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
 
     /// <summary>
     /// This property returns or sets the fullscreen status of the window.
@@ -1523,6 +1693,56 @@ public partial class PhotinoWindow
         GrantBrowserPermissions = grant;
         return this;
     }
+
+    public PhotinoWindow SetUserAgent(string userAgent)
+    {
+        Log($".SetUserAgent({userAgent})");
+        UserAgent = userAgent;
+        return this;
+    }
+
+    public PhotinoWindow SetMediaAutoplayEnabled(bool enable)
+    {
+        Log($".SetMediaAutoplayEnabled({enable})");
+        MediaAutoplayEnabled = enable;
+        return this;
+    }
+
+    public PhotinoWindow SetFileSystemAccessEnabled(bool enable)
+    {
+        Log($".SetFileSystemAccessEnabled({enable})");
+        FileSystemAccessEnabled = enable;
+        return this;
+    }
+
+    public PhotinoWindow SetWebSecurityEnabled(bool enable)
+    {
+        Log($".SetWebSecurityEnabled({enable})");
+        WebSecurityEnabled = enable;
+        return this;
+    }
+
+    public PhotinoWindow SetJavascriptClipboardAccessEnabled(bool enable)
+    {
+        Log($".SetJavascriptClipboardAccessEnabled({enable})");
+        JavascriptClipboardAccessEnabled = enable;
+        return this;
+    }
+
+    public PhotinoWindow SetMediaStreamEnabled(bool enable)
+    {
+        Log($".SetMediaStreamEnabled({enable})");
+        MediaStreamEnabled = enable;
+        return this;
+    }
+
+    public PhotinoWindow SetSmoothScrollingEnabled(bool enable)
+    {
+        Log($".SetSmoothScrollingEnabled({enable})");
+        SmoothScrollingEnabled = enable;
+        return this;
+    }
+
 
     /// <summary>
     /// Sets the native window <see cref="PhotinoWindow.Height"/> in pixels.
