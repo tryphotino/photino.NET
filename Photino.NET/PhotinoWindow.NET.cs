@@ -314,7 +314,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.MediaAutoplayEnabled;
-            
+
             var enabled = false;
             Invoke(() => Photino_GetMediaAutoplayEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -326,7 +326,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.MediaAutoplayEnabled = value;
                 else
-                    Invoke(() => Photino_SetMediaAutoplayEnabled(_nativeInstance, value));
+                    throw new ApplicationException("MediaAutoplayEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -337,9 +337,13 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.UserAgent;
-            
+
             var userAgent = string.Empty;
-            Invoke(() => Photino_GetUserAgent(_nativeInstance, out userAgent));
+            Invoke(() =>
+            {
+                var ptr = Photino_GetUserAgent(_nativeInstance);
+                userAgent = Marshal.PtrToStringAuto(ptr);
+            });
             return userAgent;
         }
         set
@@ -349,7 +353,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.UserAgent = value;
                 else
-                    Invoke(() => Photino_SetUserAgent(_nativeInstance, value));
+                    throw new ApplicationException("UserAgent can only be set before the native window is instantiated.");
             }
         }
     }
@@ -360,7 +364,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.FileSystemAccessEnabled;
-            
+
             var enabled = false;
             Invoke(() => Photino_GetFileSystemAccessEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -372,7 +376,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.FileSystemAccessEnabled = value;
                 else
-                    Invoke(() => Photino_SetFileSystemAccessEnabled(_nativeInstance, value));
+                    throw new ApplicationException("FileSystemAccessEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -383,7 +387,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.WebSecurityEnabled;
-            
+
             var enabled = true;
             Invoke(() => Photino_GetWebSecurityEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -395,7 +399,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.WebSecurityEnabled = value;
                 else
-                    Invoke(() => Photino_SetWebSecurityEnabled(_nativeInstance, value));
+                    throw new ApplicationException("WebSecurityEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -406,7 +410,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.JavascriptClipboardAccessEnabled;
-            
+
             var enabled = true;
             Invoke(() => Photino_GetJavascriptClipboardAccessEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -418,7 +422,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.JavascriptClipboardAccessEnabled = value;
                 else
-                    Invoke(() => Photino_SetJavascriptClipboardAccessEnabled(_nativeInstance, value));
+                    throw new ApplicationException("JavascriptClipboardAccessEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -429,7 +433,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.MediaStreamEnabled;
-            
+
             var enabled = true;
             Invoke(() => Photino_GetMediaStreamEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -441,7 +445,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.MediaStreamEnabled = value;
                 else
-                    Invoke(() => Photino_SetMediaStreamEnabled(_nativeInstance, value));
+                    throw new ApplicationException("MediaStreamEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -452,7 +456,7 @@ public partial class PhotinoWindow
         {
             if (_nativeInstance == IntPtr.Zero)
                 return _startupParameters.SmoothScrollingEnabled;
-            
+
             var enabled = false;
             Invoke(() => Photino_GetSmoothScrollingEnabled(_nativeInstance, out enabled));
             return enabled;
@@ -464,7 +468,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.SmoothScrollingEnabled = value;
                 else
-                    Invoke(() => Photino_SetSmoothScrollingEnabled(_nativeInstance, value));
+                    throw new ApplicationException("SmoothScrollingEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -523,7 +527,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.GrantBrowserPermissions = value;
                 else
-                    Invoke(() => Photino_SetGrantBrowserPermissions(_nativeInstance, value));
+                    throw new ApplicationException("GrantBrowserPermissions can only be set before the native window is instantiated.");
             }
         }
     }
