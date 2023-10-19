@@ -336,7 +336,10 @@ public partial class PhotinoWindow
         get
         {
             if (_nativeInstance == IntPtr.Zero)
-                return _startupParameters.UserAgent;
+                if (IsWindowsPlatform)
+                    return _startupParameters.UserAgentWide;
+                else
+                    return _startupParameters.UserAgent;
 
             var userAgent = string.Empty;
             Invoke(() =>
@@ -351,7 +354,10 @@ public partial class PhotinoWindow
             if (UserAgent != value)
             {
                 if (_nativeInstance == IntPtr.Zero)
-                    _startupParameters.UserAgent = value;
+                    if (IsWindowsPlatform)
+                        _startupParameters.UserAgentWide = value;
+                    else
+                        _startupParameters.UserAgent = value;
                 else
                     throw new ApplicationException("UserAgent can only be set before the native window is instantiated.");
             }
