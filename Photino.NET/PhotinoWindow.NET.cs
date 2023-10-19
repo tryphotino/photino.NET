@@ -45,9 +45,6 @@ public partial class PhotinoWindow
         TemporaryFilesPathWide = IsWindowsPlatform
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
             : null,
-        TemporaryFilesPath = IsWindowsPlatform
-            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
-            : null,
         TitleWide = "Photino",
         Title = "Photino",
         UseOsDefaultLocation = true,
@@ -856,6 +853,47 @@ public partial class PhotinoWindow
                 }
                 else
                     Invoke(() => Photino_SetSize(_nativeInstance, value.Width, value.Height));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets platform specific initialization parameters for the native browser control on startup.
+    /// Default is none.
+    ///WINDOWS: WebView2 specific string. Space separated.
+    ///https://peter.sh/experiments/chromium-command-line-switches/
+    ///https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2environmentoptions.additionalbrowserarguments?view=webview2-dotnet-1.0.1938.49&viewFallbackFrom=webview2-dotnet-1.0.1901.177view%3Dwebview2-1.0.1901.177
+    ///https://www.chromium.org/developers/how-tos/run-chromium-with-flags/        
+    ///LINUX: Webkit2Gtk specific string. Enter parameter names and values as JSON string. 
+    ///e.g. { "set_enable_encrypted_media": true }
+    ///https://webkitgtk.org/reference/webkit2gtk/2.5.1/WebKitSettings.html
+    ///https://lazka.github.io/pgi-docs/WebKit2-4.0/classes/Settings.html
+    ///MAC: Webkit specific string. Enter parameter names and values as JSON string.
+    ///e.g. { "minimumFontSize": 8 }
+    ///https://developer.apple.com/documentation/webkit/wkwebviewconfiguration?language=objc
+    ///https://developer.apple.com/documentation/webkit/wkpreferences?language=objc
+    /// </summary>
+    public string BrowserControlInitParameters
+    {
+        get
+        {
+            if (IsWindowsPlatform)
+                return _startupParameters.BrowserControlInitParametersWide;
+            else
+                return _startupParameters.BrowserControlInitParameters;
+        }
+        set
+        {
+            var ss = IsWindowsPlatform ? _startupParameters.BrowserControlInitParametersWide : _startupParameters.BrowserControlInitParameters;
+            if (string.Compare(ss, value, true) != 0)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    if (IsWindowsPlatform)
+                        _startupParameters.BrowserControlInitParametersWide = value;
+                    else
+                        _startupParameters.BrowserControlInitParameters = value;
+                else
+                    throw new ApplicationException($"{nameof(ss)} cannot be changed after Photino Window is initialized");
             }
         }
     }
@@ -1704,6 +1742,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.UserAgent"/>. Sets the user agent on the browser control at initialization.
+    /// </summary>
+    /// <param name="userAgent"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetUserAgent(string userAgent)
     {
         Log($".SetUserAgent({userAgent})");
@@ -1711,6 +1754,38 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.BrowserControlInitParameters"/> platform specific initialization parameters for the native browser control on startup.
+    /// Default is none.
+    /// <remarks>
+    /// WINDOWS: WebView2 specific string. Space separated.
+    /// https://peter.sh/experiments/chromium-command-line-switches/
+    /// https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2environmentoptions.additionalbrowserarguments?view=webview2-dotnet-1.0.1938.49&viewFallbackFrom=webview2-dotnet-1.0.1901.177view%3Dwebview2-1.0.1901.177
+    /// https://www.chromium.org/developers/how-tos/run-chromium-with-flags/        
+    /// LINUX: Webkit2Gtk specific string. Enter parameter names and values as JSON string. 
+    /// e.g. { "set_enable_encrypted_media": true }
+    /// https://webkitgtk.org/reference/webkit2gtk/2.5.1/WebKitSettings.html
+    /// https://lazka.github.io/pgi-docs/WebKit2-4.0/classes/Settings.html
+    /// MAC: Webkit specific string. Enter parameter names and values as JSON string.
+    /// e.g. { "minimumFontSize": 8 }
+    /// https://developer.apple.com/documentation/webkit/wkwebviewconfiguration?language=objc
+    /// https://developer.apple.com/documentation/webkit/wkpreferences?language=objc
+    /// </remarks>
+    /// <param name="parameters"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
+    /// </summary>
+    public PhotinoWindow SetBrowserControlInitParameters(string parameters)
+    {
+        Log($".SetBrowserControlInitParameters({parameters})");
+        BrowserControlInitParameters = parameters;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.MediaAutoplayEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetMediaAutoplayEnabled(bool enable)
     {
         Log($".SetMediaAutoplayEnabled({enable})");
@@ -1718,6 +1793,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.FileSystemAccessEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetFileSystemAccessEnabled(bool enable)
     {
         Log($".SetFileSystemAccessEnabled({enable})");
@@ -1725,6 +1805,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.WebSecurityEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetWebSecurityEnabled(bool enable)
     {
         Log($".SetWebSecurityEnabled({enable})");
@@ -1732,6 +1817,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.JavascriptClipboardAccessEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetJavascriptClipboardAccessEnabled(bool enable)
     {
         Log($".SetJavascriptClipboardAccessEnabled({enable})");
@@ -1739,6 +1829,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.MediaStreamEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetMediaStreamEnabled(bool enable)
     {
         Log($".SetMediaStreamEnabled({enable})");
@@ -1746,6 +1841,11 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.SmoothScrollingEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetSmoothScrollingEnabled(bool enable)
     {
         Log($".SetSmoothScrollingEnabled({enable})");
@@ -1987,7 +2087,7 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
-    /// Gets or sets the native window <see cref="PhotinoWindow.Title"/>.
+    /// Sets the native window <see cref="PhotinoWindow.Title"/>.
     /// Default is "Photino".
     /// </summary>
     /// <returns>
