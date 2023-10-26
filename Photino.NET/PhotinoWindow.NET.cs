@@ -80,6 +80,11 @@ public partial class PhotinoWindow
     public static bool IsMacOsPlatform => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
     /// <summary>
+    /// Indicates the version of MacOS
+    /// </summary>
+    public static Version MacOsVersion => IsMacOsPlatform ? Version.Parse(RuntimeInformation.OSDescription.Split(' ')[1]) : null;
+
+    /// <summary>
     /// Indicates whether the current platform is Linux.
     /// </summary>
     /// <value>
@@ -1597,7 +1602,11 @@ public partial class PhotinoWindow
         // project files it is commented to be expected behavior for macOS.
         // There is some code trying to mitigate this problem but it might
         // not work as expected. Further investigation is necessary.
-        if (IsMacOsPlatform)
+        // Update:
+        // This behavior seems to have changed with macOS Sonoma.
+        // Therefore we determine the version of macOS and only apply the
+        // workaround for older versions.
+        if (IsMacOsPlatform && MacOsVersion.Major < 23)
         {
             var workArea = MainMonitor.WorkArea.Size;
             location.Y = location.Y >= 0
