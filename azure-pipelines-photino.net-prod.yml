@@ -2,47 +2,46 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- manual
+    - manual
 
 variables:
     major: 2
     minor: 5
-    patch: 0
-    # patch: $[counter(variables['minor'], 0)] #this will reset when we bump minor
-    buildConfiguration: 'Release'
+    patch: $[counter(variables['minor'], 0)] #this will reset when we bump minor
+    buildConfiguration: "Release"
 
 jobs:
-  - job: 'BuildPackageAndPublish'
+    - job: "BuildPackageAndPublish"
 
-    pool:
-      vmImage: windows-latest
+      pool:
+          vmImage: windows-latest
 
-    steps:
-    - task: UseDotNet@2
-      displayName: 'Use .NET 7 sdk'
-      inputs:
-        packageType: sdk
-        version: 7.0.x
-        installationPath: $(Agent.ToolsDirectory)/dotnet
+      steps:
+          - task: UseDotNet@2
+            displayName: "Use .NET 7 sdk"
+            inputs:
+                packageType: sdk
+                version: 7.0.x
+                installationPath: $(Agent.ToolsDirectory)/dotnet
 
-    #Build and Create NuGet package
-    - task: CmdLine@2
-      displayName: 'Build and Create NuGet package'
-      inputs:
-        script: 'dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) /p:Version=$(major).$(minor).$(patch) /p:PackageVersion=$(major).$(minor).$(patch)'
+          #Build and Create NuGet package
+          - task: CmdLine@2
+            displayName: "Build and Create NuGet package"
+            inputs:
+                script: "dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) /p:Version=$(major).$(minor).$(patch) /p:PackageVersion=$(major).$(minor).$(patch)"
 
-  # Uploads the NuGet package file to nuget.org
-  # Important notes:
-  # 1. For this to work, you need to create a 'service connection' with the same name
-  #    as the 'publishFeedCredentials' value.
-  # 2. For security, you *must* ensure that 'Make secrets available to builds of forks'
-  #    is disabled in your PR validation settings (inside build -> Edit -> Triggers).
-  #    Otherwise, PRs would be able to push new packages even without being merged.
-    - task: NuGetCommand@2
-      displayName: 'Publish to nuget.org'
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-      inputs:
-        command: push
-        packagesToPush: 'Photino.NET/bin/$(buildConfiguration)/*.nupkg'
-        nuGetFeedType: external
-        publishFeedCredentials: 'PhotinoNetNuGet'
+          # Uploads the NuGet package file to nuget.org
+          # Important notes:
+          # 1. For this to work, you need to create a 'service connection' with the same name
+          #    as the 'publishFeedCredentials' value.
+          # 2. For security, you *must* ensure that 'Make secrets available to builds of forks'
+          #    is disabled in your PR validation settings (inside build -> Edit -> Triggers).
+          #    Otherwise, PRs would be able to push new packages even without being merged.
+          - task: NuGetCommand@2
+            displayName: "Publish to nuget.org"
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            inputs:
+                command: push
+                packagesToPush: "Photino.NET/bin/$(buildConfiguration)/*.nupkg"
+                nuGetFeedType: external
+                publishFeedCredentials: "PhotinoNetNuGet"
