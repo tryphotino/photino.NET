@@ -20,7 +20,14 @@
     <OutputType>Library</OutputType>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
+	<Version>0.9.0-debug20231116</Version>
   </PropertyGroup>
+
+  <Target Name="SetPackageVersion" DependsOnTargets="Build">
+    <PropertyGroup>
+      <PackageVersion>$(Version)</PackageVersion>
+    </PropertyGroup>
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Photino.Native" Version="0.9.0-20231228.2" />
