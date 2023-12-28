@@ -22,7 +22,7 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <Target Name="SetPackageVersion" DependsOnTargets="Build">
+  <Target Name="SetPackageVersion" BeforeTargets="Build">
     <PropertyGroup>
       <PackageVersion>$(Version)</PackageVersion>
     </PropertyGroup>
