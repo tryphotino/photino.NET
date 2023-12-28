@@ -22,12 +22,6 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <Target Name="SetPackageVersion" DependsOnTargets="Build">
-    <PropertyGroup>
-      <PackageVersion>$(Version)</PackageVersion>
-    </PropertyGroup>
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="Photino.Native" Version="0.9.0-20231228.2" />
   </ItemGroup>
