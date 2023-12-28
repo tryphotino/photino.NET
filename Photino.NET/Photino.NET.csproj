@@ -4,7 +4,7 @@
     <Authors>TryPhotino</Authors>
     <Company>TryPhotino</Company>
     <Description>.NET 6/7/8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
-    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
+    <!--<GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>-->
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageDescription>.NET 6/7/8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
     <PackageId>Photino.NET</PackageId>
