@@ -18,10 +18,10 @@ jobs:
 
       steps:
           - task: UseDotNet@2
-            displayName: "Use .NET 7 sdk"
+            displayName: "Use .NET 8 sdk"
             inputs:
                 packageType: sdk
-                version: 7.0.x
+                version: 8.0.x
                 installationPath: $(Agent.ToolsDirectory)/dotnet
 
           - task: CmdLine@2
@@ -29,7 +29,7 @@ jobs:
             inputs:
                 script: "dotnet nuget add source https://pkgs.dev.azure.com/tryphotino/Photino.Native/_packaging/PhotinoPackages/nuget/v3/index.json -n DevOpsArtifacts"
 
-          - task: NuGetAuthenticate@0
+          - task: NuGetAuthenticate@1
             displayName: "NuGet Authenticate"
 
           #- task: CmdLine@2

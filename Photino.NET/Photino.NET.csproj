@@ -5,7 +5,7 @@
     <Company>TryPhotino</Company>
     <Description>.NET 6/7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
     <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageDescription>.NET 6/7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
     <PackageId>Photino.NET</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -18,8 +18,9 @@
   
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <IsPackable>true</IsPackable> 
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <IsPackable>true</IsPackable>
+    <Version>0.9.0-debug20231116</Version> 
   </PropertyGroup>
 
   <Target Name="SetPackageVersion" DependsOnTargets="Build">
@@ -29,7 +30,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="2.5.2" />
+    <PackageReference Include="Photino.Native" Version="0.9.0-20231228.2" />
   </ItemGroup>
 
 </Project>
