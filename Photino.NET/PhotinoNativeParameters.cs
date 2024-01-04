@@ -192,6 +192,7 @@ namespace PhotinoNET
         [MarshalAs(UnmanagedType.I1)] internal bool JavascriptClipboardAccessEnabled;
         [MarshalAs(UnmanagedType.I1)] internal bool MediaStreamEnabled;
         [MarshalAs(UnmanagedType.I1)] internal bool SmoothScrollingEnabled;
+        [MarshalAs(UnmanagedType.I1)] internal bool IgnoreCertificateErrorsEnabled;
 
         [MarshalAs(UnmanagedType.I1)] internal bool DisableSslCertificateVerification;
 

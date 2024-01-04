@@ -1885,6 +1885,17 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.IgnoreCertificateErrorsEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
+    public PhotinoWindow SetIgnoreCertificateErrorsEnabled(bool enable)
+    {
+        Log($".SetIgnoreCertificateErrorsEnabled({enable})");
+        IgnoreCertificateErrorsEnabled = enable;
+        return this;
+    }
 
     /// <summary>
     /// Sets the native window <see cref="PhotinoWindow.Height"/> in pixels.
