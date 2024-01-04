@@ -42,6 +42,7 @@ public partial class PhotinoWindow
         JavascriptClipboardAccessEnabled = true,
         MediaStreamEnabled = true,
         SmoothScrollingEnabled = true,
+        IgnoreCertificateErrorsEnabled = false,
         TemporaryFilesPathWide = IsWindowsPlatform
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
             : null,
@@ -477,6 +478,29 @@ public partial class PhotinoWindow
                     _startupParameters.SmoothScrollingEnabled = value;
                 else
                     throw new ApplicationException("SmoothScrollingEnabled can only be set before the native window is instantiated.");
+            }
+        }
+    }
+
+    public bool IgnoreCertificateErrorsEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.IgnoreCertificateErrorsEnabled;
+
+            var enabled = false;
+            Invoke(() => Photino_GetIgnoreCertificateErrorsEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (IgnoreCertificateErrorsEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.IgnoreCertificateErrorsEnabled = value;
+                else
+                    throw new ApplicationException("IgnoreCertificateErrorsEnabled can only be set before the native window is instantiated.");
             }
         }
     }
@@ -1862,6 +1886,17 @@ public partial class PhotinoWindow
         return this;
     }
 
+    /// <summary>
+    /// Sets <see cref="PhotinoWindow.IgnoreCertificateErrorsEnabled"/> on the browser control at initialization.
+    /// </summary>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
+    public PhotinoWindow SetIgnoreCertificateErrorsEnabled(bool enable)
+    {
+        Log($".SetIgnoreCertificateErrorsEnabled({enable})");
+        IgnoreCertificateErrorsEnabled = enable;
+        return this;
+    }
 
     /// <summary>
     /// Sets the native window <see cref="PhotinoWindow.Height"/> in pixels.
