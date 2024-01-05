@@ -193,6 +193,8 @@ namespace PhotinoNET
         [MarshalAs(UnmanagedType.I1)] internal bool MediaStreamEnabled;
         [MarshalAs(UnmanagedType.I1)] internal bool SmoothScrollingEnabled;
 
+        [MarshalAs(UnmanagedType.I1)] internal bool DisableSslCertificateVerification;
+
         ///<summary>Set when GetParamErrors() is called, prior to initializing the native window. It is a check to make sure the struct matches what C++ is expecting.</summary>
         [MarshalAs(UnmanagedType.I4)] internal int Size;
 

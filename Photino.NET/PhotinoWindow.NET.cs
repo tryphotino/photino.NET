@@ -27,6 +27,7 @@ public partial class PhotinoWindow
     /// <param name="UseOsDefaultLocation">Specifies whether the window should use the OS default location.</param>
     /// <param name="UseOsDefaultSize">Indicates whether the window should use the OS default size.</param>
     /// <param name="Zoom">Sets the zoom level for the window.</param>
+    /// <param name="DisableSslCertificateVerification">Disables SSL Certificate Verification. This allows the window to ignore SSL certificate errors. Should not be used in production.</param>
     private PhotinoNativeParameters _startupParameters = new()
     {
         Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
@@ -52,6 +53,7 @@ public partial class PhotinoWindow
         Zoom = 100,
         MaxHeight = int.MaxValue,
         MaxWidth = int.MaxValue,
+        DisableSslCertificateVerification = false,
     };
 
     //Pointers to the type and instance.
@@ -480,7 +482,28 @@ public partial class PhotinoWindow
             }
         }
     }
+    public bool SslCertificateVerificationDisabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.DisableSslCertificateVerification;
 
+            var enabled = true;
+            Invoke(() => Photino_GetSslCertificateVerificationDisabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (SslCertificateVerificationDisabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.DisableSslCertificateVerification = value;
+                else if (IsWindowsPlatform)
+                    throw new ApplicationException("SSLCertificateVerificationDisabled can only be set before the native window is instantiated.");
+            }
+        }
+    }
 
     /// <summary>
     /// This property returns or sets the fullscreen status of the window.
@@ -2206,6 +2229,23 @@ public partial class PhotinoWindow
     {
         Log($".SetUseOsDefaultSize({useOsDefault})");
         UseOsDefaultSize = useOsDefault;
+        return this;
+    }
+
+    /// <summary>
+    /// Disable SSL Certificate Verification to bypass SSL certificate warnings. This should not be used in production environments or should be strictly controlled.
+    /// </summary>
+    /// <remarks>
+    /// This is only available on startup in windows
+    /// </remarks>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="disabled">Indicates if ssl certificate verification should be disabled.</param>
+    public PhotinoWindow SetSslCertificateVerificationDisabled(bool disabled)
+    {
+        Log($".SetSslCertificateVerificationDisabled({disabled})");
+        SslCertificateVerificationDisabled = disabled;
         return this;
     }
 
