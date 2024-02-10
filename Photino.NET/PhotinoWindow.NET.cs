@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+using static PhotinoNET.LogVerbosity;
+
 namespace PhotinoNET;
 
 public partial class PhotinoWindow
@@ -1396,14 +1398,42 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
-    /// Gets or sets the logging verbosity to standard output (Console/Terminal).
-    /// 0 = Critical Only
-    /// 1 = Critical and Warning
-    /// 2 = Verbose
-    /// >2 = All Details
+    /// Gets or sets the logging verbosity.
+    /// <list type="table">
+    ///     <item>
+    ///         <term>0</term>
+    ///         <description>Critical Only</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>1</term>
+    ///         <description>Critical and Warning</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>2</term>
+    ///         <description>Verbose</description>
+    ///     </item>
+    ///     <item>
+    ///         <term>>2</term>
+    ///         <description>All Details</description>
+    ///     </item>
+    /// </list>
     /// Default is 2.
     /// </summary>
-    public int LogVerbosity { get; set; } = 2;
+    /// <remarks>
+    /// Use constant values: <see cref="PhotinoNET.LogVerbosity"/>
+    /// </remarks>
+    public int LogVerbosity { get; set; } = Verbose;
+
+    private IPhotinoLogger _logger;
+    /// <summary>
+    /// Gets or sets the logger instance used by the Photino window. It allows for custom logging implementations.
+    /// If no custom logger is provided, a default logger that logs to the console/terminal is used.
+    /// </summary>
+    public IPhotinoLogger Logger
+    {
+        get => _logger ??= new DefaultPhotinoLogger(this);
+        set => _logger = value;
+    }
 
     //CONSTRUCTOR
     /// <summary>
@@ -1481,7 +1511,7 @@ public partial class PhotinoWindow
     /// <param name="uri">A Uri pointing to the file or the URL to load.</param>
     public PhotinoWindow Load(Uri uri)
     {
-        Log($".Load({uri})");
+        LogVerbose($".Load({uri})");
         if (_nativeInstance == IntPtr.Zero)
             if (IsWindowsPlatform)
                 _startupParameters.StartUrlWide = uri.ToString();
@@ -1504,7 +1534,7 @@ public partial class PhotinoWindow
     /// <param name="path">A path pointing to the ressource to load.</param>
     public PhotinoWindow Load(string path)
     {
-        Log($".Load({path})");
+        LogVerbose($".Load({path})");
 
         // ––––––––––––––––––––––
         // SECURITY RISK!
@@ -1525,7 +1555,7 @@ public partial class PhotinoWindow
 
             if (File.Exists(absolutePath) == false)
             {
-                Log($" ** File \"{path}\" could not be found.");
+                LogVerbose($" ** File \"{path}\" could not be found.");
                 return this;
             }
         }
@@ -1547,7 +1577,7 @@ public partial class PhotinoWindow
     public PhotinoWindow LoadRawString(string content)
     {
         var shortContent = content.Length > 50 ? string.Concat(content.AsSpan(0, 50), "...") : content;
-        Log($".LoadRawString({shortContent})");
+        LogVerbose($".LoadRawString({shortContent})");
         if (_nativeInstance == IntPtr.Zero)
             if (IsWindowsPlatform)
                 _startupParameters.StartStringWide = content;
@@ -1570,7 +1600,7 @@ public partial class PhotinoWindow
     /// <seealso cref="UseOsDefaultLocation" />
     public PhotinoWindow Center()
     {
-        Log(".Center()");
+        LogVerbose(".Center()");
         Centered = true;
         return this;
     }
@@ -1585,13 +1615,9 @@ public partial class PhotinoWindow
     /// <param name="allowOutsideWorkArea">Whether the window can go off-screen (work area)</param>
     public PhotinoWindow MoveTo(Point location, bool allowOutsideWorkArea = false)
     {
-        Log($".MoveTo({location}, {allowOutsideWorkArea})");
-
-        if (LogVerbosity > 2)
-        {
-            Log($"  Current location: {Location}");
-            Log($"  New location: {location}");
-        }
+        LogVerbose($".MoveTo({location}, {allowOutsideWorkArea})");
+        Log(Debug, $"  Current location: {Location}");
+        Log(Debug, $"  New location: {location}");
 
         // If the window is outside of the work area,
         // recalculate the position and continue.
@@ -1655,7 +1681,7 @@ public partial class PhotinoWindow
     /// <param name="allowOutsideWorkArea">Whether the window can go off-screen (work area)</param>
     public PhotinoWindow MoveTo(int left, int top, bool allowOutsideWorkArea = false)
     {
-        Log($".MoveTo({left}, {top}, {allowOutsideWorkArea})");
+        LogVerbose($".MoveTo({left}, {top}, {allowOutsideWorkArea})");
         return MoveTo(new Point(left, top), allowOutsideWorkArea);
     }
 
@@ -1669,7 +1695,7 @@ public partial class PhotinoWindow
     /// <param name="offset">Relative offset</param>
     public PhotinoWindow Offset(Point offset)
     {
-        Log($".Offset({offset})");
+        LogVerbose($".Offset({offset})");
         var location = Location;
         int left = location.X + offset.X;
         int top = location.Y + offset.Y;
@@ -1687,7 +1713,7 @@ public partial class PhotinoWindow
     /// <param name="top">Relative offset from top in pixels</param>
     public PhotinoWindow Offset(int left, int top)
     {
-        Log($".Offset({left}, {top})");
+        LogVerbose($".Offset({left}, {top})");
         return Offset(new Point(left, top));
     }
 
@@ -1704,7 +1730,7 @@ public partial class PhotinoWindow
     /// <param name="chromeless">Whether the window should be chromeless</param>
     public PhotinoWindow SetChromeless(bool chromeless)
     {
-        Log($".SetChromeless({chromeless})");
+        LogVerbose($".SetChromeless({chromeless})");
         if (_nativeInstance != IntPtr.Zero)
             throw new ApplicationException("Chromeless setting cannot be used on an unitialized window.");
 
@@ -1722,7 +1748,7 @@ public partial class PhotinoWindow
     /// <param name="enabled">Whether the context menu should be available</param>
     public PhotinoWindow SetContextMenuEnabled(bool enabled)
     {
-        Log($".SetContextMenuEnabled({enabled})");
+        LogVerbose($".SetContextMenuEnabled({enabled})");
         ContextMenuEnabled = enabled;
         return this;
     }
@@ -1737,7 +1763,7 @@ public partial class PhotinoWindow
     /// <param name="enabled">Whether developer tools should be available</param>
     public PhotinoWindow SetDevToolsEnabled(bool enabled)
     {
-        Log($".SetDevTools({enabled})");
+        LogVerbose($".SetDevTools({enabled})");
         DevToolsEnabled = enabled;
         return this;
     }
@@ -1752,7 +1778,7 @@ public partial class PhotinoWindow
     /// <param name="fullScreen">Whether the window should be fullscreen</param>
     public PhotinoWindow SetFullScreen(bool fullScreen)
     {
-        Log($".SetFullScreen({fullScreen})");
+        LogVerbose($".SetFullScreen({fullScreen})");
         FullScreen = fullScreen;
         return this;
     }
@@ -1770,7 +1796,7 @@ public partial class PhotinoWindow
     /// <param name="grant">Whether permissions should be automatically granted.</param>
     public PhotinoWindow SetGrantBrowserPermissions(bool grant)
     {
-        Log($".SetGrantBrowserPermission({grant})");
+        LogVerbose($".SetGrantBrowserPermission({grant})");
         GrantBrowserPermissions = grant;
         return this;
     }
@@ -1782,7 +1808,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetUserAgent(string userAgent)
     {
-        Log($".SetUserAgent({userAgent})");
+        LogVerbose($".SetUserAgent({userAgent})");
         UserAgent = userAgent;
         return this;
     }
@@ -1809,7 +1835,7 @@ public partial class PhotinoWindow
     /// </summary>
     public PhotinoWindow SetBrowserControlInitParameters(string parameters)
     {
-        Log($".SetBrowserControlInitParameters({parameters})");
+        LogVerbose($".SetBrowserControlInitParameters({parameters})");
         BrowserControlInitParameters = parameters;
         return this;
     }
@@ -1821,7 +1847,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetMediaAutoplayEnabled(bool enable)
     {
-        Log($".SetMediaAutoplayEnabled({enable})");
+        LogVerbose($".SetMediaAutoplayEnabled({enable})");
         MediaAutoplayEnabled = enable;
         return this;
     }
@@ -1833,7 +1859,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetFileSystemAccessEnabled(bool enable)
     {
-        Log($".SetFileSystemAccessEnabled({enable})");
+        LogVerbose($".SetFileSystemAccessEnabled({enable})");
         FileSystemAccessEnabled = enable;
         return this;
     }
@@ -1845,7 +1871,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetWebSecurityEnabled(bool enable)
     {
-        Log($".SetWebSecurityEnabled({enable})");
+        LogVerbose($".SetWebSecurityEnabled({enable})");
         WebSecurityEnabled = enable;
         return this;
     }
@@ -1857,7 +1883,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetJavascriptClipboardAccessEnabled(bool enable)
     {
-        Log($".SetJavascriptClipboardAccessEnabled({enable})");
+        LogVerbose($".SetJavascriptClipboardAccessEnabled({enable})");
         JavascriptClipboardAccessEnabled = enable;
         return this;
     }
@@ -1869,7 +1895,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetMediaStreamEnabled(bool enable)
     {
-        Log($".SetMediaStreamEnabled({enable})");
+        LogVerbose($".SetMediaStreamEnabled({enable})");
         MediaStreamEnabled = enable;
         return this;
     }
@@ -1881,7 +1907,7 @@ public partial class PhotinoWindow
     /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
     public PhotinoWindow SetSmoothScrollingEnabled(bool enable)
     {
-        Log($".SetSmoothScrollingEnabled({enable})");
+        LogVerbose($".SetSmoothScrollingEnabled({enable})");
         SmoothScrollingEnabled = enable;
         return this;
     }
@@ -1909,7 +1935,7 @@ public partial class PhotinoWindow
     /// <param name="height">Height in pixels</param>
     public PhotinoWindow SetHeight(int height)
     {
-        Log($".SetHeight({height})");
+        LogVerbose($".SetHeight({height})");
         Height = height;
         return this;
     }
@@ -1927,7 +1953,7 @@ public partial class PhotinoWindow
     /// <param name="iconFile">The file path to the icon.</param>
     public PhotinoWindow SetIconFile(string iconFile)
     {
-        Log($".SetIconFile({iconFile})");
+        LogVerbose($".SetIconFile({iconFile})");
         IconFile = iconFile;
         return this;
     }
@@ -1943,7 +1969,7 @@ public partial class PhotinoWindow
     /// <param name="left">Position in pixels from the left (X).</param>
     public PhotinoWindow SetLeft(int left)
     {
-        Log($".SetLeft({Left})");
+        LogVerbose($".SetLeft({Left})");
         Left = left;
         return this;
     }
@@ -1958,7 +1984,7 @@ public partial class PhotinoWindow
     /// <param name="resizable">Whether the window is resizable</param>
     public PhotinoWindow SetResizable(bool resizable)
     {
-        Log($".SetResizable({resizable})");
+        LogVerbose($".SetResizable({resizable})");
         Resizable = resizable;
         return this;
     }
@@ -1974,7 +2000,7 @@ public partial class PhotinoWindow
     /// <param name="size">Width &amp; Height</param>
     public PhotinoWindow SetSize(Size size)
     {
-        Log($".SetSize({size})");
+        LogVerbose($".SetSize({size})");
         Size = size;
         return this;
     }
@@ -1991,7 +2017,7 @@ public partial class PhotinoWindow
     /// <param name="height">Height in pixels</param>
     public PhotinoWindow SetSize(int width, int height)
     {
-        Log($".SetSize({width}, {height})");
+        LogVerbose($".SetSize({width}, {height})");
         Size = new Size(width, height);
         return this;
     }
@@ -2007,7 +2033,7 @@ public partial class PhotinoWindow
     /// <param name="location">Location as a <see cref="Point"/></param>
     public PhotinoWindow SetLocation(Point location)
     {
-        Log($".SetLocation({location})");
+        LogVerbose($".SetLocation({location})");
         Location = location;
         return this;
     }
@@ -2026,7 +2052,7 @@ public partial class PhotinoWindow
     /// <param name="verbosity">Verbosity as integer</param>
     public PhotinoWindow SetLogVerbosity(int verbosity)
     {
-        Log($".SetLogVerbosity({verbosity})");
+        LogVerbose($".SetLogVerbosity({verbosity})");
         LogVerbosity = verbosity;
         return this;
     }
@@ -2041,7 +2067,7 @@ public partial class PhotinoWindow
     /// <param name="maximized">Whether the window should be maximized.</param>
     public PhotinoWindow SetMaximized(bool maximized)
     {
-        Log($".SetMaximized({maximized})");
+        LogVerbose($".SetMaximized({maximized})");
         Maximized = maximized;
         return this;
     }
@@ -2049,7 +2075,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Width and Height in pixels.</summary>
     public PhotinoWindow SetMaxSize(int maxWidth, int maxHeight)
     {
-        Log($".SetMaxSize({maxWidth}, {maxHeight})");
+        LogVerbose($".SetMaxSize({maxWidth}, {maxHeight})");
         MaxSize = new Point(maxWidth, maxHeight);
         return this;
     }
@@ -2057,7 +2083,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Height in pixels.</summary>
     public PhotinoWindow SetMaxHeight(int maxHeight)
     {
-        Log($".SetMaxHeight({maxHeight})");
+        LogVerbose($".SetMaxHeight({maxHeight})");
         MaxHeight = maxHeight;
         return this;
     }
@@ -2065,7 +2091,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Width in pixels.</summary>
     public PhotinoWindow SetMaxWidth(int maxWidth)
     {
-        Log($".SetMaxWidth({maxWidth})");
+        LogVerbose($".SetMaxWidth({maxWidth})");
         MaxWidth = maxWidth;
         return this;
     }
@@ -2080,7 +2106,7 @@ public partial class PhotinoWindow
     /// <param name="minimized">Whether the window should be minimized.</param>
     public PhotinoWindow SetMinimized(bool minimized)
     {
-        Log($".SetMinimized({minimized})");
+        LogVerbose($".SetMinimized({minimized})");
         Minimized = minimized;
         return this;
     }
@@ -2088,7 +2114,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Width and Height in pixels.</summary>
     public PhotinoWindow SetMinSize(int minWidth, int minHeight)
     {
-        Log($".SetMinSize({minWidth}, {minHeight})");
+        LogVerbose($".SetMinSize({minWidth}, {minHeight})");
         MinSize = new Point(minWidth, minHeight);
         return this;
     }
@@ -2096,7 +2122,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Height in pixels.</summary>
     public PhotinoWindow SetMinHeight(int minHeight)
     {
-        Log($".SetMinHeight({minHeight})");
+        LogVerbose($".SetMinHeight({minHeight})");
         MinHeight = minHeight;
         return this;
     }
@@ -2104,7 +2130,7 @@ public partial class PhotinoWindow
     ///<summary>Native window maximum Width in pixels.</summary>
     public PhotinoWindow SetMinWidth(int minWidth)
     {
-        Log($".SetMinWidth({minWidth})");
+        LogVerbose($".SetMinWidth({minWidth})");
         MinWidth = minWidth;
         return this;
     }
@@ -2125,7 +2151,7 @@ public partial class PhotinoWindow
     /// <param name="tempFilesPath">Path to temp files directory.</param>
     public PhotinoWindow SetTemporaryFilesPath(string tempFilesPath)
     {
-        Log($".SetTemporaryFilesPath({tempFilesPath})");
+        LogVerbose($".SetTemporaryFilesPath({tempFilesPath})");
         TemporaryFilesPath = tempFilesPath;
         return this;
     }
@@ -2140,7 +2166,7 @@ public partial class PhotinoWindow
     /// <param name="title">Window title</param>
     public PhotinoWindow SetTitle(string title)
     {
-        Log($".SetTitle({title})");
+        LogVerbose($".SetTitle({title})");
         Title = title;
         return this;
     }
@@ -2156,7 +2182,7 @@ public partial class PhotinoWindow
     /// <param name="top">Position in pixels from the top (Y).</param>
     public PhotinoWindow SetTop(int top)
     {
-        Log($".SetTop({top})");
+        LogVerbose($".SetTop({top})");
         Top = top;
         return this;
     }
@@ -2171,7 +2197,7 @@ public partial class PhotinoWindow
     /// <param name="topMost">Whether the window is at the top</param>
     public PhotinoWindow SetTopMost(bool topMost)
     {
-        Log($".SetTopMost({topMost})");
+        LogVerbose($".SetTopMost({topMost})");
         Topmost = topMost;
         return this;
     }
@@ -2187,7 +2213,7 @@ public partial class PhotinoWindow
     /// <param name="width">Width in pixels</param>
     public PhotinoWindow SetWidth(int width)
     {
-        Log($".SetWidth({width})");
+        LogVerbose($".SetWidth({width})");
         Width = width;
         return this;
     }
@@ -2203,7 +2229,7 @@ public partial class PhotinoWindow
     /// <example>100 = 100%, 50 = 50%</example>
     public PhotinoWindow SetZoom(int zoom)
     {
-        Log($".SetZoom({zoom})");
+        LogVerbose($".SetZoom({zoom})");
         Zoom = zoom;
         return this;
     }
@@ -2221,7 +2247,7 @@ public partial class PhotinoWindow
     /// <param name="useOsDefault">Whether the OS Default should be used.</param>
     public PhotinoWindow SetUseOsDefaultLocation(bool useOsDefault)
     {
-        Log($".SetUseOsDefaultLocation({useOsDefault})");
+        LogVerbose($".SetUseOsDefaultLocation({useOsDefault})");
         UseOsDefaultLocation = useOsDefault;
         return this;
     }
@@ -2239,7 +2265,7 @@ public partial class PhotinoWindow
     /// <param name="useOsDefault">Whether the OS Default should be used.</param>
     public PhotinoWindow SetUseOsDefaultSize(bool useOsDefault)
     {
-        Log($".SetUseOsDefaultSize({useOsDefault})");
+        LogVerbose($".SetUseOsDefaultSize({useOsDefault})");
         UseOsDefaultSize = useOsDefault;
         return this;
     }
@@ -2260,7 +2286,7 @@ public partial class PhotinoWindow
         if (IsWindowsPlatform)
             Invoke(() => Photino_setWebView2RuntimePath_win32(_nativeType, data));
         else
-            Log("Win32SetWebView2Path is only supported on the Windows platform");
+            Log(Warning, "Win32SetWebView2Path is only supported on the Windows platform");
 
         return this;
     }
@@ -2279,8 +2305,18 @@ public partial class PhotinoWindow
         if (IsWindowsPlatform)
             Invoke(() => Photino_ClearBrowserAutoFill(_nativeInstance));
         else
-            Log("ClearBrowserAutoFill is only supported on the Windows platform");
+            Log(Warning, "ClearBrowserAutoFill is only supported on the Windows platform");
 
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the logger instance used by the Photino window. It allows for custom logging implementations.
+    /// </summary>
+    public PhotinoWindow SetLogger(IPhotinoLogger logger)
+    {
+        LogVerbose($".SetLogger({logger?.GetType()?.ToString() ?? "null"})");
+        Logger = logger;
         return this;
     }
 
@@ -2325,7 +2361,7 @@ public partial class PhotinoWindow
                 if (IsWindowsPlatform)
                     lastError = Marshal.GetLastWin32Error();
 
-                Log($"***\n{ex.Message}\n{ex.StackTrace}\nError #{lastError}");
+                Log(Critical, ex, $"Error #{lastError}");
                 throw new ApplicationException($"Native code exception. Error # {lastError}  See inner exception for details.", ex);
             }
             OnWindowCreated();
@@ -2343,7 +2379,7 @@ public partial class PhotinoWindow
                     if (IsWindowsPlatform)
                         lastError = Marshal.GetLastWin32Error();
 
-                    Log($"***\n{ex.Message}\n{ex.StackTrace}\nError #{lastError}");
+                    Log(Critical, ex, $"Error #{lastError}");
                     throw new ApplicationException($"Native code exception. Error # {lastError}  See inner exception for details.", ex);
                 }
             }
@@ -2366,7 +2402,7 @@ public partial class PhotinoWindow
     /// </exception>
     public void Close()
     {
-        Log(".Close()");
+        LogVerbose(".Close()");
         if (_nativeInstance == IntPtr.Zero)
             throw new ApplicationException("Close cannot be called until after the Photino window is initialized.");
         Invoke(() => Photino_Close(_nativeInstance));
@@ -2384,7 +2420,7 @@ public partial class PhotinoWindow
     /// <param name="message">Message as string</param>
     public void SendWebMessage(string message)
     {
-        Log($".SendWebMessage({message})");
+        LogVerbose($".SendWebMessage({message})");
         if (_nativeInstance == IntPtr.Zero)
             throw new ApplicationException("SendWebMessage cannot be called until after the Photino window is initialized.");
         Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
@@ -2394,7 +2430,7 @@ public partial class PhotinoWindow
     {
         await Task.Run(() =>
         {
-            Log($".SendWebMessage({message})");
+            LogVerbose($".SendWebMessage({message})");
             if (_nativeInstance == IntPtr.Zero)
                 throw new ApplicationException("SendWebMessage cannot be called until after the Photino window is initialized.");
             Invoke(() => Photino_SendWebMessage(_nativeInstance, message));
@@ -2412,7 +2448,7 @@ public partial class PhotinoWindow
     /// <param name="body">The text of the notification</param>
     public void SendNotification(string title, string body)
     {
-        Log($".SendNotification({title}, {body})");
+        LogVerbose($".SendNotification({title}, {body})");
         if (_nativeInstance == IntPtr.Zero)
             throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
         Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
@@ -2531,13 +2567,33 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
-    /// Logs a message.
+    /// Logs a message with verbosity <see <see cref="Verbose"/>
     /// </summary>
     /// <param name="message">Log message</param>
-    private void Log(string message)
+    private void LogVerbose(string message)
     {
-        if (LogVerbosity < 1) return;
-        Console.WriteLine($"Photino.NET: \"{Title ?? "PhotinoWindow"}\"{message}");
+        Log(Verbose, message);
+    }
+
+    /// <summary>
+    /// Logs a message.
+    /// </summary>
+    /// <param name="verbosity">Log verbosity</param>
+    /// <param name="message">Log message</param>
+    private void Log(int verbosity, string message)
+    {
+        Log(verbosity, exception: null, message);
+    }
+
+    /// <summary>
+    /// Logs a message.
+    /// </summary>
+    /// <param name="verbosity">Log verbosity</param>
+    /// <param name="exception">Log exception</param>
+    /// <param name="message">Log message</param>
+    private void Log(int verbosity, Exception exception, string message)
+    {
+        Logger.Log(verbosity, exception, message);
     }
 
     /// <summary>
