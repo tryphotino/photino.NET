@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PhotinoNET.Ipc;
+namespace Photino.NET.IPC;
 
-public class PhotinoPayload<T> where T : class
+public class PhotinoPayload<T>(string key, T data) where T : class
 {
     private static readonly JsonSerializerOptions DEFAULT_OPTIONS = new()
     {
@@ -13,17 +13,11 @@ public class PhotinoPayload<T> where T : class
 
     private static PhotinoPayload<T> Empty => new(string.Empty, null);
 
-    public PhotinoPayload(string key, T data)
-    {
-        Key = key;
-        Data = data;
-    }
-
     [JsonPropertyName("key")]
-    public string Key { get; init; }
+    public string Key { get; init; } = key;
 
     [JsonPropertyName("data")]
-    public T Data { get; init; }
+    public T Data { get; init; } = data;
 
     public static string ToJson(T payload) => JsonSerializer.Serialize(payload, DEFAULT_OPTIONS);
 
@@ -38,7 +32,7 @@ public class PhotinoPayload<T> where T : class
         }
         catch
         {
-            payload = PhotinoPayload<T>.Empty;
+            payload = Empty;
             return false;
         }
     }
