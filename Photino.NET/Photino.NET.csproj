@@ -1,36 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Authors>TryPhotino</Authors>
-    <Company>TryPhotino</Company>
-    <Description>.NET 7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
-    <GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageDescription>.NET 7 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
-    <PackageId>Photino.NET</PackageId>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Product>Photino.NET</Product>
-    <PackageProjectUrl>https://github.com/tryphotino/photino.NET</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
-    <Title>PhotinoNET</Title>
-    <RootNamespace>PhotinoNET</RootNamespace>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <IsPackable>true</IsPackable> 
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Authors>TryPhotino</Authors>
+		<Company>TryPhotino</Company>
+		<Description>.NET 6,7,8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
+		<GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageDescription>.NET 6,7,8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
+		<PackageId>Photino.NET</PackageId>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Product>Photino.NET</Product>
+		<PackageProjectUrl>https://github.com/tryphotino/photino.NET</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
+		<Title>Photino.NET</Title>
+		<RootNamespace>Photino.NET</RootNamespace>
+	</PropertyGroup>
 
-  <Target Name="SetPackageVersion" DependsOnTargets="Build">
-    <PropertyGroup>
-      <PackageVersion>$(Version)</PackageVersion>
-    </PropertyGroup>
-  </Target>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<IsPackable>true</IsPackable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="2.3.2" />
-  </ItemGroup>
+	<Target Name="SetPackageVersion" DependsOnTargets="Build">
+		<PropertyGroup>
+			<PackageVersion>$(Version)</PackageVersion>
+		</PropertyGroup>
+	</Target>
+
+	<ItemGroup>
+		<PackageReference Include="Photino.Native" Version="2.3.2" />
+	</ItemGroup>
 
 </Project>
