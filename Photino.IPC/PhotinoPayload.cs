@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Photino.NET.IPC;
 
-public class PhotinoPayload<T>(string key, T data) where T : class
+public class PhotinoPayload<T>(string key, T? data) where T : class
 {
     private static readonly JsonSerializerOptions DEFAULT_OPTIONS = new()
     {
@@ -17,17 +17,17 @@ public class PhotinoPayload<T>(string key, T data) where T : class
     public string Key { get; init; } = key;
 
     [JsonPropertyName("data")]
-    public T Data { get; init; } = data;
+    public T? Data { get; init; } = data;
 
     public static string ToJson(T payload) => JsonSerializer.Serialize(payload, DEFAULT_OPTIONS);
 
-    public static PhotinoPayload<T> FromJson(string json) => JsonSerializer.Deserialize<PhotinoPayload<T>>(json, DEFAULT_OPTIONS);
+    public static PhotinoPayload<T>? FromJson(string json) => JsonSerializer.Deserialize<PhotinoPayload<T>>(json, DEFAULT_OPTIONS);
 
     public static bool TryFromJson(string json, out PhotinoPayload<T> payload)
     {
         try
         {
-            payload = FromJson(json);
+            payload = FromJson(json) ?? throw new InvalidOperationException();
             return true;
         }
         catch

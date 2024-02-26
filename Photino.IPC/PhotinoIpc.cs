@@ -4,7 +4,7 @@ public static class PhotinoIpcRenderer
 {
     private static readonly Dictionary<string, Type> _channels = [];
 
-    public delegate void IpcEventHandler<TEventArgs>(PhotinoChannel sender, TEventArgs args);
+    public delegate void IpcEventHandler<TEventArgs>(PhotinoChannel sender, TEventArgs? args);
 
     public static PhotinoWindow RegisterChannelHandler<T>(this PhotinoWindow window, string key, IpcEventHandler<T> handler) where T : class
     {

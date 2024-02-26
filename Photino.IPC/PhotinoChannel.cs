@@ -1,5 +1,3 @@
-using Photino.NET.Ipc;
-
 namespace Photino.NET.IPC;
 
 public class PhotinoChannel(PhotinoWindow owner, string channelKey)
