@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET;
+namespace Photino.NET;
 
 public partial class PhotinoWindow
 {

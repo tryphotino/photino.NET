@@ -12,8 +12,8 @@
     <Product>Photino.NET</Product>
     <PackageProjectUrl>https://github.com/tryphotino/photino.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tryphotino/photino.NET</RepositoryUrl>
-    <Title>PhotinoNET</Title>
-    <RootNamespace>PhotinoNET</RootNamespace>
+    <Title>Photino.NET</Title>
+    <RootNamespace>Photino.NET</RootNamespace>
   </PropertyGroup>
   
   <PropertyGroup>

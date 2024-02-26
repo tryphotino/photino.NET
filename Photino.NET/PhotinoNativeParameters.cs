@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET
+namespace Photino.NET
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 	internal struct PhotinoNativeParameters

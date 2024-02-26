@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET
+namespace Photino.NET
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct NativeRect

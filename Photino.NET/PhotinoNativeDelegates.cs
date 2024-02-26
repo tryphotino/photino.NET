@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET
+namespace Photino.NET
 {
     //These are for the callbacks from C++ to C#.
 
