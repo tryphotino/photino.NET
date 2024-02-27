@@ -31,8 +31,8 @@
 		</PropertyGroup>
 	</Target>
 
-	<ItemGroup>
-		<PackageReference Include="Photino.Native" Version="2.3.2" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Photino.Native" Version="2.6.0" />
+  </ItemGroup>
 
 </Project>
