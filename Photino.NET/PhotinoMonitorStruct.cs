@@ -57,14 +57,12 @@ public readonly struct Monitor
     /// <param name="monitor">The area of monitor as <see cref="NativeRect"/></param>
     /// <param name="work">The working area as <see cref="NativeRect"/></param>
     internal Monitor(NativeRect monitor, NativeRect work)
-        : this(new Rectangle(monitor.x, monitor.y, monitor.width, monitor.height), new Rectangle(work.x, work.y, work.width, work.height))
-    { }
+        : this(new Rectangle(monitor.x, monitor.y, monitor.width, monitor.height), new Rectangle(work.x, work.y, work.width, work.height)) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Monitor"/> struct using a native monitor structure.
     /// </summary>
     /// <param name="nativeMonitor">The native monitor structure.</param>
     internal Monitor(NativeMonitor nativeMonitor)
-        : this(nativeMonitor.monitor, nativeMonitor.work)
-    { }
+        : this(nativeMonitor.monitor, nativeMonitor.work) { }
 }
