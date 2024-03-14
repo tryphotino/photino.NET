@@ -1,9 +1,5 @@
 using System.Runtime.InteropServices;
 
-#if false
-using System.Runtime.InteropServices.Marshalling;
-#endif
-
 namespace Photino.NET;
 
 /* TODO: 
@@ -50,19 +46,8 @@ public partial class PhotinoWindow
 
     //CTOR-DTOR
 
-#if false
-
-    [LibraryImport(DLL_NAME, SetLastError = true)]
-    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial IntPtr Photino_ctor([MarshalUsing(typeof(PhotinoNativeParametersMarshaller))]ref PhotinoNativeParameters parameters);
-    //necessary? - [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);  
-
-#else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(ref PhotinoNativeParameters parameters);
     //necessary? - [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);  
-
-#endif
 
 
 #if NET7_0_OR_GREATER
