@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace PhotinoNET
+namespace Photino.NET
 {
     /// <summary>
     /// Represents a 2D rectangle in a native (integer-based) coordinate system.
