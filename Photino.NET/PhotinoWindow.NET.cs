@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace PhotinoNET;
+namespace Photino.NET;
 
 public partial class PhotinoWindow
 {
@@ -142,7 +138,7 @@ public partial class PhotinoWindow
             if (_nativeInstance == IntPtr.Zero)
                 throw new ApplicationException("The Photino window hasn't been initialized yet.");
 
-            List<Monitor> monitors = new();
+            List<Monitor> monitors = [];
 
             int callback(in NativeMonitor monitor)
             {
