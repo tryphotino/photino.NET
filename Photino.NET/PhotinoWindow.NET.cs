@@ -254,6 +254,34 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// When true, the native window can be displayed with transparent background.
+    /// Chromeless must be set to true. Html document's body background must have alpha-based value.
+    /// By default, this is set to false.
+    /// </summary>
+    public bool Transparent
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.Transparent;
+
+            var enabled = false;
+            Invoke(() => Photino_GetTransparentEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (Transparent != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.Transparent = value;
+                else
+                    Invoke(() => Photino_SetTransparentEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    /// <summary>
     /// When true, the user can access the browser control's context menu.
     /// By default, this is set to true.
     /// </summary>
@@ -1705,6 +1733,18 @@ public partial class PhotinoWindow
             throw new ApplicationException("Chromeless setting cannot be used on an unitialized window.");
 
         _startupParameters.Chromeless = chromeless;
+        return this;
+    }
+
+    /// <summary>
+    /// When true, the native window can be displayed with transparent background.
+    /// Chromeless must be set to true. Html document's body background must have alpha-based value.
+    /// By default, this is set to false.
+    /// </summary>
+    public PhotinoWindow SetTransparent(bool enabled)
+    {
+        Log($".SetTransparent({enabled})");
+        Transparent = enabled;
         return this;
     }
 

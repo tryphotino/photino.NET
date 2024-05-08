@@ -81,6 +81,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    private static partial void Photino_GetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_GetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
@@ -164,6 +168,7 @@ public partial class PhotinoWindow
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetAllMonitors(IntPtr instance, CppGetAllMonitorsDelegate callback);
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetTransparentEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetContextMenuEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetDevToolsEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetFullScreen(IntPtr instance, out bool fullScreen);
@@ -231,6 +236,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
@@ -292,6 +301,7 @@ public partial class PhotinoWindow
 #else
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_setWebView2RuntimePath_win32(IntPtr instance, string webView2RuntimePath);
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetTransparentEnabled(IntPtr instance, bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetContextMenuEnabled(IntPtr instance, bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetDevToolsEnabled(IntPtr instance, bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetFullScreen(IntPtr instance, bool fullScreen);
