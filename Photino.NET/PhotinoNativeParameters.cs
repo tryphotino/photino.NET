@@ -154,6 +154,9 @@ internal struct PhotinoNativeParameters
     ///<summary>OPTIONAL: If true, window is created without a title bar or borders. This allows owner-drawn title bars and borders. Default is false.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool Chromeless;
 
+    ///<summary>OPTIONAL: If true, window can be displayed with transparent background. Chromeless must be set to true. Html document's body background must have alpha-based value. Default is false.</summary>
+    [MarshalAs(UnmanagedType.I1)] internal bool Transparent;
+
     ///<summary>OPTIONAL: If true, user can access the browser control's context menu. Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool ContextMenuEnabled;
 
