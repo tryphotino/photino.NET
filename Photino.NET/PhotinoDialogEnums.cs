@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PhotinoNET;
+namespace Photino.NET;
 
 /// <summary>
 /// Represents the types of buttons that can be displayed in a Photino-dialog.
@@ -11,27 +11,27 @@ public enum PhotinoDialogButtons
     /// Represents a dialog with an OK button.
     /// </summary>
     Ok,
-    
+
     /// <summary>
     /// Represents a dialog with OK and Cancel buttons.
     /// </summary>
     OkCancel,
-    
+
     /// <summary>
     /// Represents a dialog with Yes and No buttons.
     /// </summary>
     YesNo,
-    
+
     /// <summary>
     /// Represents a dialog with Yes, No, and Cancel buttons.
     /// </summary>
     YesNoCancel,
-    
+
     /// <summary>
     /// Represents a dialog with Retry and Cancel buttons.
     /// </summary>
     RetryCancel,
-    
+
     /// <summary>
     /// Represents a dialog with Abort, Retry, and Ignore buttons.
     /// </summary>
@@ -47,17 +47,17 @@ public enum PhotinoDialogIcon
     /// An information icon. 
     /// </summary> 
     Info,
-    
+
     /// <summary> 
     /// A warning icon. 
     /// </summary>
     Warning,
-    
+
     /// <summary> 
     /// An error icon. 
     /// </summary> 
     Error,
-    
+
     /// <summary> 
     /// A question icon. 
     /// </summary> 
