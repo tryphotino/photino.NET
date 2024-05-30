@@ -5,8 +5,8 @@ trigger:
     - manual
 
 variables:
-    major: 2
-    minor: 6
+    major: 3
+    minor: 0
     patch: $[counter(variables['minor'], 0)] #this will reset when we bump minor
     buildConfiguration: "Release"
 
