@@ -262,7 +262,6 @@ public partial class PhotinoWindow
     /// <exception cref="ApplicationException">
     /// On Windows, thrown if trying to set value after native window is initalized.
     /// </exception>
-
     public bool Transparent
     {
         get
@@ -285,7 +284,10 @@ public partial class PhotinoWindow
                     if (IsWindowsPlatform)
                         throw new ApplicationException("Transparent can only be set on Windows before the native window is instantiated.");
                     else
+                    {
+                        Log($"Invoking Photino_SetTransparentEnabled({value})");
                         Invoke(() => Photino_SetTransparentEnabled(_nativeInstance, value));
+                    }
                 }
             }
         }
@@ -1137,7 +1139,7 @@ public partial class PhotinoWindow
                 if (_nativeInstance == IntPtr.Zero)
                     _startupParameters.Topmost = value;
                 else
-                    Invoke(() => Photino_SetTopmost(_nativeInstance, value ? 1 : 0));
+                    Invoke(() => Photino_SetTopmost(_nativeInstance, value));
             }
         }
     }
