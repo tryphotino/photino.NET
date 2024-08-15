@@ -33,7 +33,7 @@ public partial class PhotinoWindow
 
 
 #if NET7_0_OR_GREATER
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -184,7 +184,7 @@ public partial class PhotinoWindow
 
     //NAVIGATE
 #if NET7_0_OR_GREATER
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -192,7 +192,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_NavigateToString(IntPtr instance, string content);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -207,7 +207,7 @@ public partial class PhotinoWindow
 
     //SET
 #if NET7_0_OR_GREATER
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -263,7 +263,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetSize(IntPtr instance, int width, int height);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -275,7 +275,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetTopmost(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool topmost);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -317,7 +317,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_ClearBrowserAutoFill(IntPtr instance);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -325,7 +325,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_SendWebMessage(IntPtr instance, string message);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -351,7 +351,7 @@ public partial class PhotinoWindow
     //DIALOG
 
 #if NET7_0_OR_GREATER
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -359,7 +359,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     public static partial IntPtr Photino_ShowOpenFile(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.I1)] bool multiSelect, string[] filters, int filtersCount, out int resultCount);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -367,7 +367,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     public static partial IntPtr Photino_ShowOpenFolder(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.I1)] bool multiSelect, out int resultCount);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
@@ -375,7 +375,7 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount);
 
-#if Windows
+#if OS_WINDOWS
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
 #else
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
