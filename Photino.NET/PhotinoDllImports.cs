@@ -2,21 +2,6 @@ using System.Runtime.InteropServices;
 
 namespace Photino.NET;
 
-/* TODO: 
-
-    CTOR-DTOR:
-    -   Check why Photino_ctor with custom marshaller not working
-
-    GET:
-    -   Check why Photino_GetResizable when ported to LibrayImport is not working correctly 
-    -   Check why Photino_GetMaximized when ported to LibrayImport is not working correctly 
-    -   Check why Photino_GetMinimized when ported to LibrayImport is not working correctly 
-
-    MISC:
-    -   Check why Photino_ShowNotification when ported to LibrayImport is not working correctly
-*/
-
-
 /// <summary>
 /// The PhotinoWindow class represents a window in a Photino-based desktop application.
 /// </summary>
@@ -27,7 +12,6 @@ public partial class PhotinoWindow
     //REGISTER
 
 #if NET7_0_OR_GREATER
-
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial IntPtr Photino_register_win32(IntPtr hInstance);
@@ -35,42 +19,39 @@ public partial class PhotinoWindow
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial IntPtr Photino_register_mac();
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern IntPtr Photino_register_win32(IntPtr hInstance);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern IntPtr Photino_register_mac();
-
 #endif
 
 
     //CTOR-DTOR
 
-    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern IntPtr Photino_ctor(ref PhotinoNativeParameters parameters);
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] 
+    static extern IntPtr Photino_ctor(ref PhotinoNativeParameters parameters);
     //necessary? - [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)] static extern void Photino_dtor(IntPtr instance);  
 
 
 #if NET7_0_OR_GREATER
-
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_AddCustomSchemeName(IntPtr instance, string scheme);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_Close(IntPtr instance);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_AddCustomSchemeName(IntPtr instance, string scheme);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_Close(IntPtr instance);
-
 #endif
 
 
     //GET
 #if NET7_0_OR_GREATER
-
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial IntPtr Photino_getHwnd_win32(IntPtr instance);
@@ -81,23 +62,23 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetFullScreen(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool fullScreen);
+    private static partial void Photino_GetFullScreen(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool fullScreen);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetGrantBrowserPermissions(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool grant);
+    private static partial void Photino_GetGrantBrowserPermissions(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool grant);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -105,31 +86,31 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetMediaAutoplayEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetMediaAutoplayEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetFileSystemAccessEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetFileSystemAccessEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetWebSecurityEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetWebSecurityEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetJavascriptClipboardAccessEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetJavascriptClipboardAccessEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetMediaStreamEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetMediaStreamEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetSmoothScrollingEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetSmoothScrollingEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetIgnoreCertificateErrorsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool enabled);
+    private static partial void Photino_GetIgnoreCertificateErrorsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -152,7 +133,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_GetTopmost(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] out bool topmost);
+    private static partial void Photino_GetTopmost(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool topmost);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -163,9 +144,7 @@ public partial class PhotinoWindow
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
     private static extern void Photino_GetMinimized(IntPtr instance, out bool minimized);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern IntPtr Photino_getHwnd_win32(IntPtr instance);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetAllMonitors(IntPtr instance, CppGetAllMonitorsDelegate callback);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetTransparentEnabled(IntPtr instance, out bool enabled);
@@ -190,73 +169,75 @@ public partial class PhotinoWindow
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetZoom(IntPtr instance, out int zoom);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetMaximized(IntPtr instance, out bool maximized);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetMinimized(IntPtr instance, out bool minimized);
-
 #endif
 
 
     //MARSHAL CALLS FROM Non-UI Thread to UI Thread
 #if NET7_0_OR_GREATER
-
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_Invoke(IntPtr instance, InvokeCallback callback);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_Invoke(IntPtr instance, InvokeCallback callback);
-
 #endif
 
 
     //NAVIGATE
 #if NET7_0_OR_GREATER
-
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_NavigateToString(IntPtr instance, string content);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_NavigateToUrl(IntPtr instance, string url);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_NavigateToString(IntPtr instance, string content);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_NavigateToUrl(IntPtr instance, string url);
-
 #endif
 
 
     //SET
 #if NET7_0_OR_GREATER
-
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_setWebView2RuntimePath_win32(IntPtr instance, string webView2RuntimePath);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+    static partial void Photino_SetTransparentEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+    static partial void Photino_SetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool enabled);
+    static partial void Photino_SetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetFullScreen(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool fullScreen);
+    static partial void Photino_SetFullScreen(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool fullScreen);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetGrantBrowserPermissions(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool grant);
+    static partial void Photino_SetGrantBrowserPermissions(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool grant);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetMaximized(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool maximized);
+    static partial void Photino_SetMaximized(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool maximized);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -264,7 +245,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_SetMinimized(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool minimized);
+    private static partial void Photino_SetMinimized(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool minimized);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -272,7 +253,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetResizable(IntPtr instance, [MarshalAs(UnmanagedType.Bool)] bool resizable);
+    static partial void Photino_SetResizable(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool resizable);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -282,24 +263,30 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetSize(IntPtr instance, int width, int height);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetTitle(IntPtr instance, string title);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    static partial void Photino_SetTopmost(IntPtr instance, int topmost);
+    static partial void Photino_SetTopmost(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool topmost);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetIconFile(IntPtr instance, string filename);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetZoom(IntPtr instance, int zoom);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_setWebView2RuntimePath_win32(IntPtr instance, string webView2RuntimePath);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetTransparentEnabled(IntPtr instance, bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetContextMenuEnabled(IntPtr instance, bool enabled);
@@ -314,16 +301,14 @@ public partial class PhotinoWindow
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetPosition(IntPtr instance, int x, int y);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetSize(IntPtr instance, int width, int height);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_SetTitle(IntPtr instance, string title);
-    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetTopmost(IntPtr instance, int topmost);
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetTopmost(IntPtr instance, bool topmost);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_SetIconFile(IntPtr instance, string filename);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_SetZoom(IntPtr instance, int zoom);
-
 #endif
 
 
     //MISC
 #if NET7_0_OR_GREATER
-
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_Center(IntPtr instance);
@@ -332,11 +317,19 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_ClearBrowserAutoFill(IntPtr instance);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_SendWebMessage(IntPtr instance, string message);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
 
@@ -346,40 +339,50 @@ public partial class PhotinoWindow
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_WaitForExit(IntPtr instance);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_Center(IntPtr instance);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_ClearBrowserAutoFill(IntPtr instance);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_SendWebMessage(IntPtr instance, string message);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)] static extern void Photino_ShowNotification(IntPtr instance, string title, string body);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_WaitForExit(IntPtr instance);
-
 #endif
 
     //DIALOG
 
 #if NET7_0_OR_GREATER
-
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    public static partial IntPtr Photino_ShowOpenFile(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.Bool)] bool multiSelect, string[] filters, int filtersCount, out int resultCount);
+    public static partial IntPtr Photino_ShowOpenFile(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.I1)] bool multiSelect, string[] filters, int filtersCount, out int resultCount);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    public static partial IntPtr Photino_ShowOpenFolder(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.Bool)] bool multiSelect, out int resultCount);
+    public static partial IntPtr Photino_ShowOpenFolder(IntPtr inst, string title, string defaultPath, [MarshalAs(UnmanagedType.I1)] bool multiSelect, out int resultCount);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount);
 
+#if Windows
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+#else
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+#endif
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     public static partial PhotinoDialogResult Photino_ShowMessage(IntPtr inst, string title, string text, PhotinoDialogButtons buttons, PhotinoDialogIcon icon);
-
 #else
-
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
     public static extern IntPtr Photino_ShowOpenFile(IntPtr inst, string title, string defaultPath, bool multiSelect, string[] filters, int filtersCount, out int resultCount);
 
@@ -391,7 +394,5 @@ public partial class PhotinoWindow
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Auto)]
     public static extern PhotinoDialogResult Photino_ShowMessage(IntPtr inst, string title, string text, PhotinoDialogButtons buttons, PhotinoDialogIcon icon);
-
 #endif
-
 }
