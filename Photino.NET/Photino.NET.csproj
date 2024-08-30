@@ -24,10 +24,6 @@
 		<IsPackable>true</IsPackable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-		<DefineConstants>OS_WINDOWS</DefineConstants>
-	</PropertyGroup>
 	
 	<Target Name="SetPackageVersion" DependsOnTargets="Build">
 		<PropertyGroup>

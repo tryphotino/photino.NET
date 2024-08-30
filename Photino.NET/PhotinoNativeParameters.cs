@@ -6,61 +6,29 @@ namespace Photino.NET;
 internal struct PhotinoNativeParameters
 {
     ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string StartStringWide;
-    ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string StartString;
 
-    ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string StartUrlWide;
     ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string StartUrl;
 
     ///<summary>OPTIONAL: Appears on the title bar of the native window. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string TitleWide;
-    ///<summary>OPTIONAL: Appears on the title bar of the native window. Default is none.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string Title;
 
-    ///<summary>WINDOWS AND LINUX ONLY: OPTIONAL: Path to a local file or a URL. Icon appears on the title bar of the native window (if supported). Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string WindowIconFileWide;
     ///<summary>WINDOWS AND LINUX ONLY: OPTIONAL: Path to a local file or a URL. Icon appears on the title bar of the native window (if supported). Default is none.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string WindowIconFile;
 
     ///<summary>WINDOWS: OPTIONAL: Path to store temp files for browser control. Defaults is user's AppDataLocal folder.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string TemporaryFilesPathWide;
-    ///<summary>WINDOWS: OPTIONAL: Path to store temp files for browser control. Defaults is user's AppDataLocal folder.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string TemporaryFilesPath;
 
     ///<summary>OPTIONAL: Changes the user agent on the browser control at initialiation.</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string UserAgentWide;
-    ///<summary>OPTIONAL: Changes the user agent on the browser control at initialiation.</summary>
     [MarshalAs(UnmanagedType.LPStr)]
     internal string UserAgent;
 
-    ///<summary>OPTIONAL: 
-    ///WINDOWS: WebView2 specific string.
-    ///https://peter.sh/experiments/chromium-command-line-switches/
-    ///https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2environmentoptions.additionalbrowserarguments?view=webview2-dotnet-1.0.1938.49&viewFallbackFrom=webview2-dotnet-1.0.1901.177view%3Dwebview2-1.0.1901.177
-    ///https://www.chromium.org/developers/how-tos/run-chromium-with-flags/        
-    ///LINUX: Webkit2Gtk specific string.
-    ///https://webkitgtk.org/reference/webkit2gtk/2.5.1/WebKitSettings.html
-    ///https://lazka.github.io/pgi-docs/WebKit2-4.0/classes/Settings.html
-    ///MAC: Webkit specific string.
-    ///https://developer.apple.com/documentation/webkit/wkwebviewconfiguration?language=objc
-    ///https://developer.apple.com/documentation/webkit/wkpreferences?language=objc
-    ///</summary>
-    [MarshalAs(UnmanagedType.LPWStr)]
-    internal string BrowserControlInitParametersWide;
     ///<summary>OPTIONAL: 
     ///WINDOWS: WebView2 specific string.
     ///https://peter.sh/experiments/chromium-command-line-switches/
@@ -107,9 +75,6 @@ internal struct PhotinoNativeParameters
     ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
     [MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebMessageReceivedDelegate WebMessageReceivedHandler;
 
-    ///<summary>OPTIONAL: Names of custom URL Schemes. e.g. 'app', 'custom'. Array length must be 16. Default is none.</summary>
-    [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPWStr, SizeConst = 16)]
-    internal string[] CustomSchemeNamesWide;
     ///<summary>OPTIONAL: Names of custom URL Schemes. e.g. 'app', 'custom'. Array length must be 16. Default is none.</summary>
     [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPStr, SizeConst = 16)]
     internal string[] CustomSchemeNames;
@@ -204,9 +169,9 @@ internal struct PhotinoNativeParameters
     {
         var response = new List<string>();
         var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        var startUrl = isWindows ? StartUrlWide : StartUrl;
-        var startString = isWindows ? StartStringWide : StartString;
-        var windowIconFile = isWindows ? WindowIconFileWide : WindowIconFile;
+        var startUrl = StartUrl;
+        var startString = StartString;
+        var windowIconFile = WindowIconFile;
 
         if (string.IsNullOrWhiteSpace(startUrl) && string.IsNullOrWhiteSpace(startString))
             response.Add("An initial URL or HTML string must be supplied in StartUrl or StartString for the browser control to naviage to.");
