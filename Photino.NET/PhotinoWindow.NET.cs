@@ -12,13 +12,10 @@ public partial class PhotinoWindow
     /// </summary>
     /// <param name="Resizable">Indicates whether the window is resizable.</param>
     /// <param name="ContextMenuEnabled">Specifies whether the context menu is enabled.</param>
-    /// <param name="CustomSchemeNamesWide">An array of strings representing wide custom scheme names.</param>
     /// <param name="CustomSchemeNames">An array of strings representing custom scheme names.</param>
     /// <param name="DevToolsEnabled">Specifies whether developer tools are enabled.</param>
     /// <param name="GrantBrowserPermissions">Indicates whether browser permissions are granted.</param>
-    /// <param name="TemporaryFilesPathWide">Defines the wide path for temporary files.</param>
     /// <param name="TemporaryFilesPath">Defines the path for temporary files.</param>
-    /// <param name="TitleWide">Sets the wide title of the window.</param>
     /// <param name="Title">Sets the title of the window.</param>
     /// <param name="UseOsDefaultLocation">Specifies whether the window should use the OS default location.</param>
     /// <param name="UseOsDefaultSize">Indicates whether the window should use the OS default size.</param>
@@ -27,7 +24,6 @@ public partial class PhotinoWindow
     {
         Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
         ContextMenuEnabled = true,
-        CustomSchemeNamesWide = new string[16],
         CustomSchemeNames = new string[16],
         DevToolsEnabled = true,
         GrantBrowserPermissions = true,
@@ -39,10 +35,9 @@ public partial class PhotinoWindow
         MediaStreamEnabled = true,
         SmoothScrollingEnabled = true,
         IgnoreCertificateErrorsEnabled = false,
-        TemporaryFilesPathWide = IsWindowsPlatform
+        TemporaryFilesPath = IsWindowsPlatform
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
             : null,
-        TitleWide = "Photino",
         Title = "Photino",
         UseOsDefaultLocation = true,
         UseOsDefaultSize = true,
@@ -375,10 +370,7 @@ public partial class PhotinoWindow
         get
         {
             if (_nativeInstance == IntPtr.Zero)
-                if (IsWindowsPlatform)
-                    return _startupParameters.UserAgentWide;
-                else
-                    return _startupParameters.UserAgent;
+                return _startupParameters.UserAgent;
 
             var userAgent = string.Empty;
             Invoke(() =>
@@ -393,10 +385,7 @@ public partial class PhotinoWindow
             if (UserAgent != value)
             {
                 if (_nativeInstance == IntPtr.Zero)
-                    if (IsWindowsPlatform)
-                        _startupParameters.UserAgentWide = value;
-                    else
-                        _startupParameters.UserAgent = value;
+                    _startupParameters.UserAgent = value;
                 else
                     throw new ApplicationException("UserAgent can only be set before the native window is instantiated.");
             }
@@ -644,12 +633,8 @@ public partial class PhotinoWindow
 
                 _iconFile = value;
 
-
                 if (_nativeInstance == IntPtr.Zero)
-                    if (IsWindowsPlatform)
-                        _startupParameters.WindowIconFileWide = _iconFile;
-                    else
-                        _startupParameters.WindowIconFile = _iconFile;
+                    _startupParameters.WindowIconFile = _iconFile;
                 else
                     Invoke(() => Photino_SetIconFile(_nativeInstance, _iconFile));
             }
@@ -942,21 +927,15 @@ public partial class PhotinoWindow
     {
         get
         {
-            if (IsWindowsPlatform)
-                return _startupParameters.BrowserControlInitParametersWide;
-            else
-                return _startupParameters.BrowserControlInitParameters;
+            return _startupParameters.BrowserControlInitParameters;
         }
         set
         {
-            var ss = IsWindowsPlatform ? _startupParameters.BrowserControlInitParametersWide : _startupParameters.BrowserControlInitParameters;
+            var ss = _startupParameters.BrowserControlInitParameters;
             if (string.Compare(ss, value, true) != 0)
             {
                 if (_nativeInstance == IntPtr.Zero)
-                    if (IsWindowsPlatform)
-                        _startupParameters.BrowserControlInitParametersWide = value;
-                    else
-                        _startupParameters.BrowserControlInitParameters = value;
+                    _startupParameters.BrowserControlInitParameters = value;
                 else
                     throw new ApplicationException($"{nameof(ss)} cannot be changed after Photino Window is initialized");
             }
@@ -978,14 +957,11 @@ public partial class PhotinoWindow
     {
         get
         {
-            if (IsWindowsPlatform)
-                return _startupParameters.StartStringWide;
-            else
-                return _startupParameters.StartString;
+            return _startupParameters.StartString;
         }
         set
         {
-            var ss = IsWindowsPlatform ? _startupParameters.StartStringWide : _startupParameters.StartString;
+            var ss = _startupParameters.StartString;
             if (string.Compare(ss, value, true) != 0)
             {
                 if (_nativeInstance != IntPtr.Zero)
@@ -1010,14 +986,11 @@ public partial class PhotinoWindow
     {
         get
         {
-            if (IsWindowsPlatform)
-                return _startupParameters.StartUrlWide;
-            else
-                return _startupParameters.StartUrl;
+            return _startupParameters.StartUrl;
         }
         set
         {
-            var su = IsWindowsPlatform ? _startupParameters.StartUrlWide : _startupParameters.StartUrl;
+            var su = _startupParameters.StartUrl;
             if (string.Compare(su, value, true) != 0)
             {
                 if (_nativeInstance != IntPtr.Zero)
@@ -1041,22 +1014,16 @@ public partial class PhotinoWindow
     {
         get
         {
-            if (IsWindowsPlatform)
-                return _startupParameters.TemporaryFilesPathWide;
-            else
-                return _startupParameters.TemporaryFilesPath;
+            return _startupParameters.TemporaryFilesPath;
         }
         set
         {
-            var tfp = IsWindowsPlatform ? _startupParameters.TemporaryFilesPathWide : _startupParameters.TemporaryFilesPath;
+            var tfp = _startupParameters.TemporaryFilesPath;
             if (tfp != value)
             {
                 if (_nativeInstance != IntPtr.Zero)
                     throw new ApplicationException($"{nameof(tfp)} cannot be changed after Photino Window is initialized");
-                if (IsWindowsPlatform)
-                    _startupParameters.TemporaryFilesPathWide = value;
-                else
-                    _startupParameters.TemporaryFilesPath = value;
+                _startupParameters.TemporaryFilesPath = value;
             }
         }
     }
@@ -1070,10 +1037,7 @@ public partial class PhotinoWindow
         get
         {
             if (_nativeInstance == IntPtr.Zero)
-                if (IsWindowsPlatform)
-                    return _startupParameters.TitleWide;
-                else
-                    return _startupParameters.Title;
+                return _startupParameters.Title;
 
             var title = string.Empty;
             Invoke(() =>
@@ -1092,10 +1056,7 @@ public partial class PhotinoWindow
                     value = value[..31];
 
                 if (_nativeInstance == IntPtr.Zero)
-                    if (IsWindowsPlatform)
-                        _startupParameters.TitleWide = value;
-                    else
-                        _startupParameters.Title = value;
+                    _startupParameters.Title = value;
                 else
                     Invoke(() => Photino_SetTitle(_nativeInstance, value));
             }
@@ -1519,10 +1480,7 @@ public partial class PhotinoWindow
     {
         Log($".Load({uri})");
         if (_nativeInstance == IntPtr.Zero)
-            if (IsWindowsPlatform)
-                _startupParameters.StartUrlWide = uri.ToString();
-            else
-                _startupParameters.StartUrl = uri.ToString();
+            _startupParameters.StartUrl = uri.ToString();
         else
             Invoke(() => Photino_NavigateToUrl(_nativeInstance, uri.ToString()));
         return this;
@@ -1585,10 +1543,7 @@ public partial class PhotinoWindow
         var shortContent = content.Length > 50 ? string.Concat(content.AsSpan(0, 50), "...") : content;
         Log($".LoadRawString({shortContent})");
         if (_nativeInstance == IntPtr.Zero)
-            if (IsWindowsPlatform)
-                _startupParameters.StartStringWide = content;
-            else
-                _startupParameters.StartString = content;
+            _startupParameters.StartString = content;
         else
             Invoke(() => Photino_NavigateToString(_nativeInstance, content));
         return this;
@@ -2348,10 +2303,7 @@ public partial class PhotinoWindow
         var i = 0;
         foreach (var name in CustomSchemes.Take(16))
         {
-            if (IsWindowsPlatform)
-                _startupParameters.CustomSchemeNamesWide[i] = name.Key;
-            else
-                _startupParameters.CustomSchemeNames[i] = name.Key;
+            _startupParameters.CustomSchemeNames[i] = name.Key;
             i++;
         }
 
