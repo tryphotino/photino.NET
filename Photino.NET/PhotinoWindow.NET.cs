@@ -133,7 +133,7 @@ public partial class PhotinoWindow
             if (_nativeInstance == IntPtr.Zero)
                 throw new ApplicationException("The Photino window hasn't been initialized yet.");
 
-            List<Monitor> monitors = [];
+            List<Monitor> monitors = new();
 
             int callback(in NativeMonitor monitor)
             {
