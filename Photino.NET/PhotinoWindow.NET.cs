@@ -2459,7 +2459,7 @@ public partial class PhotinoWindow
     /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
     /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
     /// <returns></returns>
-    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    public string ShowSaveFile(string title = "Save file", string defaultPath = null, string defaultFileName = null, (string Name, string[] Extensions)[] filters = null)
     {
         defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         filters ??= Array.Empty<(string, string[])>();
@@ -2469,7 +2469,7 @@ public partial class PhotinoWindow
 
         Invoke(() =>
         {
-            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length);
+            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, defaultFileName, nativeFilters, filters.Length);
             result = Marshal.PtrToStringAuto(ptrResult);
         });
 
