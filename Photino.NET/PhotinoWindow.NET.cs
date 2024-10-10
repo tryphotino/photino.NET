@@ -1697,7 +1697,7 @@ public partial class PhotinoWindow
     {
         Log($".SetChromeless({chromeless})");
         if (_nativeInstance != IntPtr.Zero)
-            throw new ApplicationException("Chromeless setting cannot be used on an unitialized window.");
+            throw new ApplicationException("Chromeless can only be set before the native window is instantiated.");
 
         _startupParameters.Chromeless = chromeless;
         return this;

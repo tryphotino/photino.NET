@@ -6,27 +6,27 @@ namespace Photino.NET;
 internal struct PhotinoNativeParameters
 {
     ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will render this HTML string when initialized. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string StartString;
 
     ///<summary>EITHER StartString or StartUrl Must be specified: Browser control will navigate to this URL when initialized. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string StartUrl;
 
     ///<summary>OPTIONAL: Appears on the title bar of the native window. Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string Title;
 
     ///<summary>WINDOWS AND LINUX ONLY: OPTIONAL: Path to a local file or a URL. Icon appears on the title bar of the native window (if supported). Default is none.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string WindowIconFile;
 
     ///<summary>WINDOWS: OPTIONAL: Path to store temp files for browser control. Defaults is user's AppDataLocal folder.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string TemporaryFilesPath;
 
     ///<summary>OPTIONAL: Changes the user agent on the browser control at initialiation.</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string UserAgent;
 
     ///<summary>OPTIONAL: 
@@ -41,7 +41,7 @@ internal struct PhotinoNativeParameters
     ///https://developer.apple.com/documentation/webkit/wkwebviewconfiguration?language=objc
     ///https://developer.apple.com/documentation/webkit/wkpreferences?language=objc
     ///</summary>
-    [MarshalAs(UnmanagedType.LPStr)]
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string BrowserControlInitParameters;
 
 
