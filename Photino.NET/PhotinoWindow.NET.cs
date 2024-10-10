@@ -2447,7 +2447,7 @@ public partial class PhotinoWindow
     public string[] ShowOpenFolder(string title = "Select folder", string defaultPath = null, bool multiSelect = false) => ShowOpenDialog(true, title, defaultPath, multiSelect, null);
 
     /// <summary>
-    /// Show an save folder dialog native to the OS.
+    /// Show a save folder dialog native to the OS.
     /// </summary>
     /// <remarks>
     /// Filter names are not used on macOS.
@@ -2461,6 +2461,25 @@ public partial class PhotinoWindow
     /// <returns></returns>
     public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
     {
+        return ShowSaveFile(title, defaultPath, null, filters);
+    }
+
+    /// <summary>
+    /// Show a save folder dialog native to the OS.
+    /// </summary>
+    /// <remarks>
+    /// Filter names are not used on macOS.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    /// <param name="title">Title of the dialog</param>
+    /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
+    /// <param name="defaultFileName">Default file name in the text input field.</param>
+    /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
+    /// <returns></returns>
+    public string ShowSaveFile(string title = "Save file", string defaultPath = null, string defaultFileName = null, (string Name, string[] Extensions)[] filters = null)
+    {
         defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         filters ??= Array.Empty<(string, string[])>();
 
@@ -2469,7 +2488,7 @@ public partial class PhotinoWindow
 
         Invoke(() =>
         {
-            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length);
+            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, defaultFileName, nativeFilters, filters.Length);
             result = Marshal.PtrToStringAuto(ptrResult);
         });
 

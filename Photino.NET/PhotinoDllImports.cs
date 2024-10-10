@@ -330,7 +330,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount);
+    public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string defaultFileName, string[] filters, int filtersCount);
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -343,7 +343,7 @@ public partial class PhotinoWindow
     public static extern IntPtr Photino_ShowOpenFolder(IntPtr inst, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string defaultPath, bool multiSelect, out int resultCount);
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Ansi)]
-    public static extern IntPtr Photino_ShowSaveFile(IntPtr inst, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string defaultPath, string[] filters, int filtersCount);
+    public static extern IntPtr Photino_ShowSaveFile(IntPtr inst, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string defaultPath, [MarshalAs(UnmanagedType.LPUTF8Str)] string defaultFileName, string[] filters, int filtersCount);
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Ansi)]
     public static extern PhotinoDialogResult Photino_ShowMessage(IntPtr inst, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, PhotinoDialogButtons buttons, PhotinoDialogIcon icon);
