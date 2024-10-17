@@ -44,6 +44,10 @@ internal struct PhotinoNativeParameters
     [MarshalAs(UnmanagedType.LPUTF8Str)]
     internal string BrowserControlInitParameters;
 
+    ///<summary>WINDOWS: OPTIONAL: Registers the application for toast notifications. If not provided, uses Window Title.</summary>
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
+    internal string NotificationRegistrationId;
+
 
     ///<summary>OPTIONAL: If native window is created from another native windowm this is the pointer to the parent window. It is set automatically in WaitforExit().</summary>
     internal IntPtr NativeParent;
@@ -151,13 +155,31 @@ internal struct PhotinoNativeParameters
 
     ///<summary>OPTIONAL: If true, requests for access to local resources (camera, microphone, etc.) will automatically be granted. Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool GrantBrowserPermissions;
+
+    ///<summary>OPTIONAL: If true, browser control allows auto-playing media when page is loaded. Default is Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool MediaAutoplayEnabled;
+
+    ///<summary>OPTIONAL: If true, browser allows access to the local file system. Default is Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool FileSystemAccessEnabled;
+
+    ///<summary>OPTIONAL: If true, ??? Default is Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool WebSecurityEnabled;
+
+    ///<summary>OPTIONAL: If true, ??? Default is v.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool JavascriptClipboardAccessEnabled;
+
+    ///<summary>OPTIONAL: If true, ??? Default is Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool MediaStreamEnabled;
+
+    ///<summary>OPTIONAL: If true, ??? Default is Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool SmoothScrollingEnabled;
+
+    ///<summary>OPTIONAL: If true, ??? Default is Default is false.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool IgnoreCertificateErrorsEnabled;
+
+    ///<summary>WINDOWS: OPTIONAL: If true, toast notifications are allowed on Windows by calling ShowNotification. Requires registering the app with Windows which is not always desirable as it creates shortcuts, etc. Default is true.</summary>
+    [MarshalAs(UnmanagedType.I1)] internal bool NotificationsEnabled;
+
 
     ///<summary>Set when GetParamErrors() is called, prior to initializing the native window. It is a check to make sure the struct matches what C++ is expecting.</summary>
     [MarshalAs(UnmanagedType.I4)] internal int Size;
