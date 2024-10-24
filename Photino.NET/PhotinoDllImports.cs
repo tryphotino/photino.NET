@@ -110,6 +110,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    private static partial void Photino_GetNotificationsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_GetPosition(IntPtr instance, out int x, out int y);
 
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
@@ -156,6 +160,7 @@ public partial class PhotinoWindow
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetMediaStreamEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetSmoothScrollingEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetIgnoreCertificateErrorsEnabled(IntPtr instance, out bool enabled);
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetNotificationsEnabled(IntPtr instance, out bool enabled);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetPosition(IntPtr instance, out int x, out int y);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern void Photino_GetResizable(IntPtr instance, out bool resizable);
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true)] static extern uint Photino_GetScreenDpi(IntPtr instance);

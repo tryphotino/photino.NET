@@ -35,6 +35,7 @@ public partial class PhotinoWindow
         MediaStreamEnabled = true,
         SmoothScrollingEnabled = true,
         IgnoreCertificateErrorsEnabled = false,
+        NotificationsEnabled = true,
         TemporaryFilesPath = IsWindowsPlatform
             ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Photino")
             : null,
@@ -530,6 +531,29 @@ public partial class PhotinoWindow
         }
     }
 
+    public bool NotificationsEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.NotificationsEnabled;
+
+            var enabled = false;
+            Invoke(() => Photino_GetNotificationsEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (NotificationsEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.NotificationsEnabled = value;
+                else
+                    throw new ApplicationException("NotificationsEnabled can only be set before the native window is instantiated.");
+            }
+        }
+    }
+
 
     /// <summary>
     /// This property returns or sets the fullscreen status of the window.
@@ -744,8 +768,8 @@ public partial class PhotinoWindow
         {
             if (_maxHeight != value)
             {
-                _maxHeight = value;
                 MaxSize = new Point(MaxSize.X, value);
+                _maxHeight = value;
             }
         }
     }
@@ -759,8 +783,8 @@ public partial class PhotinoWindow
         {
             if (_maxWidth != value)
             {
-                _maxWidth = value;
                 MaxSize = new Point(value, MaxSize.Y);
+                _maxWidth = value;
             }
         }
     }
@@ -820,8 +844,8 @@ public partial class PhotinoWindow
         {
             if (_minHeight != value)
             {
-                _minHeight = value;
                 MinSize = new Point(MinSize.X, value);
+                _minHeight = value;
             }
         }
     }
@@ -835,8 +859,8 @@ public partial class PhotinoWindow
         {
             if (_minWidth != value)
             {
-                _minWidth = value;
                 MinSize = new Point(value, MinSize.Y);
+                _minWidth = value;
             }
         }
     }
@@ -1024,6 +1048,34 @@ public partial class PhotinoWindow
                 if (_nativeInstance != IntPtr.Zero)
                     throw new ApplicationException($"{nameof(tfp)} cannot be changed after Photino Window is initialized");
                 _startupParameters.TemporaryFilesPath = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the registration Id for doing toast notifications.
+    /// Default is to use the window title.
+    /// </summary>
+    /// <remarks>
+    /// Only available on Windows.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown if platform is not Windows.
+    /// </exception>
+    public string NotificationRegistrationId
+    {
+        get
+        {
+            return _startupParameters.NotificationRegistrationId;
+        }
+        set
+        {
+            var nri = _startupParameters.NotificationRegistrationId;
+            if (nri != value)
+            {
+                if (_nativeInstance != IntPtr.Zero)
+                    throw new ApplicationException($"{nameof(nri)} cannot be changed after Photino Window is initialized");
+                _startupParameters.NotificationRegistrationId = value;
             }
         }
     }
@@ -1697,7 +1749,7 @@ public partial class PhotinoWindow
     {
         Log($".SetChromeless({chromeless})");
         if (_nativeInstance != IntPtr.Zero)
-            throw new ApplicationException("Chromeless setting cannot be used on an unitialized window.");
+            throw new ApplicationException("Chromeless can only be set before the native window is instantiated.");
 
         _startupParameters.Chromeless = chromeless;
         return this;
@@ -1818,6 +1870,25 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// Sets the registration id for toast notifications. 
+    /// </summary>
+    /// <remarks>
+    /// Only available on Windows.
+    /// Defaults to window title if not specified.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown if platform is not Windows.
+    /// </exception>
+    /// <param name="notificationRegistrationId"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
+    public PhotinoWindow SetNotificationRegistrationId(string notificationRegistrationId)
+    {
+        Log($".SetNotificationRegistrationId({notificationRegistrationId})");
+        NotificationRegistrationId = notificationRegistrationId;
+        return this;
+    }
+
+    /// <summary>
     /// Sets <see cref="PhotinoWindow.MediaAutoplayEnabled"/> on the browser control at initialization.
     /// </summary>
     /// <param name="enable"></param>
@@ -1898,6 +1969,24 @@ public partial class PhotinoWindow
     {
         Log($".SetIgnoreCertificateErrorsEnabled({enable})");
         IgnoreCertificateErrorsEnabled = enable;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets whether ShowNotification() can be called.
+    /// </summary>
+    /// <remarks>
+    /// Only available on Windows.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown if platform is not Windows.
+    /// </exception>
+    /// <param name="enable"></param>
+    /// <returns>Returns the current <see cref="PhotinoWindow"/> instance.</returns>
+    public PhotinoWindow SetNotificationsEnabled(bool enable)
+    {
+        Log($".SetNotificationsEnabled({enable})");
+        NotificationsEnabled = enable;
         return this;
     }
 
@@ -2422,7 +2511,7 @@ public partial class PhotinoWindow
     /// Show an open file dialog native to the OS.
     /// </summary>
     /// <remarks>
-    /// Filter names are not used on macOS.
+    /// Filter names are not used on macOS. Use async version for Photino.Blazor as syncronous version crashes.
     /// </remarks>
     /// <exception cref="ApplicationException">
     /// Thrown when the window is not initialized.
@@ -2435,6 +2524,25 @@ public partial class PhotinoWindow
     public string[] ShowOpenFile(string title = "Choose file", string defaultPath = null, bool multiSelect = false, (string Name, string[] Extensions)[] filters = null) => ShowOpenDialog(false, title, defaultPath, multiSelect, filters);
 
     /// <summary>
+    /// Async version is required for Photino.Blazor
+    /// </summary>
+    /// <remarks>
+    /// Filter names are not used on macOS. Use async version for Photino.Blazor as syncronous version crashes.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    /// <param name="title">Title of the dialog</param>
+    /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
+    /// <param name="multiSelect">Whether multiple selections are allowed</param>
+    /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
+    /// <returns>Array of file paths as strings</returns>
+    public async Task<string[]> ShowOpenFileAsync(string title = "Choose file", string defaultPath = null, bool multiSelect = false, (string Name, string[] Extensions)[] filters = null)
+    {
+        return await Task.Run(() => ShowOpenFile(title, defaultPath, multiSelect, filters));
+    }
+
+    /// <summary>
     /// Show an open folder dialog native to the OS.
     /// </summary>
     /// <exception cref="ApplicationException">
@@ -2445,6 +2553,21 @@ public partial class PhotinoWindow
     /// <param name="multiSelect">Whether multiple selections are allowed</param>
     /// <returns>Array of folder paths as strings</returns>
     public string[] ShowOpenFolder(string title = "Select folder", string defaultPath = null, bool multiSelect = false) => ShowOpenDialog(true, title, defaultPath, multiSelect, null);
+
+    /// <summary>
+    /// Async version is required for Photino.Blazor
+    /// </summary>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    /// <param name="title">Title of the dialog</param>
+    /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
+    /// <param name="multiSelect">Whether multiple selections are allowed</param>
+    /// <returns>Array of folder paths as strings</returns>
+    public async Task<string[]> ShowOpenFolderAsync(string title = "Choose file", string defaultPath = null, bool multiSelect = false)
+    {
+        return await Task.Run(() => ShowOpenFolder(title, defaultPath, multiSelect));
+    }
 
     /// <summary>
     /// Show an save folder dialog native to the OS.
@@ -2474,6 +2597,24 @@ public partial class PhotinoWindow
         });
 
         return result;
+    }
+
+    /// <summary>
+    /// Async version is required for Photino.Blazor
+    /// </summary>
+    /// <remarks>
+    /// Filter names are not used on macOS.
+    /// </remarks>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    /// <param name="title">Title of the dialog</param>
+    /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
+    /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
+    /// <returns></returns>
+    public async Task<string> ShowSaveFileAsync(string title = "Choose file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    {
+        return await Task.Run(() => ShowSaveFile(title, defaultPath, filters));
     }
 
     /// <summary>
