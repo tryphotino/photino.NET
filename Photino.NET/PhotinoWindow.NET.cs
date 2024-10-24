@@ -768,8 +768,8 @@ public partial class PhotinoWindow
         {
             if (_maxHeight != value)
             {
-                _maxHeight = value;
                 MaxSize = new Point(MaxSize.X, value);
+                _maxHeight = value;
             }
         }
     }
@@ -783,8 +783,8 @@ public partial class PhotinoWindow
         {
             if (_maxWidth != value)
             {
-                _maxWidth = value;
                 MaxSize = new Point(value, MaxSize.Y);
+                _maxWidth = value;
             }
         }
     }
@@ -844,8 +844,8 @@ public partial class PhotinoWindow
         {
             if (_minHeight != value)
             {
-                _minHeight = value;
                 MinSize = new Point(MinSize.X, value);
+                _minHeight = value;
             }
         }
     }
@@ -859,8 +859,8 @@ public partial class PhotinoWindow
         {
             if (_minWidth != value)
             {
-                _minWidth = value;
                 MinSize = new Point(value, MinSize.Y);
+                _minWidth = value;
             }
         }
     }
