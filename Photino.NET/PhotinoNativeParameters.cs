@@ -205,9 +205,10 @@ internal struct PhotinoNativeParameters
             response.Add("FullScreen cannot be combined with Maximized or Minimized");
 
         if (!string.IsNullOrWhiteSpace(windowIconFile) && !File.Exists(windowIconFile))
-        {
             response.Add($"WindowIconFile: {windowIconFile} cannot be found");
-        }
+
+        if (isWindows && Chromeless && (UseOsDefaultLocation || UseOsDefaultSize))
+            response.Add($"Chromeless cannot be used with UseOsDefaultLocation or UseOsDefaultSize on Windows. Size and location must be specified.");
 
         Size = Marshal.SizeOf(typeof(PhotinoNativeParameters));
 
