@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Photino.NET.Tests", "Photino.NET.Tests\Photino.NET.Tests.csproj", "{0287EFF1-DF1F-409D-B0F3-6239B8A2AE5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{BB5C5BF0-D891-4005-BEC2-A654FCF02D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB5C5BF0-D891-4005-BEC2-A654FCF02D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB5C5BF0-D891-4005-BEC2-A654FCF02D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0287EFF1-DF1F-409D-B0F3-6239B8A2AE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0287EFF1-DF1F-409D-B0F3-6239B8A2AE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0287EFF1-DF1F-409D-B0F3-6239B8A2AE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0287EFF1-DF1F-409D-B0F3-6239B8A2AE5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

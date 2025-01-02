@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 namespace Photino.NET;
 
@@ -353,4 +354,55 @@ public partial class PhotinoWindow
     [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Ansi)]
     public static extern PhotinoDialogResult Photino_ShowMessage(IntPtr inst, [MarshalAs(UnmanagedType.LPUTF8Str)] string title, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, PhotinoDialogButtons buttons, PhotinoDialogIcon icon);
 #endif
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void Photino_ClearErrorMessage();
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void Photino_GetErrorMessage(int length, byte[] buffer);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void Photino_GetErrorMessageLength(out int length);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_Create(out IntPtr menu);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_Destroy(IntPtr menu);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_AddMenuItem(IntPtr menu, IntPtr menuItem);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_AddMenuSeparator(IntPtr menu, IntPtr menuSeparator);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_AddOnClicked(IntPtr menu, MenuOnClicked onClicked);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_Hide(IntPtr menu);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_RemoveOnClicked(IntPtr menu, MenuOnClicked onClicked);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_Menu_Show(IntPtr menu, IntPtr window, int x, int y);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuItem_Create(NativeMenuItemOptions options, out IntPtr menuItem);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuItem_Destroy(IntPtr menuItem);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuItem_AddMenuItem(IntPtr menuItem, IntPtr newMenuItem);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuItem_AddMenuSeparator(IntPtr menuItem, IntPtr menuSeparator);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuSeparator_Create(out IntPtr menuSeparator);
+
+    [DllImport(DLL_NAME, CallingConvention = CallingConvention.Cdecl)]
+    public static extern PhotinoErrorKind Photino_MenuSeparator_Destroy(IntPtr menuSeparator);
 }

@@ -24,6 +24,10 @@
 		<IsPackable>true</IsPackable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<PhotinoNativeVersion Condition=" '$(PhotinoNativeVersion)' == '' ">3.2.3</PhotinoNativeVersion>
+	</PropertyGroup>
 	
 	<Target Name="SetPackageVersion" DependsOnTargets="Build">
 		<PropertyGroup>
@@ -32,7 +36,7 @@
 	</Target>
 
   <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="3.2.3" />
+    <PackageReference Include="Photino.Native" Version="$(PhotinoNativeVersion)" />
   </ItemGroup>
 
 </Project>

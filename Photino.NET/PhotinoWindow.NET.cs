@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading.Tasks;
 
 namespace Photino.NET;
@@ -49,7 +50,7 @@ public partial class PhotinoWindow
 
     //Pointers to the type and instance.
     private static IntPtr _nativeType = IntPtr.Zero;
-    private IntPtr _nativeInstance;
+    internal IntPtr _nativeInstance;
     private readonly int _managedThreadId;
 
     //There can only be 1 message loop for all windows.
