@@ -1471,18 +1471,7 @@ public partial class PhotinoWindow
 
         //This only has to be done once
         if (_nativeType == IntPtr.Zero)
-        {
-#if NET7_0_OR_GREATER
             _nativeType = NativeLibrary.GetMainProgramHandle();
-#else
-            _nativeType = Marshal.GetHINSTANCE(typeof(PhotinoWindow).Module);
-#endif
-
-            if (IsWindowsPlatform)
-                Invoke(() => Photino_register_win32(_nativeType));
-            else if (IsMacOsPlatform)
-                Invoke(() => Photino_register_mac());
-        }
 
         //Wire up handlers from C++ to C#
         _startupParameters.ClosingHandler = OnWindowClosing;
@@ -2406,6 +2395,13 @@ public partial class PhotinoWindow
             OnWindowCreating();
             try  //All C++ exceptions will bubble up to here.
             {
+                _nativeType = NativeLibrary.GetMainProgramHandle();
+
+                if (IsWindowsPlatform)
+                    Invoke(() => Photino_register_win32(_nativeType));
+                else if (IsMacOsPlatform)
+                    Invoke(() => Photino_register_mac());
+
                 Invoke(() => _nativeInstance = Photino_ctor(ref _startupParameters));
             }
             catch (Exception ex)

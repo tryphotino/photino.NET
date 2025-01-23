@@ -18,10 +18,10 @@ jobs:
 
       steps:
           - task: UseDotNet@2
-            displayName: "Use .NET 8 sdk"
+            displayName: "Use .NET 9 sdk"
             inputs:
                 packageType: sdk
-                version: 8.0.x
+                version: 9.0.x
                 installationPath: $(Agent.ToolsDirectory)/dotnet
 
           - task: CmdLine@2
@@ -32,22 +32,11 @@ jobs:
           - task: NuGetAuthenticate@1
             displayName: "NuGet Authenticate"
 
-          #- task: CmdLine@2
-          #  displayName: 'Build Photino.NET'
-          #  inputs:
-          #    script: 'dotnet build Photino.NET/Photino.NET.csproj -c $(buildConfiguration)'
-
           #Build and Create NuGet package
           - task: CmdLine@2
             displayName: "Build and Create NuGet package"
             inputs:
                 script: "dotnet pack Photino.NET/Photino.NET.csproj -c $(buildConfiguration) --include-symbols /p:Version=$(versionprefix)-dev-$(Build.BuildNumber) /p:PackageVersion=$(versionprefix)-dev-$(Build.BuildNumber)"
-
-          #Create NuGet package
-          #- task: CmdLine@2
-          #  displayName: 'Create NuGet package'
-          #  inputs:
-          #    script: 'nuget.exe pack Photino.NET/Photino.NET.nuspec -Version $(versionprefix)-$(Build.BuildNumber) -NonInteractive -Properties version=$(versionprefix)-$(Build.BuildNumber)'
 
           #Publish NuGet package to Artifacts
           - task: NuGetCommand@2

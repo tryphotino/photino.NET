@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<Authors>TryPhotino</Authors>
 		<Company>TryPhotino</Company>
-		<Description>.NET 6/7/8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
+		<Description>.NET 8/9 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</Description>
 		<GenerateNuspecDependsOn>$(GenerateNuspecDependsOn);SetPackageVersion</GenerateNuspecDependsOn>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<PackageDescription>.NET 6/7/8 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
+		<PackageDescription>.NET 8/9 app that opens native OS windows hosting web UI on Windows, Mac, and Linux (without Blazor support)</PackageDescription>
 		<PackageId>Photino.NET</PackageId>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<Product>Photino.NET</Product>
@@ -17,12 +17,13 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<ImplicitUsings>true</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
 		<OutputType>Library</OutputType>
 		<IsPackable>true</IsPackable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<Copyright>Copyright (C) 2025</Copyright>
 	</PropertyGroup>
 	
 	<Target Name="SetPackageVersion" DependsOnTargets="Build">
@@ -32,7 +33,7 @@
 	</Target>
 
   <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="3.2.3" />
+    <PackageReference Include="Photino.Native" Version="4.0.22" />
   </ItemGroup>
 
 </Project>
