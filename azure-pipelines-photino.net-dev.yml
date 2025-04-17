@@ -45,7 +45,7 @@ jobs:
                 command: push
                 feedsToUse: "select"
                 publishVstsFeed: "Photino.Native/PhotinoPackages"
-                packagesToPush: "Photino.NET/bin/$(buildConfiguration)/*.nupkg"
+                packagesToPush: "Photino.NET/bin/$(buildConfiguration)/*.symbols.nupkg"
                 allowPackageConflicts: true
 
     # Uploads the NuGet package file to nuget.org

@@ -15,6 +15,14 @@
 		<Title>Photino.NET</Title>
 		<RootNamespace>Photino.NET</RootNamespace>
 	</PropertyGroup>
+	
+	<!-- debug info, symbols -->
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>symbols.nupkg</SymbolPackageFormat>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
@@ -25,15 +33,15 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Copyright>Copyright (C) 2025</Copyright>
 	</PropertyGroup>
-	
+
 	<Target Name="SetPackageVersion" DependsOnTargets="Build">
 		<PropertyGroup>
 			<PackageVersion>$(Version)</PackageVersion>
 		</PropertyGroup>
 	</Target>
 
-  <ItemGroup>
-    <PackageReference Include="Photino.Native" Version="4.0.22" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Photino.Native" Version="4.0.22" />
+	</ItemGroup>
 
 </Project>
