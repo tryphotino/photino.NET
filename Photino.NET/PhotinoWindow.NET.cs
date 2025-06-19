@@ -13,6 +13,7 @@ public partial class PhotinoWindow
     /// </summary>
     /// <param name="Resizable">Indicates whether the window is resizable.</param>
     /// <param name="ContextMenuEnabled">Specifies whether the context menu is enabled.</param>
+    /// <param name="ZoomEnabled">Specifies whether the user zoom is enabled.</param>
     /// <param name="CustomSchemeNames">An array of strings representing custom scheme names.</param>
     /// <param name="DevToolsEnabled">Specifies whether developer tools are enabled.</param>
     /// <param name="GrantBrowserPermissions">Indicates whether browser permissions are granted.</param>
@@ -25,6 +26,7 @@ public partial class PhotinoWindow
     {
         Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
         ContextMenuEnabled = true,
+        ZoomEnabled = true,
         CustomSchemeNames = new string[16],
         DevToolsEnabled = true,
         GrantBrowserPermissions = true,
@@ -313,6 +315,33 @@ public partial class PhotinoWindow
                     _startupParameters.ContextMenuEnabled = value;
                 else
                     Invoke(() => Photino_SetContextMenuEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    /// <summary>
+    /// When true, the user can zoom.
+    /// By default, this is set to true.
+    /// </summary>
+    public bool ZoomEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.ZoomEnabled;
+
+            var enabled = false;
+            Invoke(() => Photino_GetZoomEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (ZoomEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.ZoomEnabled = value;
+                else
+                    Invoke(() => Photino_SetZoomEnabled(_nativeInstance, value));
             }
         }
     }
@@ -1769,6 +1798,21 @@ public partial class PhotinoWindow
     {
         Log($".SetContextMenuEnabled({enabled})");
         ContextMenuEnabled = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// When true, the user can zoom.
+    /// By default, this is set to true.
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="enabled">Whether the zoom should be available</param>
+    public PhotinoWindow SetZoomEnabled(bool enabled)
+    {
+        Log($".SetZoomEnabled({enabled})");
+        ZoomEnabled = enabled;
         return this;
     }
 

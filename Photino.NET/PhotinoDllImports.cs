@@ -55,6 +55,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    private static partial void Photino_GetZoomEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_GetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
@@ -163,6 +167,10 @@ public partial class PhotinoWindow
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetContextMenuEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetZoomEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
