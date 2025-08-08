@@ -2504,6 +2504,22 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// open dev tools, when return 0 is ok, otherwise error.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="ApplicationException"></exception>
+    public int OpenDevTools()
+    {
+        if (!DevToolsEnabled) return 1;
+        Log($".OpenDevTools()");
+        if (_nativeInstance == IntPtr.Zero)
+            throw new ApplicationException("OpenDevTools cannot be called until after the Photino window is initialized.");
+        Invoke(() => Photino_OpenDevTools(_nativeInstance));
+
+        return 0;
+    }
+
+    /// <summary>
     /// Show an open file dialog native to the OS.
     /// </summary>
     /// <remarks>
