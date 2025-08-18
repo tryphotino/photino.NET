@@ -1,5 +1,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Photino.NET;
 
