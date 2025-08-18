@@ -1,6 +1,5 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Photino.NET;
 
@@ -2578,17 +2577,18 @@ public partial class PhotinoWindow
     /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
     /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
     /// <returns></returns>
-    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null, string defaultFileName = null)
     {
         defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         filters ??= Array.Empty<(string, string[])>();
+        defaultFileName ??= string.Empty;
 
         string result = null;
         var nativeFilters = GetNativeFilters(filters);
 
         Invoke(() =>
         {
-            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length);
+            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length, defaultFileName);
             result = Marshal.PtrToStringAuto(ptrResult);
         });
 
@@ -2608,9 +2608,9 @@ public partial class PhotinoWindow
     /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
     /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
     /// <returns></returns>
-    public async Task<string> ShowSaveFileAsync(string title = "Choose file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    public async Task<string> ShowSaveFileAsync(string title = "Choose file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null, string defaultFileName = null)
     {
-        return await Task.Run(() => ShowSaveFile(title, defaultPath, filters));
+        return await Task.Run(() => ShowSaveFile(title, defaultPath, filters, defaultFileName));
     }
 
     /// <summary>
