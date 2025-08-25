@@ -17,14 +17,14 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;</TargetFrameworks>
 		<ImplicitUsings>true</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
 		<OutputType>Library</OutputType>
 		<IsPackable>true</IsPackable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<Copyright>Copyright (C) 2025</Copyright>
-		<Version>4.0.16.25081</Version>
+		<Version>4.0.16.25082</Version>
 	</PropertyGroup>
 	
 	<Target Name="SetPackageVersion" DependsOnTargets="Build">
@@ -34,7 +34,7 @@
 	</Target>
 	
 	<ItemGroup>
-	  <PackageReference Include="Photino.Native2" Version="4.0.16.25081" />
+	  <PackageReference Include="Photino.Native2" Version="4.0.16.25082" />
 	</ItemGroup>
 
 </Project>
