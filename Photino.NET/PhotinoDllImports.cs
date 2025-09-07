@@ -248,7 +248,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_ShowNotification(IntPtr instance, string firstLine, string secondLine, string thirdLine, string attributionText, string iconPath, uint type, string button1, string button2, string button3, string button4, string button5);
+    private static partial void Photino_ShowNotificationEx(IntPtr instance, string firstLine, string secondLine, string thirdLine, string attributionText, string iconPath, uint type, string button1, string button2, string button3, string button4, string button5);
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

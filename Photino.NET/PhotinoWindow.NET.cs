@@ -2575,7 +2575,7 @@ public partial class PhotinoWindow
         Log($".SendNotification({firstLine}, {secondLine}, {thirdLine}, {attributionText}, {iconPath}, {type}, {button1}, {button2}, {button3}, {button4}, {button5})");
         if (_nativeInstance == IntPtr.Zero)
             throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
-        Invoke(() => Photino_ShowNotification(_nativeInstance, firstLine, secondLine, thirdLine, attributionText, iconPath, type, button1, button2, button3, button4, button5));
+        Invoke(() => Photino_ShowNotificationEx(_nativeInstance, firstLine, secondLine, thirdLine, attributionText, iconPath, type, button1, button2, button3, button4, button5));
     }
 
     /// <summary>
