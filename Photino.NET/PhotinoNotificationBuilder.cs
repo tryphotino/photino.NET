@@ -17,6 +17,19 @@ namespace Photino.NET
             _window = window;
         }
 
+        private ushort MaxLinesSupported => _notification.Type switch
+        {
+            PhotinoNotificationType.ToastText01 => 1,
+            PhotinoNotificationType.ToastText02 => 2,
+            PhotinoNotificationType.ToastText03 => 2,
+            PhotinoNotificationType.ToastText04 => 3,
+            PhotinoNotificationType.ToastImageAndText01 => 1,
+            PhotinoNotificationType.ToastImageAndText02 => 2,
+            PhotinoNotificationType.ToastImageAndText03 => 2,
+            PhotinoNotificationType.ToastImageAndText04 => 3,
+            _ => throw new NotImplementedException(),
+        };
+
         public PhotinoNotificationBuilder SetFirstLine(string text)
         {
             _notification.FirstLine = text;
@@ -26,14 +39,16 @@ namespace Photino.NET
 
         public PhotinoNotificationBuilder SetSecondLine(string text)
         {
-            _notification.SecondLine = text;
+            if (MaxLinesSupported >= 2)
+                _notification.SecondLine = text;
 
             return this;
         }
 
         public PhotinoNotificationBuilder SetThirdLine(string text)
         {
-            _notification.ThirdLine = text;
+            if (MaxLinesSupported >= 3)
+                _notification.ThirdLine = text;
 
             return this;
         }
@@ -48,13 +63,13 @@ namespace Photino.NET
         public PhotinoNotificationBuilder AddText(string text)
         {
             if (String.IsNullOrWhiteSpace(_notification.FirstLine))
-                _notification.FirstLine = text;
+                SetFirstLine(text);
             else if (String.IsNullOrWhiteSpace(_notification.SecondLine))
-                _notification.SecondLine = text;
+                SetSecondLine(text);
             else if (String.IsNullOrWhiteSpace(_notification.ThirdLine))
-                _notification.ThirdLine = text;
+                SetThirdLine(text);
             else if (String.IsNullOrWhiteSpace(_notification.AttributionText))
-                _notification.AttributionText = text;
+                SetAttributionText(text);
 
                 return this;
         }
