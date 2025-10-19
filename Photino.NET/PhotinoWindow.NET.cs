@@ -2487,6 +2487,35 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// Start dragging the window as if the title bar was being clicked on
+    /// </summary>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    public void StartDragging()
+    {
+        Log($".StartDragging()");
+        if (_nativeInstance == IntPtr.Zero)
+            throw new ApplicationException("StartDragging cannot be called until after the Photino window is initialized.");
+        Invoke(() => Photino_StartDragging(_nativeInstance));
+    }
+
+    /// <summary>
+    /// Start resizing the window as if an edge/corner was being clicked on
+    /// </summary>
+    /// <param name="hitTestCode">The edge/corner where the resizing should start</param>
+    /// <exception cref="ApplicationException">
+    /// Thrown when the window is not initialized.
+    /// </exception>
+    public void StartResizing(PhotinoWindowHitTestCode hitTestCode)
+    {
+        Log($".StartResizing({hitTestCode})");
+        if (_nativeInstance == IntPtr.Zero)
+            throw new ApplicationException("StartResizing cannot be called until after the Photino window is initialized.");
+        Invoke(() => Photino_StartResizing(_nativeInstance, hitTestCode));
+    }
+
+    /// <summary>
     /// Sends a native notification to the OS.
     /// Sometimes referred to as Toast notifications.
     /// </summary>
