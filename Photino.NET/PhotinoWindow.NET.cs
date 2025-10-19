@@ -2554,72 +2554,13 @@ public partial class PhotinoWindow
         });
     }
 
-    /// <summary>
-    /// Sends a native notification to the OS.
-    /// Sometimes referred to as Toast notifications.
-    /// </summary>
-    /// <exception cref="ApplicationException">
-    /// Thrown when the window is not initialized.
-    /// </exception>
-    /// <param name="firstLine">The first line of the notification</param>
-    /// <param name="secondLine">The second line of the notification</param>
-    /// <param name="thirdLine">The third line of the notification</param>
-    /// <param name="attributionText">The attribution text of the notification</param>
-    /// <param name="iconPath">The path of the icon to use for the notification. Defaults to application icon</param>
-    /// <param name="type">The type of notification to display</param>
-    /// <param name="button1">The label of the first button of the notification</param>
-    /// <param name="button2">The label of the second button of the notification</param>
-    /// <param name="button3">The label of the first button of the notification</param>
-    public void SendNotification(string firstLine, string secondLine, string thirdLine, string attributionText, string iconPath, uint type, string button1, string button2, string button3, string button4, string button5)
+    public PhotinoNotification CreateNotification(PhotinoNotificationType type)
     {
-        Log($".SendNotification({firstLine}, {secondLine}, {thirdLine}, {attributionText}, {iconPath}, {type}, {button1}, {button2}, {button3}, {button4}, {button5})");
+        Log($".Createnotification({type})");
         if (_nativeInstance == IntPtr.Zero)
-            throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
-        Invoke(() => Photino_ShowNotificationEx(_nativeInstance, firstLine, secondLine, thirdLine, attributionText, iconPath, type, button1, button2, button3, button4, button5));
-    }
-
-    /// <summary>
-    /// Sends a native notification to the OS.
-    /// Sometimes referred to as Toast notifications
-    /// </summary>
-    /// <exception cref="ApplicationException">
-    /// Thrown when the window is not initialized.
-    /// </exception>
-    /// <param name="notification">A built notification reference</param>
-    public void SendNotification(PhotinoNotification notification)
-    {
-        Log($".SendNotification(notification)");
-        SendNotification(notification.FirstLine, notification.SecondLine, notification.ThirdLine, notification.AttributionText, notification.IconPath, (uint)notification.Type, notification.Buttons[0]?.Label, notification.Buttons[1]?.Label, notification.Buttons[2]?.Label, notification.Buttons[3]?.Label, notification.Buttons[4]?.Label);
-    }
-
-    /// <summary>
-    /// Sends a native notification to the OS.
-    /// Sometimes referred to as Toast notifications.
-    /// </summary>
-    /// <exception cref="ApplicationException">
-    /// Thrown when the window is not initialized.
-    /// </exception>
-    /// <param name="title">The title of the notification</param>
-    /// <param name="body">The text of the notification</param>
-    public void SendNotification(string title, string body)
-    {
-        Log($".SendNotification({title}, {body})");
-        if (_nativeInstance == IntPtr.Zero)
-            throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
-        Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
-    }
-
-    /// <summary>
-    /// Build and send a native notification to the OS.
-    /// </summary>
-    /// <param name="options">Action to build the notification</param>
-    public void SendNotification(Action<PhotinoNotificationBuilder> options)
-    {
-        var builder = new PhotinoNotificationBuilder(this);
-
-        options(builder);
-
-        builder.Send();
+            throw new ApplicationException("CreateNotification cannot be called until after the Photino window is initialized.");
+        return new PhotinoNotification(_nativeInstance)
+            .SetType(type);
     }
 
     /// <summary>

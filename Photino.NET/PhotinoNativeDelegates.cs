@@ -19,3 +19,8 @@ namespace Photino.NET;
 //These are sent in during the request
 [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate int CppGetAllMonitorsDelegate(in NativeMonitor monitor);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)] delegate void InvokeCallback();
+
+//Notifications
+[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppNotificationActionDelegate(int actionIndex);
+[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppNotificationActivatedDelegate();
+[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppNotificationDismissedDelegate(PhotinoNotificationDismissalReason reason);
