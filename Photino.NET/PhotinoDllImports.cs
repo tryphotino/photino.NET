@@ -220,6 +220,18 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetZoom(IntPtr instance, int zoom);
 
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetFlash(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool state);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetProgress(IntPtr instance, ulong current, ulong total, PhotinoWindowProgressState state);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_ClearProgress(IntPtr instance);
+
 
     //MISC
     [LibraryImport(DLL_NAME, SetLastError = true)]
