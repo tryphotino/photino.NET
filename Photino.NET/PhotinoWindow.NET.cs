@@ -865,7 +865,8 @@ public partial class PhotinoWindow
         }
     }
 
-    private readonly PhotinoWindow _dotNetParent;
+    private PhotinoWindow _dotNetParent;
+
     /// <summary>
     /// Gets the reference to parent PhotinoWindow instance.
     /// This property can only be set in the constructor and it is optional.
@@ -1741,6 +1742,23 @@ public partial class PhotinoWindow
             throw new ApplicationException("Chromeless can only be set before the native window is instantiated.");
 
         _startupParameters.Chromeless = chromeless;
+        return this;
+    }
+
+    /// <summary>
+    /// Set the parent window
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="parent">The window that should be used as this window's parent</param>
+    public PhotinoWindow SetParent(PhotinoWindow parent)
+    {
+        Log($".SetParent({parent.Id})");
+        if (_nativeInstance != IntPtr.Zero)
+            throw new ApplicationException("Parent window can only be set before the native window is instantiated.");
+
+        _dotNetParent = parent;
         return this;
     }
 
