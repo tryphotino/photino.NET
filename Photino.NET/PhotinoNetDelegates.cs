@@ -274,6 +274,33 @@ public partial class PhotinoWindow
     }
 
 
+    /// <summary>
+    /// Event raised when a native menu item is clicked.
+    /// </summary>
+    public event EventHandler<string> MenuCommand;
+
+    /// <summary>
+    /// Registers user-defined handler methods to receive callbacks when a native menu item is clicked.
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="handler">Handler that receives the command string from the menu item.</param>
+    public PhotinoWindow RegisterMenuCommandHandler(EventHandler<string> handler)
+    {
+        MenuCommand += handler;
+        return this;
+    }
+
+    /// <summary>
+    /// Invokes registered user-defined handler methods when a native menu item is clicked.
+    /// </summary>
+    internal void OnMenuCommand(string command)
+    {
+        MenuCommand?.Invoke(this, command);
+    }
+
+
     //NOTE: There is 1 callback from C++ to C# which is automatically registered. The .NET callback appropriate for the custom scheme is handled in OnCustomScheme().
 
     public delegate Stream NetCustomSchemeDelegate(object sender, string scheme, string url, out string contentType);

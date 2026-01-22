@@ -87,6 +87,13 @@ internal struct PhotinoNativeParameters
     ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
     [MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebResourceRequestedDelegate CustomSchemeHandler;
 
+    ///<summary>OPTIONAL: JSON string defining native menu bar structure.</summary>
+    [MarshalAs(UnmanagedType.LPUTF8Str)]
+    internal string MenuDefinition;
+
+    ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
+    [MarshalAs(UnmanagedType.FunctionPtr)] internal CppMenuCommandDelegate MenuCommandHandler;
+
 
     ///<summary>OPTIONAL: Initial window position in pixels. Default is 0. Can be overridden with UseOsDefaultLocation.</summary>
     [MarshalAs(UnmanagedType.I4)] internal int Left;

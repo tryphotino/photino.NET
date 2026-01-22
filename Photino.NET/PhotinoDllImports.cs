@@ -255,6 +255,11 @@ public partial class PhotinoWindow
     static partial void Photino_WaitForExit(IntPtr instance);
 
 
+    //MENU
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetMenu(IntPtr instance, string menuJson);
+
     //DIALOG
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

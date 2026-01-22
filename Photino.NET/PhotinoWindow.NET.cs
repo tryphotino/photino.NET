@@ -1514,6 +1514,7 @@ public partial class PhotinoWindow
         _startupParameters.FocusOutHandler = OnFocusOut;
         _startupParameters.WebMessageReceivedHandler = OnWebMessageReceived;
         _startupParameters.CustomSchemeHandler = OnCustomScheme;
+        _startupParameters.MenuCommandHandler = OnMenuCommand;
     }
 
     //FLUENT METHODS FOR INITIALIZING STARTUP PARAMETERS FOR NEW WINDOWS
@@ -2291,6 +2292,42 @@ public partial class PhotinoWindow
     {
         Log($".SetTitle({title})");
         Title = title;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the native window menu bar using a JSON definition.
+    /// The JSON should have a "menus" array containing menu definitions.
+    /// Each menu has a "label" and "items" array.
+    /// Items can have "label", "command", "accelerator", or "type": "separator".
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="menuJson">JSON string defining the menu structure.</param>
+    /// <example>
+    /// <code>
+    /// window.SetMenu(@"{
+    ///   ""menus"": [
+    ///     {
+    ///       ""label"": ""File"",
+    ///       ""items"": [
+    ///         { ""label"": ""New"", ""command"": ""file.new"", ""accelerator"": ""Cmd+N"" },
+    ///         { ""type"": ""separator"" },
+    ///         { ""label"": ""Exit"", ""command"": ""app.exit"" }
+    ///       ]
+    ///     }
+    ///   ]
+    /// }");
+    /// </code>
+    /// </example>
+    public PhotinoWindow SetMenu(string menuJson)
+    {
+        Log($".SetMenu({(menuJson?.Length > 50 ? menuJson.Substring(0, 50) + "..." : menuJson)})");
+        if (_nativeInstance == IntPtr.Zero)
+            _startupParameters.MenuDefinition = menuJson;
+        else
+            Invoke(() => Photino_SetMenu(_nativeInstance, menuJson));
         return this;
     }
 
