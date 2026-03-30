@@ -2289,6 +2289,27 @@ public partial class PhotinoWindow
         return this;
     }
 
+    public PhotinoWindow SetFlash(bool state)
+    {
+        Log($".SetFlash({state})");
+        Invoke(() => Photino_SetFlash(_nativeInstance, state));
+        return this;
+    }
+
+    public PhotinoWindow SetProgress(ulong current, ulong total, PhotinoWindowProgressState state)
+    {
+        Log($".SetProgress({current}, {total}, {state})");
+        Invoke(() => Photino_SetProgress(_nativeInstance, current, total, state));
+        return this;
+    }
+
+    public PhotinoWindow ClearProgress()
+    {
+        Log($".ClearProgress()");
+        Invoke(() => Photino_ClearProgress(_nativeInstance));
+        return this;
+    }
+
     /// <summary>
     /// When true the native window starts up at the OS Default location.
     /// Default is true.
