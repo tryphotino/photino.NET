@@ -87,7 +87,6 @@ internal struct PhotinoNativeParameters
     ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
     [MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebResourceRequestedDelegate CustomSchemeHandler;
 
-
     ///<summary>OPTIONAL: Initial window position in pixels. Default is 0. Can be overridden with UseOsDefaultLocation.</summary>
     [MarshalAs(UnmanagedType.I4)] internal int Left;
 
@@ -128,6 +127,9 @@ internal struct PhotinoNativeParameters
 
     ///<summary>OPTIONAL: If true, user can access the browser control's context menu. Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool ContextMenuEnabled;
+
+    ///<summary>OPTIONAL: If true, user can zoom the browser control. Default is true.</summary>
+    [MarshalAs(UnmanagedType.I1)] internal bool ZoomEnabled;
 
     ///<summary>OPTIONAL: If true, user can access the browser control's dev tools. Default is true.</summary>
     [MarshalAs(UnmanagedType.I1)] internal bool DevToolsEnabled;

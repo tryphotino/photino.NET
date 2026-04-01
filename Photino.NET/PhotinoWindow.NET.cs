@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Photino.NET;
@@ -12,6 +13,7 @@ public partial class PhotinoWindow
     /// </summary>
     /// <param name="Resizable">Indicates whether the window is resizable.</param>
     /// <param name="ContextMenuEnabled">Specifies whether the context menu is enabled.</param>
+    /// <param name="ZoomEnabled">Specifies whether the user zoom is enabled.</param>
     /// <param name="CustomSchemeNames">An array of strings representing custom scheme names.</param>
     /// <param name="DevToolsEnabled">Specifies whether developer tools are enabled.</param>
     /// <param name="GrantBrowserPermissions">Indicates whether browser permissions are granted.</param>
@@ -24,6 +26,7 @@ public partial class PhotinoWindow
     {
         Resizable = true,   //These values can't be initialized within the struct itself. Set required defaults.
         ContextMenuEnabled = true,
+        ZoomEnabled = true,
         CustomSchemeNames = new string[16],
         DevToolsEnabled = true,
         GrantBrowserPermissions = true,
@@ -312,6 +315,33 @@ public partial class PhotinoWindow
                     _startupParameters.ContextMenuEnabled = value;
                 else
                     Invoke(() => Photino_SetContextMenuEnabled(_nativeInstance, value));
+            }
+        }
+    }
+
+    /// <summary>
+    /// When true, the user can zoom.
+    /// By default, this is set to true.
+    /// </summary>
+    public bool ZoomEnabled
+    {
+        get
+        {
+            if (_nativeInstance == IntPtr.Zero)
+                return _startupParameters.ZoomEnabled;
+
+            var enabled = false;
+            Invoke(() => Photino_GetZoomEnabled(_nativeInstance, out enabled));
+            return enabled;
+        }
+        set
+        {
+            if (ZoomEnabled != value)
+            {
+                if (_nativeInstance == IntPtr.Zero)
+                    _startupParameters.ZoomEnabled = value;
+                else
+                    Invoke(() => Photino_SetZoomEnabled(_nativeInstance, value));
             }
         }
     }
@@ -1772,6 +1802,21 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// When true, the user can zoom.
+    /// By default, this is set to true.
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="enabled">Whether the zoom should be available</param>
+    public PhotinoWindow SetZoomEnabled(bool enabled)
+    {
+        Log($".SetZoomEnabled({enabled})");
+        ZoomEnabled = enabled;
+        return this;
+    }
+
+    /// <summary>
     /// When true, the user can access the browser control's developer tools.
     /// By default, this is set to true.
     /// </summary>
@@ -1994,6 +2039,7 @@ public partial class PhotinoWindow
         Height = height;
         return this;
     }
+
     /// <summary>
     /// Sets the icon file for the native window title bar.
     /// The file must be located on the local machine and cannot be a URL. The default is none.
@@ -2011,6 +2057,28 @@ public partial class PhotinoWindow
         Log($".SetIconFile({iconFile})");
         IconFile = iconFile;
         return this;
+    }
+
+    /// <summary>
+    /// Sets the icon file for the native window title bar from an embedded resource.
+    /// The resource file is extracted to a temporary file, and its path is then set as the icon.
+    /// </summary>
+    /// <remarks>
+    /// This only works on Windows and Linux.
+    /// The resource file is expected to be embedded in the assembly from the `wwwroot` folder, and the provided namespace is used to locate the resource.
+    /// </remarks>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    /// <param name="resourceFileName">The name of the embedded resource file (e.g., "favicon.ico").</param>
+    /// <param name="resourceNamespace">
+    /// The namespace in which the embedded resource is located (e.g., "MyApp" or "MyCompany.MyApp").
+    /// This allows for specifying the custom namespace where the resource is embedded.
+    /// </param>
+    public PhotinoWindow SetIconFile(string resourceFileName, string resourceNamespace)
+    {
+        string iconPath = ExtractEmbeddedResourceToTempFile(resourceFileName, resourceNamespace);
+        return iconPath != null ? SetIconFile(iconPath) : this;
     }
 
     /// <summary>
@@ -2486,21 +2554,13 @@ public partial class PhotinoWindow
         });
     }
 
-    /// <summary>
-    /// Sends a native notification to the OS.
-    /// Sometimes referred to as Toast notifications.
-    /// </summary>
-    /// <exception cref="ApplicationException">
-    /// Thrown when the window is not initialized.
-    /// </exception>
-    /// <param name="title">The title of the notification</param>
-    /// <param name="body">The text of the notification</param>
-    public void SendNotification(string title, string body)
+    public PhotinoNotification CreateNotification(PhotinoNotificationType type)
     {
-        Log($".SendNotification({title}, {body})");
+        Log($".Createnotification({type})");
         if (_nativeInstance == IntPtr.Zero)
-            throw new ApplicationException("SendNotification cannot be called until after the Photino window is initialized.");
-        Invoke(() => Photino_ShowNotification(_nativeInstance, title, body));
+            throw new ApplicationException("CreateNotification cannot be called until after the Photino window is initialized.");
+        return new PhotinoNotification(_nativeInstance)
+            .SetType(type);
     }
 
     /// <summary>
@@ -2578,17 +2638,18 @@ public partial class PhotinoWindow
     /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
     /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
     /// <returns></returns>
-    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    public string ShowSaveFile(string title = "Save file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null, string defaultFileName = null)
     {
         defaultPath ??= Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         filters ??= Array.Empty<(string, string[])>();
+        defaultFileName ??= string.Empty;
 
         string result = null;
         var nativeFilters = GetNativeFilters(filters);
 
         Invoke(() =>
         {
-            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length);
+            var ptrResult = Photino_ShowSaveFile(_nativeInstance, title, defaultPath, nativeFilters, filters.Length, defaultFileName);
             result = Marshal.PtrToStringAuto(ptrResult);
         });
 
@@ -2608,9 +2669,9 @@ public partial class PhotinoWindow
     /// <param name="defaultPath">Default path. Defaults to <see cref="Environment.SpecialFolder.MyDocuments"/></param>
     /// <param name="filters">Array of <see cref="Extensions"/> for filtering.</param>
     /// <returns></returns>
-    public async Task<string> ShowSaveFileAsync(string title = "Choose file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null)
+    public async Task<string> ShowSaveFileAsync(string title = "Choose file", string defaultPath = null, (string Name, string[] Extensions)[] filters = null, string defaultFileName = null)
     {
-        return await Task.Run(() => ShowSaveFile(title, defaultPath, filters));
+        return await Task.Run(() => ShowSaveFile(title, defaultPath, filters, defaultFileName));
     }
 
     /// <summary>
@@ -2695,5 +2756,44 @@ public partial class PhotinoWindow
         return nativeFilters;
     }
 
+    /// <summary>
+    /// Extracts an embedded resource from the assembly to a temporary file.
+    /// </summary>
+    /// <remarks>
+    /// The resource is expected to be located within the provided namespace and under the `wwwroot` folder.
+    /// This method will write the resource to a temporary file and return its path.
+    /// </remarks>
+    /// <returns>
+    /// The path to the temporary file containing the extracted resource, or <c>null</c> if the resource was not found.
+    /// </returns>
+    /// <param name="fileName">The name of the embedded resource file (e.g., "favicon.ico").</param>
+    /// <param name="resourceNamespace">
+    /// The namespace where the embedded resource is located (e.g., "MyApp" or "MyCompany.MyApp").
+    ///
+    /// The method expects the resource to be in the `wwwroot` folder of the provided namespace.
+    /// </param>
+    private string ExtractEmbeddedResourceToTempFile(string fileName, string resourceNamespace)
+    {
+        string resourceName = $"{resourceNamespace}.wwwroot.{fileName}";
 
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
+        {
+            if (resourceStream == null)
+            {
+                Log($"Resource '{fileName}' couldn't be found in namespace '{resourceNamespace}'");
+                return null;
+            }
+
+            string tempFile = Path.Combine(Path.GetTempPath(), fileName);
+
+            using (FileStream fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+            {
+                resourceStream.CopyTo(fileStream);
+            }
+
+            return tempFile;
+        }
+    }
 }

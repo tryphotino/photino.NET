@@ -55,6 +55,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    private static partial void Photino_GetZoomEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_GetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] out bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
@@ -166,6 +170,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetZoomEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
@@ -238,10 +246,6 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     private static partial void Photino_ShowMessage(IntPtr instance, string title, string body, uint type);
 
-    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
-    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    private static partial void Photino_ShowNotification(IntPtr instance, string title, string body);
-
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_WaitForExit(IntPtr instance);
@@ -258,7 +262,7 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount);
+    public static partial IntPtr Photino_ShowSaveFile(IntPtr inst, string title, string defaultPath, string[] filters, int filtersCount, string defaultFileName);
 
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
