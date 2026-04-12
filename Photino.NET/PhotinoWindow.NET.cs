@@ -1081,7 +1081,7 @@ public partial class PhotinoWindow
     }
     
     /// <summary>
-    /// Gets or sets if window title's length is limited on Linux
+    /// Gets or sets whether the window title is truncated to 31 characters on Linux.
     /// </summary>
     public bool Linux31CharLimitation { get; set; } = true;
 
