@@ -2218,7 +2218,7 @@ public partial class PhotinoWindow
     
     /// <summary>
     /// Sets the native window <see cref="PhotinoWindow.Linux31CharLimitation"/>.
-    /// Default is False.
+    /// Default is True.
     /// </summary>
     /// <returns>
     /// Returns the current <see cref="PhotinoWindow"/> instance.
