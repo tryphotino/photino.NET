@@ -1079,6 +1079,11 @@ public partial class PhotinoWindow
             }
         }
     }
+    
+    /// <summary>
+    /// Gets or sets whether the window title is truncated to 31 characters on Linux.
+    /// </summary>
+    public bool Linux31CharLimitation { get; set; } = true;
 
     /// <summary>
     /// Gets or sets the native window title.
@@ -1104,7 +1109,7 @@ public partial class PhotinoWindow
             if (Title != value)
             {
                 // Due to Linux/Gtk platform limitations, the window title has to be no more than 31 chars
-                if (value.Length > 31 && IsLinuxPlatform)
+                if (value.Length > 31 && IsLinuxPlatform && Linux31CharLimitation)
                     value = value[..31];
 
                 if (_nativeInstance == IntPtr.Zero)
@@ -2208,6 +2213,20 @@ public partial class PhotinoWindow
     {
         Log($".SetTemporaryFilesPath({tempFilesPath})");
         TemporaryFilesPath = tempFilesPath;
+        return this;
+    }
+    
+    /// <summary>
+    /// Sets the native window <see cref="PhotinoWindow.Linux31CharLimitation"/>.
+    /// Default is True.
+    /// </summary>
+    /// <returns>
+    /// Returns the current <see cref="PhotinoWindow"/> instance.
+    /// </returns>
+    public PhotinoWindow SetLinux31CharLimitation(bool isLimited)
+    {
+        Log($".SetLinux31CharLimitation({isLimited})");
+        Linux31CharLimitation = isLimited;
         return this;
     }
 
