@@ -43,6 +43,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    private static partial IntPtr Photino_getGtkWindow_linux(IntPtr instance);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_GetAllMonitors(IntPtr instance, CppGetAllMonitorsDelegate callback);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
