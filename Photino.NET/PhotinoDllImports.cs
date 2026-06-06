@@ -150,6 +150,11 @@ public partial class PhotinoWindow
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_NavigateToUrl(IntPtr instance, string url);
 
+    [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    [return: MarshalAs(UnmanagedType.I1)]
+    private static partial bool Photino_ExecuteScript(IntPtr instance, string script);
+
 
     //SET
     [LibraryImport(DLL_NAME, SetLastError = true, StringMarshalling = StringMarshalling.Utf8)]

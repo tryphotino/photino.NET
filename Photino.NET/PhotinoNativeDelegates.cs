@@ -14,6 +14,7 @@ namespace Photino.NET;
 [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppMinimizedDelegate();
 [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppMovedDelegate(int x, int y);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate void CppWebMessageReceivedDelegate(string message);
+[UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate byte CppPopupRequestedDelegate(string url, string name, int x, int y, int width, int height);
 [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Auto)] public delegate IntPtr CppWebResourceRequestedDelegate(string url, out int outNumBytes, out string outContentType);
 
 //These are sent in during the request
