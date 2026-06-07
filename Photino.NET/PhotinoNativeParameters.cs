@@ -79,6 +79,9 @@ internal struct PhotinoNativeParameters
     ///<summary>SET BY PHOTINIWINDOW CONSTRUCTOR</summary>
     [MarshalAs(UnmanagedType.FunctionPtr)] internal CppWebMessageReceivedDelegate WebMessageReceivedHandler;
 
+    ///<summary>SET BY PHOTINOWINDOW CONSTRUCTOR</summary>
+    [MarshalAs(UnmanagedType.FunctionPtr)] internal CppInputDialogRequestedDelegate InputDialogRequestedHandler;
+
     ///<summary>OPTIONAL: Names of custom URL Schemes. e.g. 'app', 'custom'. Array length must be 16. Default is none.</summary>
     [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.LPStr, SizeConst = 16)]
     internal string[] CustomSchemeNames;

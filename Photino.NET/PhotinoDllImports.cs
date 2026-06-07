@@ -166,6 +166,10 @@ public partial class PhotinoWindow
 
     [LibraryImport(DLL_NAME, SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    static partial void Photino_SetInputDialogInterceptionEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
+
+    [LibraryImport(DLL_NAME, SetLastError = true)]
+    [UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
     static partial void Photino_SetDevToolsEnabled(IntPtr instance, [MarshalAs(UnmanagedType.I1)] bool enabled);
 
     [LibraryImport(DLL_NAME, SetLastError = true)]

@@ -1231,6 +1231,23 @@ public partial class PhotinoWindow
     }
 
     /// <summary>
+    /// Gets or sets handlers for InputDialogRequested event.
+    /// Set assigns a new handler to the event.
+    /// </summary>
+    /// <seealso cref="InputDialogRequested"/>
+    public EventHandler<InputDialogEventArgs> InputDialogRequestedHandler
+    {
+        get
+        {
+            return _inputDialogRequested;
+        }
+        set
+        {
+            InputDialogRequested += value;
+        }
+    }
+
+    /// <summary>
     /// Gets or Sets the native window width in pixels.
     /// Default is 0.
     /// </summary>
@@ -1483,6 +1500,7 @@ public partial class PhotinoWindow
         _startupParameters.FocusInHandler = OnFocusIn;
         _startupParameters.FocusOutHandler = OnFocusOut;
         _startupParameters.WebMessageReceivedHandler = OnWebMessageReceived;
+        _startupParameters.InputDialogRequestedHandler = OnInputDialogRequested;
         _startupParameters.CustomSchemeHandler = OnCustomScheme;
     }
 
@@ -2402,7 +2420,12 @@ public partial class PhotinoWindow
                 else if (IsMacOsPlatform)
                     Invoke(() => Photino_register_mac());
 
-                Invoke(() => _nativeInstance = Photino_ctor(ref _startupParameters));
+                Invoke(() =>
+                {
+                    _nativeInstance = Photino_ctor(ref _startupParameters);
+                    if (_inputDialogRequested is not null)
+                        Photino_SetInputDialogInterceptionEnabled(_nativeInstance, true);
+                });
             }
             catch (Exception ex)
             {
